@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { User } from '../models/User';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 interface IJson {
-    email: string,
+    email?: string,
     username: string,
     password: string,
 }
@@ -58,6 +59,31 @@ class AuthController {
                 message: "Server error",
             });
         })
+    }
+
+    async login(req: Request, res: Response) {
+        const { username, password } = req.body as IJson;
+        const user = await User.findOne({
+            username: username,
+        });
+        if (!user) {
+            return res.json({
+                message: "Wrong credentials",
+            })
+        }
+        if (!await bcrypt.compare(password, user.password)) {
+            return res.json({
+                message: "Wrong credentials",
+            })
+        }
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET!);
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+        return res.json({
+            message: "Login success",
+        });
     }
 }
 

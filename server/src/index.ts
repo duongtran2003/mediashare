@@ -1,10 +1,18 @@
 import express, { Request, Response } from 'express'
 import { router as route } from './routes/index';
 import { connect as dbConnect } from '../config/db';
+import cookieParser = require('cookie-parser');
+const dotenv = require('dotenv').config();
+import cors from 'cors';
 
 let app = express();
 dbConnect();
 
+console.log(dotenv)
+app.use(cookieParser());
+app.use(cors({
+    credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({
     extended: true,
