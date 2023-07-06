@@ -3,6 +3,7 @@ import { User } from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+
 interface IJson {
     email?: string,
     username: string,
@@ -76,13 +77,29 @@ class AuthController {
                 message: "Wrong credentials",
             })
         }
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET!);
+        const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET!);
         res.cookie('jwt', token, {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000,
         });
         return res.json({
             message: "Login success",
+        });
+    }
+
+    index(req: Request, res: Response) {
+        return res.json({
+            username: res.locals.claims.username,
+        });
+    }
+    
+    logout(req: Request, res: Response) {
+        res.cookie('jwt', "", {
+            httpOnly: true,
+            maxAge: 0,
+        });
+        return res.json({
+            message: "Logout success",
         });
     }
 }

@@ -8,7 +8,6 @@ import cors from 'cors';
 let app = express();
 dbConnect();
 
-console.log(dotenv)
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
