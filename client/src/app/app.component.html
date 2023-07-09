@@ -1,2 +1,3 @@
-<app-nav-bar (onLoginToggle)="toggleLogin()"></app-nav-bar>
-<app-login *ngIf="isLoginVisible" (onLoginToggle)="toggleLogin()"></app-login>
+<app-nav-bar (onLoginToggle)="toggleLogin()" (onRegisterToggle)="toggleRegister()"></app-nav-bar>
+<app-login *ngIf="isLoginVisible" (onLoginToggle)="toggleLogin()" (onRegisterToggle)="toggleRegister()"></app-login>
+<app-register *ngIf="isRegisterVisible" (onRegisterToggle)="toggleRegister()" (onLoginToggle)="toggleLogin()"></app-register>

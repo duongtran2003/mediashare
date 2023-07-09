@@ -10,10 +10,18 @@ import { AuthService } from 'src/app/services/auth.service';
 export class LoginComponent {
   userName: string = "";
   userPassword: string = "";
+  userNameError: boolean = false;
+  userPasswordError: boolean = false;
   @Output() onLoginToggle = new EventEmitter();
+  @Output() onRegisterToggle = new EventEmitter();
 
   constructor(private api: ApiService, private auth: AuthService) { }
   onLoginClick(): void {
+
+    //validate input start:
+
+    //validate input end;
+
     this.api.post('auth/login', {
       username: this.userName,
       password: this.userPassword
@@ -28,6 +36,11 @@ export class LoginComponent {
       }
     });
   }
+
+  onRegisterClick(): void {
+    this.onRegisterToggle.emit();
+  }
+
   updateUserName(val: string): void {
     this.userName = val;
   }
