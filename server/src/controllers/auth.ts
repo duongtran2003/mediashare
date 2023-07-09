@@ -83,6 +83,7 @@ class AuthController {
             maxAge: 24 * 60 * 60 * 1000,
         });
         return res.json({
+            username: user.username,
             message: "Login success",
         });
     }
