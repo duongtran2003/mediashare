@@ -12,54 +12,90 @@ interface IJson {
 
 class AuthController {
     async register(req: Request, res: Response) {
-        //todo: validate this fucking json
         const { email, username, password } = req.body as IJson;
+
+        //validate
+        if (!(typeof email) || !(typeof username) || !(typeof password)) {
+            res.statusCode = 400;
+            return res.json({
+                message: "nice try dude",
+            });
+        }
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(req.body.email)) {
+            res.statusCode = 400;
+            return res.json({
+                message: "nice try dude",
+            });
+        }
+        if (!/^[a-zA-Z0-9_]{6,20}$/.test(req.body.username)) {
+            res.statusCode = 400;
+            return res.json({
+                message: "nice try dude",
+            });
+        }
+        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(req.body.password)) {
+            res.statusCode = 400;
+            return res.json({
+                message: "nice try dude",
+            });
+        }
+        //validate
+
         let salt = await bcrypt.genSalt(10);
         let hashedPassword = await bcrypt.hash(password, salt);
-        User.findOne({
-            $or: [
-                {
-                    email: email
-                },
-                {
-                    username: username,
+        await User.findOne({
+            email: req.body.email
+        })
+            .then((user) => {
+                if (user) {
+                    res.statusCode = 409;
+                    return res.json({
+                        type: "email",
+                        message: "Email's already been used",
+                    });
                 }
-            ]
+            })
+            .catch((err) => {
+                res.statusCode = 500;
+                return res.json({
+                    message: "Server's error",
+                })
+            });
+        await User.findOne({
+            username: req.body.username,
+        })
+            .then((user) => {
+                if (user) {
+                    res.statusCode = 409;
+                    return res.json({
+                        type: "username",
+                        message: "Username's already been used",
+                    });
+                }
+            })
+            .catch(() => {
+                res.statusCode = 500;
+                return res.json({
+                    message: "Server's error",
+                })
+            });
+        User.create({
+            email: req.body.email,
+            username: req.body.username,
+            password: hashedPassword,
         })
         .then((user) => {
-            if (!user) {
-                //todo create user
-                let newUser = {
-                    email: email,
-                    username: username,
-                    password: hashedPassword,
-                }
-                User.create(newUser)
-                .then((user) => {
-                    return res.json({
-                        message: "Register successfully",
-                        email: user.email,
-                        username: user.username,
-                        password: user.password,
-                    })
-                })
-                .catch((e) => {
-                    return res.json({
-                        message: "Server error",
-                    })
-                })
-            }
-            else {
-                return res.json({
-                    message: "It seems like you already have one."
-                });
-            }
-        })
-        .catch((e) => {
+            res.statusCode = 200;
             return res.json({
-                message: "Server error",
+                message: "Account created",
             });
         })
+        .catch((err) => {
+            res.statusCode = 500;
+            return res.json({
+                message: "Server's error",
+            })
+        });
     }
 
     async login(req: Request, res: Response) {
@@ -68,11 +104,13 @@ class AuthController {
             username: username,
         });
         if (!user) {
+            res.statusCode = 401;
             return res.json({
                 message: "Wrong credentials",
             })
         }
         if (!await bcrypt.compare(password, user.password)) {
+            res.statusCode = 401;
             return res.json({
                 message: "Wrong credentials",
             })
@@ -82,18 +120,39 @@ class AuthController {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000,
         });
+        res.statusCode = 200;
         return res.json({
             username: user.username,
             message: "Login success",
         });
     }
 
-    index(req: Request, res: Response) {
-        return res.json({
-            username: res.locals.claims.username,
+    getUser(req: Request, res: Response) {
+        User.findOne({
+            username: req.body.username
+        })
+        .then((user) => {
+            if (user) {
+                res.statusCode = 200;
+                return res.json({
+                    message: "Username's already been used",
+                })
+            }
+            else {
+                res.statusCode = 200;
+                return res.json({
+                    message: "OK",
+                })
+            }
+        })
+        .catch((err) => {
+            res.statusCode = 500;
+            return res.json({
+                message: "Server's error",
+            })
         });
-    }
-    
+    } 
+
     logout(req: Request, res: Response) {
         res.cookie('jwt', "", {
             httpOnly: true,

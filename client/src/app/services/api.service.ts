@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, debounceTime, delay } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,4 +20,5 @@ export class ApiService {
     const url: string = this.rootUrl + endpoint;
     return this.http.post(url, data);
   }
+
 }

@@ -1,4 +1,4 @@
-<div id="modal" (click)="onModalClick($event)" class="fixed bg-gray-500 w-full h-full">
+<div id="modal" (mousedown)="onModalClick($event)" class="fixed bg-gray-500 w-full h-full">
     <div class="w-96 h-3/4 bg-white ml-auto mr-auto mt-20 mb-auto rounded-lg flex flex-col items-center px-16 pt-8">
         <div class="select-none font-sans font-bold text-3xl">Register</div>
         <div class="w-full">
@@ -9,7 +9,7 @@
         </div>
         <div class="w-full">
             <div class="pl-1 pb-1 pt-2">Username</div>
-            <input #name type="text" [value]="userName" (input)="updateUserName(name.value)"
+            <input #name type="text" [value]="userName" (input)="updateUserName(name.value); checkDuplicate(name.value)"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md block w-full p-2.5 focus:outline-none focus:border-blue-400">
             <div class="text-red-600 text-xs pl-1">{{ userNameError }}</div>
         </div>

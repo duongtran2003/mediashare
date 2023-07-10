@@ -47,7 +47,8 @@ export class LoginComponent {
         this.userPasswordError = "";
       },
       error: (err) => {
-        console.log(err.statusCode);
+        //wrong credentials
+        this.userNameError = "Incorrect username or password";
       }
     });
   }
@@ -63,7 +64,7 @@ export class LoginComponent {
     this.userPassword = val;
   }
   onModalClick(event: any): void {
-    if (event.target.id == 'modal') {
+    if (event.target.id == 'modal' && event.button == 0) {
       this.onLoginToggle.emit();
     }
   }

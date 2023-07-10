@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -8,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
+  timeout: number | null = null;
   userName: string = "";
   userPassword: string = "";
   userEmail: string = "";
@@ -55,11 +57,16 @@ export class RegisterComponent {
       password: this.userPassword,
     }).subscribe({
       next: (response) => {
-        console.log(response.message);
         this.onLoginToggle.emit();
       },
       error: (err) => {
-        console.log(err.message);
+        console.log(err);
+        if (err.type == "user") {
+          this.userNameError = err.error.message;
+        }
+        else {
+          this.userEmailError = err.error.message;
+        }
       }
     })
   }
@@ -76,9 +83,30 @@ export class RegisterComponent {
     this.userEmail = val;
   }
   onModalClick(event: any): void {
-    if (event.target.id == 'modal') {
+    if (event.target.id == 'modal' && event.button == 0) {
       this.onRegisterToggle.emit();
     }
+  }
+  checkDuplicate(val: string) {
+    this.userNameError = "";
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+    this.timeout = window.setTimeout(() => {
+      this.api.post('auth/getUser', {
+        username: val,
+      })
+        .subscribe({
+          next: (response) => {
+            if (response.message != "OK") {
+              this.userNameError = response.message;
+            }
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        })
+    }, 300);
   }
 }
 
