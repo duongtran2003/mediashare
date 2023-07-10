@@ -93,7 +93,7 @@ export class RegisterComponent {
       clearTimeout(this.timeout);
     }
     this.timeout = window.setTimeout(() => {
-      this.api.post('auth/getUser', {
+      this.api.post('auth/checkUsername', {
         username: val,
       })
         .subscribe({

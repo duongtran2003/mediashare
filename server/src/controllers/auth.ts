@@ -127,7 +127,7 @@ class AuthController {
         });
     }
 
-    getUser(req: Request, res: Response) {
+    checkUsername(req: Request, res: Response) {
         User.findOne({
             username: req.body.username
         })
@@ -152,6 +152,33 @@ class AuthController {
             })
         });
     } 
+
+    async getUsername(req: Request, res: Response) {
+        const claims = res.locals.claims;
+        User.findOne({
+            username: claims.username,
+        })
+        .then((user) => {
+            if (user) {
+                res.statusCode = 200;
+                return res.json({
+                    username: claims.username
+                });
+            }
+            else {
+                res.statusCode = 200;
+                return res.json({
+                    username: "",
+                })
+            }
+        })
+        .catch((err) => {
+            res.statusCode = 500;
+            return res.json({
+                message: err,
+            });
+        });
+    }
 
     logout(req: Request, res: Response) {
         res.cookie('jwt', "", {

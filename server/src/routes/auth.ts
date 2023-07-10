@@ -7,7 +7,8 @@ let authController = new AuthController();
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
-router.post('/getUser', authController.getUser);
+router.post('/checkUsername', authController.checkUsername);
+router.get('/getUsername', authGuard, authController.getUsername);
 router.get('/logout', authGuard, authController.logout);
 
 export {

@@ -13,12 +13,16 @@ export class ApiService {
 
   get(endpoint: string): Observable<any> {
     const url: string = this.rootUrl + endpoint;
-    return this.http.get(url);
+    return this.http.get(url, {
+      withCredentials: true,
+    });
   }
 
   post(endpoint: string, data: any): Observable<any> {
     const url: string = this.rootUrl + endpoint;
-    return this.http.post(url, data);
+    return this.http.post(url, data, {
+      withCredentials: true,
+    });
   }
 
 }
