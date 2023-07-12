@@ -3,7 +3,7 @@ import { HostListener } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { ApiService } from './services/api.service';
 import { AuthService } from './services/auth.service';
-import { animate, style, transition, state, trigger } from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-root',

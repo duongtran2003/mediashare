@@ -2,31 +2,11 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastService } from 'src/app/services/toast.service';
-import { animate, style, transition, state, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
-  animations: [
-    trigger(
-      'inOutAnimation', 
-      [
-        transition(':enter',
-          [
-            style({ opacity: '0' }),
-            animate('250ms ease-out', style({ opacity: '1' })),
-          ]
-        ),
-        transition(':leave', 
-          [
-            style({ opacity: '1' }),
-            animate('2000ms ease-in', style({ opacity: '0' })),
-          ]
-        )
-      ]
-    ),
-  ],
 })
 export class RegisterComponent {
   timeout: number | null = null;
