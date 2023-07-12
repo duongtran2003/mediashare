@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent {
   @Output() onLoginToggle = new EventEmitter();
   @Output() onRegisterToggle = new EventEmitter();
 
-  constructor(private api: ApiService, private auth: AuthService) { }
+  constructor(private api: ApiService, private auth: AuthService, private toast: ToastService) { }
   onLoginClick(): void {
 
     //validate input start:
@@ -42,6 +43,11 @@ export class LoginComponent {
     }).subscribe({
       next: (response: any) => {
         this.auth.setCurrentUser(response.username); 
+        this.toast.makeToast({
+          state: "close",
+          message: `Welcome home, ${response.username}`,
+          barClass: ['bg-lime-500']
+        });
         this.onLoginToggle.emit();
         this.userNameError = "";
         this.userPasswordError = "";

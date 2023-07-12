@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -23,7 +23,7 @@ export class RegisterComponent {
   @Output() onRegisterToggle = new EventEmitter();
   @Output() onLoginToggle = new EventEmitter();
 
-  constructor(private api: ApiService, private auth: AuthService) { }
+  constructor(private api: ApiService, private auth: AuthService, private toast: ToastService) { }
 
   onRegisterClick(): void {
 
@@ -57,6 +57,11 @@ export class RegisterComponent {
       password: this.userPassword,
     }).subscribe({
       next: (response) => {
+        this.toast.makeToast({
+          state: "close",
+          message: "Account created",
+          barClass: ['bg-lime-500']
+        });
         this.onLoginToggle.emit();
       },
       error: (err) => {

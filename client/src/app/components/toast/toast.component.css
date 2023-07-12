@@ -1,0 +1,26 @@
+.toastr {
+    background-color: white;
+    position: relative;
+    right: 0rem;
+    transform: translateX(200%);
+    margin-bottom: 1.25rem;
+    display: flex;
+    min-width: 300px;
+    min-height: 60px;
+    max-height: 80px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.351);
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: space-between;
+    /* border-left: 6px solid black; */
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.progress-bar {
+    width: 100%;
+    transition-duration: 1950ms;
+    transition-timing-function: linear;
+    height: 5px;
+}
+

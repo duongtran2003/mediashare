@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { ApiService } from 'src/app/services/api.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -14,7 +15,7 @@ export class NavBarComponent implements OnInit{
   
   currentUser: string = "";
   isDropdownVisible: boolean = false; 
-  constructor(private auth: AuthService, private api: ApiService) { 
+  constructor(private auth: AuthService, private api: ApiService, private toast: ToastService) { 
     this.currentUser = "";
   }
   
@@ -34,6 +35,18 @@ export class NavBarComponent implements OnInit{
       next: (response) => {
         console.log(response.message);
         this.auth.setCurrentUser("");
+        this.toast.makeToast({
+          state: "close",
+          message: "Logout successfully",
+          barClass: ['bg-lime-500'],
+        });
+      },
+      error: (err) => {
+        this.toast.makeToast({
+          state: "close",
+          message: "Server's error",
+          barClass: ['bg-red-600']
+        })
       }
     })
   }

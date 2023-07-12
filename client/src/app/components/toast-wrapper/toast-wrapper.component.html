@@ -1,0 +1,1 @@
+<app-toast *ngFor="let toast of toastList; let i = index" [newToast]="toast" (destroyToast)="onDestroyToast($event)" [index]="i"></app-toast>
