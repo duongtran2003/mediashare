@@ -1,4 +1,8 @@
 <app-nav-bar (onLoginToggle)="toggleLogin()" (onRegisterToggle)="toggleRegister()"></app-nav-bar>
-<app-login *ngIf="isLoginVisible" (onLoginToggle)="toggleLogin()" (onRegisterToggle)="toggleRegister()"></app-login>
-<app-register *ngIf="isRegisterVisible" (onRegisterToggle)="toggleRegister()" (onLoginToggle)="toggleLogin()"></app-register>
+<div *ngIf="isModalVisible" id="modal" (mousedown)="onModalClick($event)" class="fixed bg-gray-500 w-full h-full">
+    <app-login [@inOutAnimation] *ngIf="isLoginVisible" (onLoginToggle)="toggleLogin()" id="childModal"
+        (onRegisterToggle)="toggleRegister()"></app-login>
+    <app-register [@inOutAnimation] *ngIf="isRegisterVisible" (onRegisterToggle)="toggleRegister()" id="childModal"
+        (onLoginToggle)="toggleLogin()"></app-register>
+</div>
 <app-toast-wrapper ngClass="fixed top-16 right-0 flex flex-col pt-5 pb-5"></app-toast-wrapper>

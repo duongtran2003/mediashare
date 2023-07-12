@@ -1,21 +1,19 @@
-<div id="modal" (mousedown)="onModalClick($event)" class="fixed bg-gray-500 w-full h-full">
-    <div class="w-96 h-3/5 bg-white ml-auto mr-auto mt-20 mb-auto rounded-lg flex flex-col items-center px-16 pt-8">
-        <div class="select-none font-sans font-bold text-3xl">Login</div>
-        <div class="w-full">
-            <div class="pl-1 pb-1 pt-5">Username</div>
-            <input #name type="text" [value]="userName" (input)="updateUserName(name.value)"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md block w-full p-2.5 focus:outline-none focus:border-blue-400">
-            <div class="text-red-600 text-xs pl-1">{{ userNameError }}</div>
-        </div>
-        <div class="w-full grow">
-            <div class="pl-1 pb-1 pt-2">Password</div>
-            <input #pass type="password" [value]="userPassword" (input)="updateUserPassword(pass.value)"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md block w-full p-2.5 focus:outline-none focus:border-blue-400">
-            <div class="text-red-600 text-xs pl-1">{{ userPasswordError }}</div>
-        </div>
-        <button (click)="onLoginClick()" type="button"
-            class="w-full mt-10 text-white bg-blue-700 focus:outline-none focus:ring-0 hover:bg-blue-800 font-medium rounded-md text-sm py-2.5 block">Login</button>
-        <div class="mt-2 mb-8">No account? <span (click)="onRegisterClick()"
-                class="select-none cursor-pointer text-blue-600">Get yourself one</span></div>
+<div class="w-96 h-3/5 bg-white ml-auto mr-auto mt-20 mb-auto rounded-lg flex flex-col items-center px-16 pt-8">
+    <div class="select-none font-sans font-bold text-3xl">Login</div>
+    <div class="w-full">
+        <div class="pl-1 pb-1 pt-5">Username</div>
+        <input #name type="text" [value]="userName" (input)="updateUserName(name.value)"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md block w-full p-2.5 focus:outline-none focus:border-blue-400">
+        <div class="text-red-600 text-xs pl-1">{{ userNameError }}</div>
     </div>
+    <div class="w-full grow">
+        <div class="pl-1 pb-1 pt-2">Password</div>
+        <input #pass type="password" [value]="userPassword" (input)="updateUserPassword(pass.value)"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md block w-full p-2.5 focus:outline-none focus:border-blue-400">
+        <div class="text-red-600 text-xs pl-1">{{ userPasswordError }}</div>
+    </div>
+    <button (click)="onLoginClick()" type="button"
+        class="w-full mt-10 text-white bg-blue-700 focus:outline-none focus:ring-0 hover:bg-blue-800 font-medium rounded-md text-sm py-2.5 block">Login</button>
+    <div class="mt-2 mb-8">No account? <span (click)="onRegisterClick()"
+            class="select-none cursor-pointer text-blue-600">Get yourself one</span></div>
 </div>

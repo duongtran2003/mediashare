@@ -69,9 +69,4 @@ export class LoginComponent {
   updateUserPassword(val: string): void {
     this.userPassword = val;
   }
-  onModalClick(event: any): void {
-    if (event.target.id == 'modal' && event.button == 0) {
-      this.onLoginToggle.emit();
-    }
-  }
 }
