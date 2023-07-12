@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -12,8 +13,8 @@ export class NavBarComponent implements OnInit{
   @Output() onRegisterToggle = new EventEmitter();
   
   currentUser: string = "";
-  
-  constructor(private auth: AuthService) { 
+  isDropdownVisible: boolean = false; 
+  constructor(private auth: AuthService, private api: ApiService) { 
     this.currentUser = "";
   }
   
@@ -28,6 +29,15 @@ export class NavBarComponent implements OnInit{
     })
   }
   
+  logOut(): void {
+    this.api.get('auth/logout').subscribe({
+      next: (response) => {
+        console.log(response.message);
+        this.auth.setCurrentUser("");
+      }
+    })
+  }
+
   onLoginClick(): void {
     this.onLoginToggle.emit();
   }
