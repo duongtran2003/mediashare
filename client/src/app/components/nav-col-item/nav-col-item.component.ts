@@ -35,12 +35,9 @@ export class NavColItemComponent implements OnInit {
     }
   }
 
-  changeState() {
+  activeState() {
     if (this.currentState == 'deactive') {
       this.currentState = 'active';
-    }
-    else {
-      this.currentState = 'deactive';
     }
     console.log(this.currentState);
   }

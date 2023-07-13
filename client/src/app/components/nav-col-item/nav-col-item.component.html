@@ -1,4 +1,4 @@
-<button [@activeCard]="this.currentState" (click)="changeState()" type="button" [ngClass]="{ 'bg-white': this.currentState == 'deactive', 'bg-blue-900': this.currentState == 'active', 'text-white': this.currentState == 'active' }" class="hover:bg-blue-900 hover:text-white duration-300 shadow-lg mt-4 min-w-full font-medium rounded-lg text-2xl px-12 py-4 text-center inline-flex items-center">
+<button [@activeCard]="this.currentState" (click)="activeState()" type="button" [ngClass]="{ 'bg-white': this.currentState == 'deactive', 'bg-blue-900': this.currentState == 'active', 'text-white': this.currentState == 'active' }" class="hover:bg-blue-900 hover:text-white duration-300 shadow-lg mt-4 min-w-full font-medium rounded-lg text-2xl px-12 py-4 text-center inline-flex items-center">
     <fa-icon [icon]="currentIcon"></fa-icon>
     <div class="ml-4">{{ content }}</div>
 </button>
