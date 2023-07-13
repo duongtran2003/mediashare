@@ -10,7 +10,9 @@ import { RegisterComponent } from './components/register/register.component';
 import { ToastWrapperComponent } from './components/toast-wrapper/toast-wrapper.component';
 import { ToastComponent } from './components/toast/toast.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NavColComponent } from './components/nav-col/nav-col.component';
+import { NavColItemComponent } from './components/nav-col-item/nav-col-item.component'
 
 @NgModule({
   declarations: [
@@ -20,6 +22,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
     RegisterComponent,
     ToastWrapperComponent,
     ToastComponent,
+    NavColComponent,
+    NavColItemComponent,
   ],
   imports: [
     BrowserModule,
