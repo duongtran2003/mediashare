@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { ApiService } from 'src/app/services/api.service';
+import { Router } from '@angular/router';
 import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
@@ -9,19 +9,18 @@ import { ToastService } from 'src/app/services/toast.service';
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.css']
 })
-export class NavBarComponent implements OnInit{
+export class NavBarComponent implements OnInit {
   @Output() onLoginToggle = new EventEmitter();
   @Output() onRegisterToggle = new EventEmitter();
   
   currentUser: string = "";
   isDropdownVisible: boolean = false; 
-  constructor(private auth: AuthService, private api: ApiService, private toast: ToastService) { 
+  constructor(private auth: AuthService, private api: ApiService, private toast: ToastService, private router: Router) { 
     this.currentUser = "";
   }
   
   ngOnInit() {
-    console.log(this.isDropdownVisible);
-    this.auth.currentUser.subscribe({
+    this.auth.currentUserEmitter.subscribe({
       next: (user) => {
         this.currentUser = user;
       },
@@ -41,6 +40,8 @@ export class NavBarComponent implements OnInit{
           message: "Logout successfully",
           barClass: ['bg-lime-500'],
         });
+        this.hideDropdown();
+        this.router.navigate(['']);
       },
       error: (err) => {
         this.toast.makeToast({
@@ -48,6 +49,7 @@ export class NavBarComponent implements OnInit{
           message: "Server's error",
           barClass: ['bg-red-600']
         })
+        this.hideDropdown();
       }
     })
   }
@@ -58,4 +60,14 @@ export class NavBarComponent implements OnInit{
   onRegisterClick(): void {
     this.onRegisterToggle.emit();
   }
+
+  showDropdown(): void {
+    this.isDropdownVisible = true;
+    console.log("mouseenter");
+  }
+  hideDropdown(): void {
+    this.isDropdownVisible = false;
+    console.log("mouseleave");
+  }
+
 }

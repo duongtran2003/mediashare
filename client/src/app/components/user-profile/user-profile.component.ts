@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  constructor(private api: ApiService, private toast: ToastService, private route: ActivatedRoute) {  }
+  constructor(private api: ApiService, private toast: ToastService, private route: ActivatedRoute) { }
   username: string = "";
   email: string = "";
   ngOnInit(): void {
@@ -27,5 +27,5 @@ export class UserProfileComponent implements OnInit {
         }
       })
     })
-  } 
+  }
 }

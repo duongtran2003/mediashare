@@ -1,7 +1,8 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { IconDefinition, faFire, faHome, faSun } from '@fortawesome/free-solid-svg-icons';
 import { NavigationEnd, Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-nav-col-item',
@@ -22,10 +23,11 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 export class NavColItemComponent implements OnInit {
   @Input() content!: string;
+  @Output() onUnauthenticatedAccess = new EventEmitter(); 
   currentIcon!: IconDefinition;
   currentState: string = 'deactive';
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private auth: AuthService) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd && event.url) {
         console.log(event.url);
@@ -71,6 +73,13 @@ export class NavColItemComponent implements OnInit {
   activeState() {
     if (this.currentState == 'deactive') {
       this.currentState = 'active';
+    }
+  }
+
+  onClick(): void {
+    if (this.auth.getCurrentUser() == "") {
+      //unauthenticated user
+      this.onUnauthenticatedAccess.emit();
     }
   }
 }

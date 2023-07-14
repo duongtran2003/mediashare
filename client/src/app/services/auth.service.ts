@@ -7,8 +7,13 @@ import { Subject } from 'rxjs';
 export class AuthService {
 
   constructor() { }
-  currentUser = new Subject<string>();
+  currentUserEmitter = new Subject<string>();
+  private currentUser: string = "";
   setCurrentUser(username: string) {
-    this.currentUser.next(username);
+    this.currentUserEmitter.next(username);
+    this.currentUser = username; 
+  }
+  getCurrentUser(): string {
+    return this.currentUser;
   }
 }
