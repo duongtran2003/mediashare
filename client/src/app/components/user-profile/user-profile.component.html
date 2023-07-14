@@ -1,0 +1,9 @@
+<div class="ml-[25%] w-[50%] mt-9 bg-gray-400 rounded-lg h-screen max-h-[75vh]">
+    <div *ngIf="username && email">
+        <div>{{ username }}</div>
+        <div>{{ email }}</div>
+    </div>
+    <div *ngIf="!(username && email)">
+        Error
+    </div>
+</div>

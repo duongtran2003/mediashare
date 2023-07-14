@@ -27,13 +27,13 @@
                         Register</div>
                 </li>
                 <li *ngIf="currentUser != ''">
-                    <div (mouseenter)="isDropdownVisible = !isDropdownVisible" (mouseleave)="isDropdownVisible = !isDropdownVisible">
+                    <div (mouseenter)="isDropdownVisible = !isDropdownVisible">
                         <div class="text-white select-none hover:text-blue-500 cursor-pointer duration-150">
                             {{ currentUser }}
                         </div>
                         <div *ngIf="isDropdownVisible" class="bg-transparent h-10 absolute block w-full">i</div>
                         <div *ngIf="isDropdownVisible" class="overflow-hidden absolute bg-gray-100 top-12 text-gray-950 rounded-lg shadow-lg right-2"> 
-                            <div class="hover:bg-gray-200 duration-150 whitespace-nowrap py-2.5 px-5 border-b-2 select-none cursor-pointer text-wrap">My profile</div>
+                            <div [routerLink]="['user', currentUser]" class="hover:bg-gray-200 duration-150 whitespace-nowrap py-2.5 px-5 border-b-2 select-none cursor-pointer text-wrap">My profile</div>
                             <div (click)="logOut()" class="hover:bg-gray-200 duration-150 whitespace-nowrap py-2.5 px-5 border-t-2 select-none cursor-pointer">Log out</div>
                         </div>
                     </div>

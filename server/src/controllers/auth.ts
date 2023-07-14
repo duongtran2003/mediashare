@@ -127,31 +127,7 @@ class AuthController {
         });
     }
 
-    checkUsername(req: Request, res: Response) {
-        User.findOne({
-            username: req.body.username
-        })
-        .then((user) => {
-            if (user) {
-                res.statusCode = 200;
-                return res.json({
-                    message: "Username's already been used",
-                })
-            }
-            else {
-                res.statusCode = 200;
-                return res.json({
-                    message: "OK",
-                })
-            }
-        })
-        .catch((err) => {
-            res.statusCode = 500;
-            return res.json({
-                message: "Server's error",
-            })
-        });
-    } 
+     
 
     async getUsername(req: Request, res: Response) {
         const claims = res.locals.claims;

@@ -1,10 +1,10 @@
 <app-nav-bar (onLoginToggle)="toggleLogin()" (onRegisterToggle)="toggleRegister()"></app-nav-bar>
-<div *ngIf="isModalVisible" id="modal" (mousedown)="onModalClick($event)" class="fixed bg-gray-500 w-full h-full">
+<div *ngIf="isModalVisible" id="modal" (mousedown)="onModalClick($event)" class="fixed bg-gray-800 bg-opacity-75 w-full h-full z-20">
     <app-login [@inOutAnimation] *ngIf="isLoginVisible" (onLoginToggle)="toggleLogin()" id="childModal"
         (onRegisterToggle)="toggleRegister()"></app-login>
     <app-register [@inOutAnimation] *ngIf="isRegisterVisible" (onRegisterToggle)="toggleRegister()" id="childModal"
         (onLoginToggle)="toggleLogin()"></app-register>
 </div>
 <app-toast-wrapper ngClass="fixed top-16 right-0 flex flex-col pt-5 pb-5"></app-toast-wrapper>
-<app-nav-col ngClass="fixed top-16 left-0 flex flex-col pt-5 pb-5 pl-5 w-96"></app-nav-col>
+<app-nav-col ngClass="fixed top-16 left-0 flex flex-col pt-5 pb-5 pl-5 w-[20%] z-10"></app-nav-col>
 <router-outlet></router-outlet>

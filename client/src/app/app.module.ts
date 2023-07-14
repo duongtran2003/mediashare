@@ -13,9 +13,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavColComponent } from './components/nav-col/nav-col.component';
 import { NavColItemComponent } from './components/nav-col-item/nav-col-item.component';
-import { HotColComponent } from './components/hot-col/hot-col.component';
-import { NewColComponent } from './components/new-col/new-col.component';
-import { HomeColComponent } from './components/home-col/home-col.component';
 
 @NgModule({
   declarations: [
@@ -27,9 +24,6 @@ import { HomeColComponent } from './components/home-col/home-col.component';
     ToastComponent,
     NavColComponent,
     NavColItemComponent,
-    HotColComponent,
-    NewColComponent,
-    HomeColComponent,
   ],
   imports: [
     BrowserModule,

@@ -20,6 +20,7 @@ export class NavBarComponent implements OnInit{
   }
   
   ngOnInit() {
+    console.log(this.isDropdownVisible);
     this.auth.currentUser.subscribe({
       next: (user) => {
         this.currentUser = user;
