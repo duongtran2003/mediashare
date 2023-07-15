@@ -9,13 +9,16 @@ import { ToastService } from 'src/app/services/toast.service';
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
-  timeout: number | null = null;
+  timeoutDup: number | null = null;
+  timeoutConf: number | null = null;
   userName: string = "";
   userPassword: string = "";
   userEmail: string = "";
+  userPasswordConf: string = "";
   userNameError: string = "";
   userPasswordError: string = "";
   userEmailError: string = "";
+  userPasswordConfError: string = "";
   emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   usernameRegex: RegExp = /^[a-zA-Z0-9_]{6,20}$/;
   passwordRegex: RegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
@@ -87,12 +90,15 @@ export class RegisterComponent {
   updateUserEmail(val: string): void {
     this.userEmail = val;
   }
+  updateUserPasswordConf(val: string): void {
+    this.userPasswordConf = val;
+  }
   checkDuplicate(val: string) {
     this.userNameError = "";
-    if (this.timeout) {
-      clearTimeout(this.timeout);
+    if (this.timeoutDup) {
+      clearTimeout(this.timeoutDup);
     }
-    this.timeout = window.setTimeout(() => {
+    this.timeoutDup = window.setTimeout(() => {
       this.api.post('user/checkUsername', {
         username: val,
       })
@@ -106,6 +112,17 @@ export class RegisterComponent {
             console.log(err);
           }
         })
+    }, 300);
+  }
+  checkPasswordConf() {
+    this.userPasswordConfError = "";
+    if (this.timeoutConf) {
+      clearTimeout(this.timeoutConf);
+    }
+    this.timeoutConf = window.setTimeout(() => {
+      if (this.userPassword != this.userPasswordConf) {
+        this.userPasswordConfError = "Password don't match";
+      }
     }, 300);
   }
 }

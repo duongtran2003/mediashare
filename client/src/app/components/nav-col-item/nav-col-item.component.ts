@@ -2,8 +2,6 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, Input, OnInit } from '@angular/core';
 import { IconDefinition, faFire, faHome, faSun } from '@fortawesome/free-solid-svg-icons';
 import { NavigationEnd, Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
-import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-nav-col-item',
@@ -27,7 +25,7 @@ export class NavColItemComponent implements OnInit {
   currentIcon!: IconDefinition;
   currentState: string = 'deactive';
 
-  constructor(private router: Router, private auth: AuthService, private toast: ToastService) {
+  constructor(private router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd && event.url) {
         console.log(event.url);
@@ -67,23 +65,6 @@ export class NavColItemComponent implements OnInit {
     }
     if (this.content == "Hot") {
       this.currentIcon = faFire;
-    }
-  }
-
-  activeState() {
-    if (this.currentState == 'deactive') {
-      this.currentState = 'active';
-    }
-  }
-
-  onClick(): void {
-    if (this.auth.getCurrentUser() == "" && (this.content == "New" || this.content == "Home")) {
-      //unauthenticated user
-      this.toast.makeToast({
-        state: "close",
-        message: "Please log in",
-        barClass: ['bg-red-600']
-      })
     }
   }
 }

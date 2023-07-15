@@ -18,6 +18,12 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md block w-full p-2.5 focus:outline-none focus:border-blue-400">
         <div class="text-red-600 text-xs pl-1">{{ userPasswordError }}</div>
     </div>
+    <div class="w-full grow">
+        <div class="pl-1 pb-1 pt-2">Confirm Password</div>
+        <input #passConf type="password" [value]="userPasswordConf" (input)="updateUserPasswordConf(passConf.value)"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md block w-full p-2.5 focus:outline-none focus:border-blue-400">
+        <div class="text-red-600 text-xs pl-1">{{ userPasswordConfError }}</div>
+    </div>
     <button (click)="onRegisterClick()" type="button"
         class="w-full mt-10 text-white bg-blue-700 focus:outline-none focus:ring-0 hover:bg-blue-800 font-medium rounded-md text-sm py-2.5 block">Register</button>
     <div class="mt-2 mb-8">Already have an account? <span (click)="onLoginClick()"

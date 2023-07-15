@@ -19,6 +19,7 @@ export class ToastWrapperComponent implements OnInit {
   ngOnInit(): void {
     this.toastService.toastList$.subscribe({
       next: (newToast: IToast) => {
+        console.log("toast received");
         this.toastList.unshift(newToast);
       }
     })
