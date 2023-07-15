@@ -11,8 +11,6 @@ export class HomeColComponent implements OnInit {
   constructor(private auth: AuthService, private router: Router) { }
   
   ngOnInit(): void {
-    if (this.auth.getCurrentUser() == "") {
-      this.router.navigate(['']);
-    }
+    
   }
 }

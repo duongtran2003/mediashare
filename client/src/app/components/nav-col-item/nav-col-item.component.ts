@@ -1,8 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { IconDefinition, faFire, faHome, faSun } from '@fortawesome/free-solid-svg-icons';
 import { NavigationEnd, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-nav-col-item',
@@ -23,11 +24,10 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class NavColItemComponent implements OnInit {
   @Input() content!: string;
-  @Output() onUnauthenticatedAccess = new EventEmitter(); 
   currentIcon!: IconDefinition;
   currentState: string = 'deactive';
 
-  constructor(private router: Router, private auth: AuthService) {
+  constructor(private router: Router, private auth: AuthService, private toast: ToastService) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd && event.url) {
         console.log(event.url);
@@ -77,9 +77,13 @@ export class NavColItemComponent implements OnInit {
   }
 
   onClick(): void {
-    if (this.auth.getCurrentUser() == "") {
+    if (this.auth.getCurrentUser() == "" && (this.content == "New" || this.content == "Home")) {
       //unauthenticated user
-      this.onUnauthenticatedAccess.emit();
+      this.toast.makeToast({
+        state: "close",
+        message: "Please log in",
+        barClass: ['bg-red-600']
+      })
     }
   }
 }

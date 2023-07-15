@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-nav-col',
@@ -6,8 +6,5 @@ import { Component, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./nav-col.component.css']
 })
 export class NavColComponent {
-  @Output() forceLogin = new EventEmitter();
-  onUnauthenticatedAccess(): void {
-    this.forceLogin.emit();
-  }
+
 }
