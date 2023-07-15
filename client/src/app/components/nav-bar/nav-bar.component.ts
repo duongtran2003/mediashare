@@ -3,11 +3,25 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ApiService } from 'src/app/services/api.service';
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/services/toast.service';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-nav-bar',
   templateUrl: './nav-bar.component.html',
-  styleUrls: ['./nav-bar.component.css']
+  styleUrls: ['./nav-bar.component.css'],
+  animations: [
+    trigger(
+      'inOutAnimation',
+      [
+        transition(':enter',
+          [
+            style({ opacity: '0' }),
+            animate('250ms ease-out', style({ opacity: '1' })),
+          ]
+        ),
+      ]
+    ),
+  ]
 })
 export class NavBarComponent implements OnInit {
   @Output() onLoginToggle = new EventEmitter();
@@ -105,10 +119,10 @@ export class NavBarComponent implements OnInit {
       this.isSearchResultVisible = true;
     }
   }
-  
+
   hideResult(): void {
     window.setTimeout(() => {
       this.isSearchResultVisible = false;
-    }, 75);
+    }, 150);
   }
 }

@@ -90,9 +90,6 @@ export class RegisterComponent {
   updateUserEmail(val: string): void {
     this.userEmail = val;
   }
-  updateUserPasswordConf(val: string): void {
-    this.userPasswordConf = val;
-  }
   checkDuplicate(val: string) {
     this.userNameError = "";
     if (this.timeoutDup) {
@@ -114,8 +111,9 @@ export class RegisterComponent {
         })
     }, 300);
   }
-  checkPasswordConf() {
+  checkPasswordConf(val: string) {
     this.userPasswordConfError = "";
+    this.userPasswordConf = val;
     if (this.timeoutConf) {
       clearTimeout(this.timeoutConf);
     }
