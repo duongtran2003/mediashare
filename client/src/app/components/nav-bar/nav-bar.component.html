@@ -15,17 +15,17 @@
         </button>
 
         <div class="relative w-full mx-52">
-            <input #searchInput (input)="onInput(searchInput.value)" (focus)="showResult(searchInput.value)"
-                (focusout)="hideResult()" autocomplete="off" type="search"
+            <input #searchInput (input)="onInput(searchInput.value)" (focus)="showResult(searchInput.value)" (focusout)="hideResult()"
+                autocomplete="off" type="search"
                 class="border-gray-900 border focus:border-gray-600 block w-full p-2 pl-10 text-sm text-gray-50 bg-gray-800 focus:outline-none"
                 [ngClass]="{'rounded-lg': !isSearchResultVisible, 'rounded-t-lg': isSearchResultVisible}"
                 placeholder="Search user" required>
-            <div *ngIf="isSearchResultVisible || 1"
+            <div *ngIf="isSearchResultVisible"
                 class="box-border absolute top-10 w-full border border-gray-600 pb-2 rounded-b-lg bg-gray-900 max-h-[40vh] overflow-y-scroll">
                 <app-search-item *ngIf="this.onQuery" [content]="'Searching...'"></app-search-item>
                 <app-search-item *ngIf="!searchResult.length && !this.onQuery && searchInput.value.trim() != ''"
                     [content]="'User not found'"></app-search-item>
-                <app-search-item *ngFor="let result of searchResult" [content]="result.username" [routerLink]="['user', currentUser]"></app-search-item>
+                <app-search-item *ngFor="let result of searchResult" [content]="result.username" [routerLink]="['user', result.username]"></app-search-item>
             </div>
         </div>
 

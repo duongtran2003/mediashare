@@ -81,7 +81,7 @@ export class NavBarComponent implements OnInit {
     const parsedVal = val.trim();
     if (parsedVal == "") {
       this.onQuery = false;
-      this.hideResult();
+      // this.hideResult();
     }
     if (parsedVal != "") {
       this.onQuery = true;
@@ -107,6 +107,8 @@ export class NavBarComponent implements OnInit {
   }
   
   hideResult(): void {
-    this.isSearchResultVisible = false;
+    window.setTimeout(() => {
+      this.isSearchResultVisible = false;
+    }, 75);
   }
 }
