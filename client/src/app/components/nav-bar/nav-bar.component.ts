@@ -12,13 +12,17 @@ import { ToastService } from 'src/app/services/toast.service';
 export class NavBarComponent implements OnInit {
   @Output() onLoginToggle = new EventEmitter();
   @Output() onRegisterToggle = new EventEmitter();
-  
+
+  onQuery: boolean = false;
+  isSearchResultVisible: boolean = false;
+  searchTimeout: number | null = null;
+  searchResult: any = [];
   currentUser: string = "";
-  isDropdownVisible: boolean = false; 
-  constructor(private auth: AuthService, private api: ApiService, private toast: ToastService, private router: Router) { 
+  isDropdownVisible: boolean = false;
+  constructor(private auth: AuthService, private api: ApiService, private toast: ToastService, private router: Router) {
     this.currentUser = "";
   }
-  
+
   ngOnInit() {
     this.auth.currentUserEmitter.subscribe({
       next: (user) => {
@@ -29,7 +33,7 @@ export class NavBarComponent implements OnInit {
       }
     })
   }
-  
+
   logOut(): void {
     this.api.get('auth/logout').subscribe({
       next: (response) => {
@@ -69,5 +73,40 @@ export class NavBarComponent implements OnInit {
     this.isDropdownVisible = false;
     console.log("mouseleave");
   }
+  onInput(val: string): void {
+    this.showResult(val);
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+    const parsedVal = val.trim();
+    if (parsedVal == "") {
+      this.onQuery = false;
+      this.hideResult();
+    }
+    if (parsedVal != "") {
+      this.onQuery = true;
+      this.searchResult = [];
+      this.searchTimeout = window.setTimeout(() => {
+        this.api.post('user/queryMatchedUser', {
+          username: val,
+        }).subscribe({
+          next: (response) => {
+            this.searchResult = response.users;
+            this.onQuery = false;
+          }
+        })
+      }, 1000);
+    }
+  }
 
+  showResult(val: string): void {
+    const parsedVal = val.trim();
+    if (parsedVal != "") {
+      this.isSearchResultVisible = true;
+    }
+  }
+  
+  hideResult(): void {
+    this.isSearchResultVisible = false;
+  }
 }

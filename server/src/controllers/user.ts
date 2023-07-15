@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { User } from '../models/User';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 
 class UserController {
     checkUsername(req: Request, res: Response) {
@@ -56,6 +54,32 @@ class UserController {
                 message: "Server's error",
             })
         });
+    }
+
+    queryMatched(req: Request, res: Response): void {
+        const username = req.body.username;
+        const regex = `.*${username.split('').join('.*')}.*`;
+        User.find({ username: { $regex: regex } }).select('username')
+        .then((users) => {
+            res.statusCode = 200;
+            if (!users) {
+                return res.json({
+                    message: "No user found",
+                });
+            }
+            else {
+                return res.json({
+                    message: "Query success",
+                    users: users,
+                })
+            }
+        })
+        .catch((err) => {
+            res.statusCode = 500;
+            return res.json({
+                message: "Server's error",
+            })
+        })
     }
 }
 

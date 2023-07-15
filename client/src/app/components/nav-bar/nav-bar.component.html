@@ -1,5 +1,5 @@
 <nav class=" border-gray-200 bg-gray-900">
-    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+    <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
         <a href="https://flowbite.com/" class="flex items-center">
             <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="Flowbite Logo" />
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
@@ -13,6 +13,22 @@
                     d="M1 1h15M1 7h15M1 13h15" />
             </svg>
         </button>
+
+        <div class="relative w-full mx-52">
+            <input #searchInput (input)="onInput(searchInput.value)" (focus)="showResult(searchInput.value)"
+                (focusout)="hideResult()" autocomplete="off" type="search"
+                class="border-gray-900 border focus:border-gray-600 block w-full p-2 pl-10 text-sm text-gray-50 bg-gray-800 focus:outline-none"
+                [ngClass]="{'rounded-lg': !isSearchResultVisible, 'rounded-t-lg': isSearchResultVisible}"
+                placeholder="Search user" required>
+            <div *ngIf="isSearchResultVisible || 1"
+                class="box-border absolute top-10 w-full border border-gray-600 pb-2 rounded-b-lg bg-gray-900 max-h-[40vh] overflow-y-scroll">
+                <app-search-item *ngIf="this.onQuery" [content]="'Searching...'"></app-search-item>
+                <app-search-item *ngIf="!searchResult.length && !this.onQuery && searchInput.value.trim() != ''"
+                    [content]="'User not found'"></app-search-item>
+                <app-search-item *ngFor="let result of searchResult" [content]="result.username" [routerLink]="['user', currentUser]"></app-search-item>
+            </div>
+        </div>
+
         <div class="relative hidden w-full md:block md:w-auto" id="navbar-default">
             <ul
                 class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
@@ -32,9 +48,14 @@
                             {{ currentUser }}
                         </div>
                         <div *ngIf="isDropdownVisible" class="bg-transparent h-10 absolute block w-full">i</div>
-                        <div *ngIf="isDropdownVisible" class="overflow-hidden absolute bg-gray-100 top-12 text-gray-950 rounded-lg shadow-lg right-2"> 
-                            <div (click)="hideDropdown()" [routerLink]="['user', currentUser]" class="hover:bg-gray-200 duration-150 whitespace-nowrap py-2.5 px-5 border-b-2 select-none cursor-pointer text-wrap">My profile</div>
-                            <div (click)="logOut()" class="hover:bg-gray-200 duration-150 whitespace-nowrap py-2.5 px-5 border-t-2 select-none cursor-pointer">Log out</div>
+                        <div *ngIf="isDropdownVisible"
+                            class="overflow-hidden absolute bg-gray-100 top-12 text-gray-950 rounded-lg shadow-lg right-2">
+                            <div (click)="hideDropdown()" [routerLink]="['user', currentUser]"
+                                class="hover:bg-gray-200 duration-150 whitespace-nowrap py-2.5 px-5 border-b-2 select-none cursor-pointer text-wrap">
+                                My profile</div>
+                            <div (click)="logOut()"
+                                class="hover:bg-gray-200 duration-150 whitespace-nowrap py-2.5 px-5 border-t-2 select-none cursor-pointer">
+                                Log out</div>
                         </div>
                     </div>
                 </li>
