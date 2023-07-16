@@ -1,1 +1,3 @@
 server/.env
+server/public/posts
+server/public/avatars
