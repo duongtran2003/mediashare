@@ -1,11 +1,14 @@
 <div class="ml-[25%] w-[50%] mt-9 bg-white rounded-lg shadow-xl p-8">
     <div *ngIf="username && email" class="flex">
-        <div class="h-[23%] w-[23%] drop-shadow-xl bg-white rounded-full border-2 border-blue-400 items-center">
-            <img [src]="avatarPath">
+        <div class="flex flex-col h-[23%] w-[23%] drop-shadow-xl bg-white rounded-full border-2 border-blue-400 items-center relative">
+            <img [src]="avatarPath" (mouseenter)="showUpdateAvatarTooltip()" (mouseleave)="hideUpdateAvatarTooltip()" class="select-none cursor-pointer">
+            <div *ngIf="isTooltipVisible" class="absolute bg-gray-800 py-1 px-3 text-xs top-44 rounded-lg text-gray-50">
+                Update your avatar
+            </div>
         </div>
         <div class="flex flex-col justify-center ml-8">
-            <div class="ml-4 my-2 bg-gray-100 pl-2 pr-12 py-2 rounded-lg drop-shadow-lg">Username: {{ username }}</div>
-            <div class="ml-4 my-2 bg-gray-100 pl-2 pr-12 py-2 rounded-lg drop-shadow-lg">Email: {{ email }}</div>
+            <div (click)="onUsernameClick()" class="duration-200 hover:shadow-blue-500/20 cursor-pointer select-none ml-4 my-2 bg-gray-100 pl-2 pr-12 py-2 rounded-lg shadow-lg">Username: {{ username }}</div>
+            <div (click)="onEmailClick()" class="duration-200 hover:shadow-blue-500/20 cursor-pointer select-none ml-4 my-2 bg-gray-100 pl-2 pr-12 py-2 rounded-lg shadow-lg">Email: {{ email }}</div>
         </div>
     </div>
     <div *ngIf="!(username && email)">
