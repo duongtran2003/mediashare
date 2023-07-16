@@ -8,6 +8,7 @@ import cors from 'cors';
 let app = express();
 dbConnect();
 
+app.use('/static', express.static('public'));
 app.use(cookieParser());
 app.use(cors({
     credentials: true,

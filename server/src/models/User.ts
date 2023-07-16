@@ -3,6 +3,7 @@ interface IUser {
     email: string,
     username: string,
     password: string,
+    avatarPath: string,
 }
 
 const userSchema = new Schema<IUser> ({
@@ -13,6 +14,9 @@ const userSchema = new Schema<IUser> ({
         type: String,
     },
     password: {
+        type: String,
+    },
+    avatarPath: {
         type: String,
     }
 });

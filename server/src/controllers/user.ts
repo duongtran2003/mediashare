@@ -45,6 +45,7 @@ class UserController {
                 return res.json({
                     email: user.email,
                     username: user.username,
+                    avatarPath: user.avatarPath,
                 }) 
             }
         })

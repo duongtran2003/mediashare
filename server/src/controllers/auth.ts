@@ -8,6 +8,7 @@ interface IJson {
     email?: string,
     username: string,
     password: string,
+    avatarPath: string,
 }
 
 class AuthController {
@@ -83,6 +84,7 @@ class AuthController {
             email: req.body.email,
             username: req.body.username,
             password: hashedPassword,
+            avatarPath: 'http://localhost:8000/static/default.png',
         })
         .then((user) => {
             res.statusCode = 200;
@@ -123,6 +125,7 @@ class AuthController {
         res.statusCode = 200;
         return res.json({
             username: user.username,
+            avatarPath: user.avatarPath,
             message: "Login success",
         });
     }
@@ -138,13 +141,15 @@ class AuthController {
             if (user) {
                 res.statusCode = 200;
                 return res.json({
-                    username: claims.username
+                    username: claims.username,
+                    avatarPath: user.avatarPath,
                 });
             }
             else {
                 res.statusCode = 200;
                 return res.json({
                     username: "",
+                    avatarPath: "",
                 })
             }
         })
