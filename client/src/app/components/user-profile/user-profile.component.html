@@ -1,8 +1,8 @@
 <div class="ml-[25%] w-[50%] mt-9 bg-white rounded-lg shadow-xl p-8">
     <div *ngIf="username && email" class="flex">
         <div class="flex flex-col h-[23%] w-[23%] drop-shadow-xl bg-white rounded-full border-2 border-blue-400 items-center relative">
-            <img [src]="avatarPath" (mouseenter)="showUpdateAvatarTooltip()" (mouseleave)="hideUpdateAvatarTooltip()" class="select-none cursor-pointer">
-            <div *ngIf="isTooltipVisible" class="absolute bg-gray-800 py-1 px-3 text-xs top-44 rounded-lg text-gray-50">
+            <img [src]="avatarPath" (mouseenter)="showUpdateAvatarTooltip()" (mouseleave)="hideUpdateAvatarTooltip()" class="select-none cursor-pointer rounded-full">
+            <div *ngIf="isTooltipVisible && isMyProfile" class="absolute bg-gray-800 py-1 px-3 text-xs top-44 rounded-lg text-gray-50">
                 Update your avatar
             </div>
         </div>
