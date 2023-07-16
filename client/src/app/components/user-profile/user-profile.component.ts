@@ -12,6 +12,7 @@ export class UserProfileComponent implements OnInit {
   constructor(private api: ApiService, private toast: ToastService, private route: ActivatedRoute) { }
   username: string = "";
   email: string = "";
+  avatarPath: string = "";
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const usernameFromParams = params['username'];
@@ -21,6 +22,7 @@ export class UserProfileComponent implements OnInit {
         next: (response) => {
           this.username = response.username;
           this.email = response.email;
+          this.avatarPath = response.avatarPath;
         },
         error: (err) => {
           console.log(err.error.message);

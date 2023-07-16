@@ -42,7 +42,7 @@ export class LoginComponent {
       password: this.userPassword
     }).subscribe({
       next: (response: any) => {
-        this.auth.setCurrentUser(response.username); 
+        this.auth.setCurrentUser({ username: response.username, avatarPath: response.avatarPath }); 
         this.toast.makeToast({
           state: "close",
           message: `Welcome home, ${response.username}`,

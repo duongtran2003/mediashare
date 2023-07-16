@@ -68,7 +68,7 @@ export class AppComponent implements OnInit {
     this.api.get('auth/getUsername').subscribe({
       next: (response) => {
         if (response.username) {
-          this.auth.setCurrentUser(response.username);
+          this.auth.setCurrentUser({ username: response.username, avatarPath: response.avatarPath });
         }
       },
     });

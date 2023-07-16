@@ -1,7 +1,12 @@
-<div class="ml-[25%] w-[50%] mt-9 bg-gray-400 rounded-lg h-screen max-h-[25vh]">
-    <div *ngIf="username && email">
-        <div>{{ username }}</div>
-        <div>{{ email }}</div>
+<div class="ml-[25%] w-[50%] mt-9 bg-white rounded-lg shadow-xl p-8">
+    <div *ngIf="username && email" class="flex">
+        <div class="h-[23%] w-[23%] drop-shadow-xl bg-white rounded-full border-2 border-blue-400 items-center">
+            <img [src]="avatarPath">
+        </div>
+        <div class="flex flex-col justify-center ml-8">
+            <div class="ml-4 my-2 bg-gray-100 pl-2 pr-12 py-2 rounded-lg drop-shadow-lg">Username: {{ username }}</div>
+            <div class="ml-4 my-2 bg-gray-100 pl-2 pr-12 py-2 rounded-lg drop-shadow-lg">Email: {{ email }}</div>
+        </div>
     </div>
     <div *ngIf="!(username && email)">
         Error

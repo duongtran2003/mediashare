@@ -7,11 +7,11 @@ import { Subject } from 'rxjs';
 export class AuthService {
 
   constructor() { }
-  currentUserEmitter = new Subject<string>();
+  currentUserEmitter = new Subject<{username: string, avatarPath: string}>();
   private currentUser: string = "";
-  setCurrentUser(username: string) {
-    this.currentUserEmitter.next(username);
-    this.currentUser = username; 
+  setCurrentUser(user: { username: string, avatarPath: string }) {
+    this.currentUserEmitter.next({ username: user.username, avatarPath: user.avatarPath });
+    this.currentUser = user.username; 
   }
   getCurrentUser(): string {
     return this.currentUser;

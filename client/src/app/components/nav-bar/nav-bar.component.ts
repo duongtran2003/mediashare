@@ -32,6 +32,7 @@ export class NavBarComponent implements OnInit {
   searchTimeout: number | null = null;
   searchResult: any = [];
   currentUser: string = "";
+  avatarPath: string = "";
   isDropdownVisible: boolean = false;
   constructor(private auth: AuthService, private api: ApiService, private toast: ToastService, private router: Router) {
     this.currentUser = "";
@@ -40,7 +41,8 @@ export class NavBarComponent implements OnInit {
   ngOnInit() {
     this.auth.currentUserEmitter.subscribe({
       next: (user) => {
-        this.currentUser = user;
+        this.currentUser = user.username,
+        this.avatarPath = user.avatarPath
       },
       error: (err) => {
         console.log("idk man");
@@ -52,7 +54,7 @@ export class NavBarComponent implements OnInit {
     this.api.get('auth/logout').subscribe({
       next: (response) => {
         console.log(response.message);
-        this.auth.setCurrentUser("");
+        this.auth.setCurrentUser({ username: "", avatarPath: "" });
         this.toast.makeToast({
           state: "close",
           message: "Logout successfully",
