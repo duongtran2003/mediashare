@@ -4,6 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ApiService } from './services/api.service';
 import { AuthService } from './services/auth.service';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,7 @@ export class AppComponent implements OnInit {
   isLoginVisible: boolean = false;
   isRegisterVisible: boolean = false;
   isModalVisible: boolean = false;
+  isNavTabVisible: boolean = true;
   @HostListener('document:keydown.escape', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (!this.isEscapeKeyPressed) {
@@ -49,8 +51,20 @@ export class AppComponent implements OnInit {
     this.isEscapeKeyPressed = false;
   }
 
-  constructor(private api: ApiService, private auth: AuthService, private cookie: CookieService) { }
+  constructor(private router: Router, private api: ApiService, private auth: AuthService, private cookie: CookieService) { }
   ngOnInit(): void {
+    this.router.events.subscribe({
+      next: (event) => {
+        if (event instanceof NavigationEnd && event.url) {
+          if (event.url == "/" || event.url == "/home" || event.url == "/new") {
+            this.isNavTabVisible = true;
+          }
+          else {
+            this.isNavTabVisible = false;
+          }
+        }
+      }
+    })
     this.api.get('auth/getUsername').subscribe({
       next: (response) => {
         if (response.username) {

@@ -5,7 +5,7 @@
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Mdshare</span>
         </a>
         <div class="relative w-full mx-52">
-            <input #searchInput (input)="onInput(searchInput.value)" (focus)="showResult(searchInput.value)" (focusout)="hideResult()"
+            <input #searchInput (input)="onInput(searchInput.value)" (focusin)="showResult(searchInput.value)" (focusout)="hideResult()"
                 autocomplete="off" type="search"
                 class="border-gray-900 border focus:border-gray-600 block w-full p-2 pl-10 text-sm text-gray-50 bg-gray-800 focus:outline-none"
                 [ngClass]="{'rounded-lg': !isSearchResultVisible, 'rounded-t-lg': isSearchResultVisible}"

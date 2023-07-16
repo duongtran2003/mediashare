@@ -11,7 +11,7 @@ import { NavigationEnd, Router } from '@angular/router';
     [
       trigger('activeCard',
         [
-          state('active', style({ transform: 'scale(1.03)' })),
+          state('active', style({ transform: 'scale(0.99)' })),
           state('deactive', style({ transform: 'scale(1.0)' })),
           transition('active <=> deactive', [
             animate('0.1s ease-in')

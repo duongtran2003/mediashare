@@ -1,3 +1,10 @@
-<app-nav-col-item routerLink="" [content]="'Hot'"></app-nav-col-item>
-<app-nav-col-item routerLink="new" [content]="'New'"></app-nav-col-item>
-<app-nav-col-item routerLink="home" [content]="'Home'"></app-nav-col-item>
+<div class="relative top-0 mx-auto flex flex-col w-[50%] justify-center z-10">
+    <div class="flex justify-center mt-4 shadow-lg">
+        <app-nav-col-item [ngClass]="['w-[33.3333%]']" routerLink="" [content]="'Hot'"></app-nav-col-item>
+        <app-nav-col-item [ngClass]="['w-[33.3333%]']" routerLink="new" [content]="'New'"></app-nav-col-item>
+        <app-nav-col-item [ngClass]="['w-[33.3333%]']" routerLink="home" [content]="'Home'"></app-nav-col-item>
+    </div>
+    <div class="w-[100%] h-1 bg-white">
+        <div class="w-[33.3%] bg-blue-600 h-1 relative duration-150" [ngClass]="{ 'left-[0%]': navIndex == 1, 'left-[33.3333%]': navIndex == 2, 'left-[66.6666%]': navIndex == 3 }"></div>
+    </div>
+</div>
