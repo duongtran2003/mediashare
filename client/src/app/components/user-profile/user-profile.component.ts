@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ToastService } from 'src/app/services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 @Component({
   selector: 'app-user-profile',
@@ -17,6 +19,11 @@ export class UserProfileComponent implements OnInit {
   avatarPath: string = "";
   isMyProfile: boolean = false;
   isTooltipVisible: boolean = false;
+  imgChangeEvent: any = "";
+  cropImgPreview: any = "";
+  isCropperVisible: boolean = false;
+  isImageLoaded: boolean = false;
+
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const usernameFromParams = params['username'];
@@ -60,5 +67,29 @@ export class UserProfileComponent implements OnInit {
       barClass: ['bg-blue-500'],
     });
     this.clipboard.copy(this.email);
+  }
+
+  onFileChange(event: any): void {
+    this.imgChangeEvent = event;
+  }
+
+  cropImg(event: ImageCroppedEvent) {
+    this.cropImgPreview = event.objectUrl;
+  }
+
+  imgLoad() {
+    this.isImageLoaded = true;
+  }
+
+  initCropper() {
+
+  }
+
+  imgFailed() {
+
+  }
+
+  toggleCropper() {
+    this.isCropperVisible = !this.isCropperVisible;
   }
 }
