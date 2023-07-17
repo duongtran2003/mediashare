@@ -5,6 +5,8 @@
     <app-register [@inOutAnimation] *ngIf="isRegisterVisible" (onRegisterToggle)="toggleRegister()" id="childModal"
         (onLoginToggle)="toggleLogin()"></app-register>
 </div>
-<app-toast-wrapper ngClass="fixed top-16 right-0 flex flex-col pt-5 pb-5"></app-toast-wrapper>
-<app-nav-col *ngIf="isNavTabVisible" (forceLogin)="toggleLogin()" ngClass=""></app-nav-col>
-<router-outlet></router-outlet>
+<app-toast-wrapper ngClass="fixed top-16 right-0 flex flex-col pt-5 pb-5 z-30"></app-toast-wrapper>
+<app-nav-col *ngIf="isNavTabVisible" (forceLogin)="toggleLogin()"></app-nav-col>
+<div>
+    <router-outlet></router-outlet>
+</div>

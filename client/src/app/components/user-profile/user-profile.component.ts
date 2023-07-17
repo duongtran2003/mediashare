@@ -5,7 +5,6 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { ToastService } from 'src/app/services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { ImageCropperModule } from 'ngx-image-cropper';
 
 @Component({
   selector: 'app-user-profile',
@@ -23,6 +22,7 @@ export class UserProfileComponent implements OnInit {
   cropImgPreview: any = "";
   isCropperVisible: boolean = false;
   isImageLoaded: boolean = false;
+  isUploadingDone: boolean = true;
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -79,6 +79,7 @@ export class UserProfileComponent implements OnInit {
 
   imgLoad() {
     this.isImageLoaded = true;
+    console.log("uploaded");
   }
 
   initCropper() {
@@ -86,10 +87,35 @@ export class UserProfileComponent implements OnInit {
   }
 
   imgFailed() {
-
+    this.toast.makeToast({
+      state: "close",
+      message: "File must be an image",
+      barClass: ['bg-red-600']
+    });
+    this.isImageLoaded = false;
   }
 
   toggleCropper() {
     this.isCropperVisible = !this.isCropperVisible;
+  }
+
+  changeAvatar(): void {
+    if (this.isImageLoaded) {
+      console.log(this.cropImgPreview);
+      const formData = new FormData();
+      formData.append('file', this.cropImgPreview);
+      this.isUploadingDone = false;
+      this.api.post('user/setAvatar', formData).subscribe({
+        next: (response) => {
+          this.toast.makeToast({
+            state: "close",
+            message: "Image uploaded",
+            barClass: ['bg-lime-500']
+          });
+          this.avatarPath = response.avatarPath;
+          this.isUploadingDone = true;
+        }
+      })
+    }
   }
 }

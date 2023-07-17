@@ -1,6 +1,6 @@
 <button type="button"
     [ngClass]="{  'bg-white': this.currentState == 'deactive', 'bg-gray-100': this.currentState == 'active', 'text-blue-700': this.currentState == 'active' }"
-    class="hover:bg-blue-900 hover:text-white duration-300 w-[100%] font-medium text-2xl justify-center py-4 text-center inline-flex items-center">
+    class="hover:bg-blue-900 hover:text-white duration-300 w-[100%] font-medium text-2xl justify-center py-4 text-center inline-flex items-center z-0">
     <fa-icon [icon]="currentIcon"></fa-icon>
     <div class="ml-4">{{ content }}</div>
 </button>
