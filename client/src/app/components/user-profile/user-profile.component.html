@@ -37,7 +37,7 @@
                 </div>
                 <img class="h-44 w-44 rounded-full" [src]="cropImgPreview">
             </div>
-            <image-cropper [roundCropper]="true" [imageChangedEvent]="imgChangeEvent"
+            <image-cropper [ngClass]="['cropper']" [roundCropper]="true" [imageChangedEvent]="imgChangeEvent"
                 [maintainAspectRatio]="true" [aspectRatio]="1/1" format="png" (imageCropped)="cropImg($event)"
                 (imageLoaded)="imgLoad()" (cropperReady)="initCropper()" (loadImageFailed)="imgFailed()"
                 [output]="'blob'">

@@ -5,3 +5,7 @@
 html {
     background-color: rgb(238, 238, 238);
 }
+
+.cropper img {
+    display: inline !important;
+}
