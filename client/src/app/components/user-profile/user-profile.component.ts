@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ToastService } from 'src/app/services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { ImageCroppedEvent } from 'ngx-image-cropper'
 
 @Component({
   selector: 'app-user-profile',
@@ -83,7 +83,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   initCropper() {
-
+    
   }
 
   imgFailed() {
@@ -101,7 +101,6 @@ export class UserProfileComponent implements OnInit {
 
   changeAvatar(): void {
     if (this.isImageLoaded) {
-      console.log(this.cropImgPreview);
       const formData = new FormData();
       formData.append('file', this.cropImgPreview);
       this.isUploadingDone = false;

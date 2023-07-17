@@ -84,7 +84,7 @@ class AuthController {
             email: req.body.email,
             username: req.body.username,
             password: hashedPassword,
-            avatarPath: 'http://localhost:8000/static/default.png',
+            avatarPath: 'http://localhost:8000/static/default',
         })
         .then((user) => {
             res.statusCode = 200;

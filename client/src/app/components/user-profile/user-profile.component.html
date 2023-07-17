@@ -1,8 +1,8 @@
-<div class="pt-20">
-    <div class="ml-[25%] w-[50%] bg-white rounded-lg shadow-xl p-8">
+<div class="pt-20 pb-12">
+    <div class="m-auto w-[50%] bg-white rounded-lg shadow-xl p-8">
         <div *ngIf="username && email" class="flex">
             <div
-                class="flex flex-col h-[23%] w-[23%] drop-shadow-xl bg-white rounded-full border-2 border-blue-400 items-center relative">
+                class="flex flex-col h-44 w-44 drop-shadow-xl bg-white rounded-full border-2 border-blue-400 items-center relative">
                 <img [src]="avatarPath" (mouseenter)="showUpdateAvatarTooltip()"
                     (mouseleave)="hideUpdateAvatarTooltip()" (click)="toggleCropper()"
                     class="select-none cursor-pointer rounded-full">
@@ -23,26 +23,25 @@
         <div *ngIf="!(username && email)">
             Error
         </div>
-        <div class="mt-12" *ngIf="isCropperVisible">
+        <div class="mt-16 z-0" *ngIf="isCropperVisible">
             <div class="bg-gray-100 rounded-lg drop-shadow-lg max-w-fit mb-4 py-2 px-4 flex flex-col">
                 <div class="mb-2">Upload your picture</div>
                 <input accept="image/*" class="mb-2" type="file" (change)="onFileChange($event)">
-                <button (click)="changeAvatar()" *ngIf="isImageLoaded" class="rounded-lg bg-blue-500 text-gray-50 px-4 py-2 hover:bg-blue-700 duration-200">Looking good! Upload</button>
+                <button (click)="changeAvatar()" *ngIf="isImageLoaded"
+                    class="rounded-lg bg-blue-500 text-gray-50 px-4 py-2 hover:bg-blue-700 duration-200">Upload</button>
                 <div class="mt-2" *ngIf="!isUploadingDone">Uploading...</div>
             </div>
             <div class="flex flex-col items-center mb-2" *ngIf="isImageLoaded">
                 <div>
                     Image Preview
                 </div>
-                <img class="h-[23%] w-[23%] rounded-full" [src]="cropImgPreview">
+                <img class="h-44 w-44 rounded-full" [src]="cropImgPreview">
             </div>
-            <div>
-                <image-cropper [roundCropper]="true" [imageChangedEvent]="imgChangeEvent" [maintainAspectRatio]="true"
-                    [aspectRatio]="4 / 4" [resizeToWidth]="256" format="png" (imageCropped)="cropImg($event)"
-                    (imageLoaded)="imgLoad()" (cropperReady)="initCropper()" (loadImageFailed)="imgFailed()"
-                    [output]="'blob'">
-                </image-cropper>
-            </div>
+            <image-cropper [roundCropper]="true" [imageChangedEvent]="imgChangeEvent"
+                [maintainAspectRatio]="true" [aspectRatio]="1/1" format="png" (imageCropped)="cropImg($event)"
+                (imageLoaded)="imgLoad()" (cropperReady)="initCropper()" (loadImageFailed)="imgFailed()"
+                [output]="'blob'">
+            </image-cropper>
         </div>
     </div>
 </div>

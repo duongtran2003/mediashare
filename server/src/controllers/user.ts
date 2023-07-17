@@ -82,6 +82,36 @@ class UserController {
             })
         })
     }
+
+    async setAvatar(req: Request, res: Response) {
+        const username = res.locals.claims.username;
+        const filename = req.body.file;
+        await User.findOneAndUpdate({
+            username: username, 
+        }, {
+            avatarPath: filename,
+        }, { new: true })
+        .then((updatedUser) => {
+            if (updatedUser) {
+                res.statusCode = 200;
+                return res.json({
+                    avatarPath: updatedUser.avatarPath,
+                });
+            }
+            else {
+                res.statusCode = 500;
+                return res.json({
+                    message: "Server's error",
+                })
+            }
+        })
+        .catch((err) => {
+            res.statusCode = 500;
+            return res.json({
+                message: err,
+            })
+        });
+    }
 }
 
 export {
