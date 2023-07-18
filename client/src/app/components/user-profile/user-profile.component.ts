@@ -75,6 +75,7 @@ export class UserProfileComponent implements OnInit {
 
   cropImg(event: ImageCroppedEvent) {
     this.cropImgPreview = event.objectUrl;
+    //results in a blob file
   }
 
   imgLoad() {
@@ -100,9 +101,12 @@ export class UserProfileComponent implements OnInit {
   }
 
   changeAvatar(): void {
+    //need to convert the blob file into File first
+    const username = this.auth.getCurrentUser();
+    const file = new File([this.cropImgPreview], `avatar${username}`, { type: this.cropImgPreview.type });
     if (this.isImageLoaded) {
       const formData = new FormData();
-      formData.append('file', this.cropImgPreview);
+      formData.append('file', file);
       this.isUploadingDone = false;
       this.api.post('user/setAvatar', formData).subscribe({
         next: (response) => {
