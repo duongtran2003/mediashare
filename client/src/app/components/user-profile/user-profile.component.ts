@@ -39,6 +39,9 @@ export class UserProfileComponent implements OnInit {
           if (response.username == this.auth.getCurrentUser()) {
             this.isMyProfile = true;
           }
+          else {
+            this.isMyProfile = false;
+          }
         },
         error: (err) => {
           console.log(err.error.message);
@@ -99,6 +102,9 @@ export class UserProfileComponent implements OnInit {
   }
 
   toggleCropper() {
+    if (!this.isMyProfile) {
+      return;
+    }
     this.isCropperVisible = !this.isCropperVisible;
   }
 
