@@ -50,6 +50,16 @@ export class UserProfileComponent implements OnInit {
     })
   }
 
+  resetState(): void {
+    this.isUploadingDone = true;
+    this.isCropperVisible = false;
+    this.imageCroppedEvent = "";
+    this.imgChangeEvent = "";
+    this.cropImgPreview = "";
+    this.cropImgFile = "";
+    this.isImageLoaded = false;
+  }
+
   showUpdateAvatarTooltip(): void {
     this.isTooltipVisible = true;
   }
@@ -89,7 +99,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   initCropper() {
-    
+
   }
 
   imgFailed() {
@@ -109,7 +119,6 @@ export class UserProfileComponent implements OnInit {
   }
 
   changeAvatar(): void {
-    //need to convert the blob file into File first
     const username = this.auth.getCurrentUser();
     this.cropImgFile = this.imageCroppedEvent.blob;
     const file = new File([this.cropImgFile], `avatar${username}`, { type: this.cropImgFile.type });
@@ -127,13 +136,7 @@ export class UserProfileComponent implements OnInit {
           });
           this.avatarPath = response.avatarPath;
           this.auth.setCurrentUser({ username: response.username, avatarPath: response.avatarPath });
-          this.isUploadingDone = true;
-          this.isCropperVisible = false;
-          this.imageCroppedEvent = "";
-          this.imgChangeEvent = "";
-          this.cropImgPreview = "";
-          this.cropImgFile = "";
-          this.isImageLoaded = false;
+          this.resetState();
         }
       })
     }
