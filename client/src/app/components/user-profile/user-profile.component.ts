@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ToastService } from 'src/app/services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { ImageCroppedEvent } from 'ngx-image-cropper'
+import { ImageCroppedEvent, base64ToFile } from 'ngx-image-cropper'
 
 @Component({
   selector: 'app-user-profile',
@@ -19,7 +19,9 @@ export class UserProfileComponent implements OnInit {
   isMyProfile: boolean = false;
   isTooltipVisible: boolean = false;
   imgChangeEvent: any = "";
+  cropImgFile: any = "";
   cropImgPreview: any = "";
+  imageCroppedEvent: any = "";
   isCropperVisible: boolean = false;
   isImageLoaded: boolean = false;
   isUploadingDone: boolean = true;
@@ -75,7 +77,7 @@ export class UserProfileComponent implements OnInit {
 
   cropImg(event: ImageCroppedEvent) {
     this.cropImgPreview = event.objectUrl;
-    //results in a blob file
+    this.imageCroppedEvent = event;
   }
 
   imgLoad() {
@@ -103,7 +105,9 @@ export class UserProfileComponent implements OnInit {
   changeAvatar(): void {
     //need to convert the blob file into File first
     const username = this.auth.getCurrentUser();
-    const file = new File([this.cropImgPreview], `avatar${username}`, { type: this.cropImgPreview.type });
+    this.cropImgFile = this.imageCroppedEvent.blob;
+    const file = new File([this.cropImgFile], `avatar${username}`, { type: this.cropImgFile.type });
+    console.log(file);
     if (this.isImageLoaded) {
       const formData = new FormData();
       formData.append('file', file);
@@ -116,7 +120,9 @@ export class UserProfileComponent implements OnInit {
             barClass: ['bg-lime-500']
           });
           this.avatarPath = response.avatarPath;
+          this.auth.setCurrentUser({ username: response.username, avatarPath: response.avatarPath });
           this.isUploadingDone = true;
+          this.isCropperVisible = false;
         }
       })
     }
