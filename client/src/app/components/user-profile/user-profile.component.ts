@@ -123,6 +123,11 @@ export class UserProfileComponent implements OnInit {
           this.auth.setCurrentUser({ username: response.username, avatarPath: response.avatarPath });
           this.isUploadingDone = true;
           this.isCropperVisible = false;
+          this.imageCroppedEvent = "";
+          this.imgChangeEvent = "";
+          this.cropImgPreview = "";
+          this.cropImgFile = "";
+          this.isImageLoaded = false;
         }
       })
     }
