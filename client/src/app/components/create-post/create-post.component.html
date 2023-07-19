@@ -2,11 +2,11 @@
     <div [@closeOpenAnimation]="formState" class="flex flex-col box-border overflow-hidden">
         <div class="text-center font-bold text-2xl">Create a new post</div>
         <div class="mt-4 mb-2">Title</div> 
-        <div *ngIf="titleError">Title cannot be blank</div>
         <input #titleInput [value]="userTitle" (input)="updateTitle(titleInput.value)" class="duration-200 bg-gray-100 outline-none px-4 py-2 rounded-lg border hover:border-blue-300 focus:border-blue-500" type="text">
+        <div class="text-red-600 text-xs" *ngIf="titleError">Title cannot be blank</div>
         <div class="mt-4 mb-2">Upload your file</div>
-        <input class="max-w-fit bg-gray-100" type="file">
-        <div *ngIf="fileError">You have to upload something</div>
+        <input #fileInput accept="video/mp4, image/*" (change)="onFileSelected($event)" class="max-w-fit bg-gray-100" type="file">
+        <div class="text-red-600 text-xs" *ngIf="fileError">You have to upload something</div>
     </div>
     <div class="flex space-x-6 justify-center">
         <button (click)="showForm()" *ngIf="!isFormVisible"
