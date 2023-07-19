@@ -1,0 +1,25 @@
+<div class="w-[50%] mx-auto bg-white rounded-lg drop-shadow-lg mt-4 px-6 py-2 flex flex-col" *ngIf="isVisible">
+    <div [@closeOpenAnimation]="formState" class="flex flex-col box-border overflow-hidden">
+        <div class="text-center font-bold text-2xl">Create a new post</div>
+        <div class="mt-4 mb-2">Title</div> 
+        <div *ngIf="titleError">Title cannot be blank</div>
+        <input #titleInput [value]="userTitle" (input)="updateTitle(titleInput.value)" class="duration-200 bg-gray-100 outline-none px-4 py-2 rounded-lg border hover:border-blue-300 focus:border-blue-500" type="text">
+        <div class="mt-4 mb-2">Upload your file</div>
+        <input class="max-w-fit bg-gray-100" type="file">
+        <div *ngIf="fileError">You have to upload something</div>
+    </div>
+    <div class="flex space-x-6 justify-center">
+        <button (click)="showForm()" *ngIf="!isFormVisible"
+            class="bg-blue-600 duration-200 px-12 py-2 rounded-2xl hover:bg-blue-700">
+            <fa-icon class="text-white text-lg" [icon]="newPostIcon"></fa-icon>
+        </button>
+        <button (click)="createPost()" *ngIf="isFormVisible"
+            class="bg-green-600 duration-200 px-12 py-2 rounded-2xl hover:bg-green-700">
+            <fa-icon class="text-white text-lg" [icon]="acceptIcon"></fa-icon>
+        </button>
+        <button (click)="hideForm()" *ngIf="isFormVisible"
+            class="bg-red-600 duration-200 px-12 py-2 rounded-2xl hover:bg-red-700">
+            <fa-icon class="text-white text-lg" [icon]="abortIcon"></fa-icon>
+        </button>
+    </div>
+</div>

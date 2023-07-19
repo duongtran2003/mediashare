@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 const newColRoutes: Routes = [{ path: '', component: NewColComponent }];
 
 @NgModule({
-  declarations: [NewColComponent],
+  declarations: [NewColComponent, ],
   imports: [
     CommonModule, RouterModule.forChild(newColRoutes),
   ]

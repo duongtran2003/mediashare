@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavColComponent } from './components/nav-col/nav-col.component';
 import { NavColItemComponent } from './components/nav-col-item/nav-col-item.component';
 import { SearchItemComponent } from './components/search-item/search-item.component';
+import { CreatePostComponent } from './components/create-post/create-post.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { SearchItemComponent } from './components/search-item/search-item.compon
     ToastComponent,
     NavColComponent,
     NavColItemComponent,
+    CreatePostComponent,
     SearchItemComponent,
   ],
   imports: [

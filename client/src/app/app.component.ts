@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
   isRegisterVisible: boolean = false;
   isModalVisible: boolean = false;
   isNavTabVisible: boolean = true;
+  isCreatePostVisible: boolean = true;
   @HostListener('document:keydown.escape', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (!this.isEscapeKeyPressed) {
@@ -58,9 +59,11 @@ export class AppComponent implements OnInit {
         if (event instanceof NavigationEnd && event.url) {
           if (event.url == "/" || event.url == "/home" || event.url == "/new") {
             this.isNavTabVisible = true;
+            this.isCreatePostVisible = true;
           }
           else {
             this.isNavTabVisible = false;
+            this.isCreatePostVisible = false;
           }
         }
       }

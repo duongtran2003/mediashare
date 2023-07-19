@@ -8,6 +8,7 @@
 </div>
 <app-toast-wrapper ngClass="fixed top-16 right-0 flex flex-col pt-5 pb-5 z-30"></app-toast-wrapper>
 <app-nav-col *ngIf="isNavTabVisible" (forceLogin)="toggleLogin()"></app-nav-col>
-<div class="">
+<app-create-post *ngIf="isCreatePostVisible"></app-create-post>
+<div class="w-[50%] m-auto pt-20 pb-12">
     <router-outlet></router-outlet>
 </div>
