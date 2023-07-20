@@ -16,6 +16,8 @@ export class PostComponent implements OnInit {
   fileType: string = "";
   avatar: string = "";
   filePath: string = "";
+  karma: number = 0;
+  _id: string = "";
   upvoteIcon: IconDefinition = faChevronCircleUp;
   downvoteIcon: IconDefinition = faChevronCircleDown;
   commentsIcon: IconDefinition = faComments;
@@ -29,6 +31,8 @@ export class PostComponent implements OnInit {
     this.fileType = this.post.fileType;
     this.filename = this.post.filename;
     this.filePath = `http://localhost:8000/static/${this.filename}`;
+    this.karma = this.post.karma;
+    this._id = this.post._id;
     this.api.post('user/getUserInfo', { username: this.username }).subscribe({
       next: (response) => {
         this.avatar = response.avatarPath;

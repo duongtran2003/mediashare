@@ -7,7 +7,7 @@ class PostController {
         const queryByUsername = res.locals.claims.username;
         let posts = await Post.find({
             username: queryByUsername,
-        }, "title filename username fileType");
+        }, "title filename username fileType karma _id");
         return res.json({
             message: "Query success",
             posts: posts,
@@ -30,6 +30,7 @@ class PostController {
             filename: filename,
             fileType: ext,
             username: username,
+            karma: 0,
         }
         console.log(newPost);
         Post.create(newPost)
@@ -37,10 +38,12 @@ class PostController {
                 if (post) {
                     res.statusCode = 200;
                     return res.json({
+                        _id: post._id,
                         title: post.title,
                         filename: post.filename,
                         fileType: ext,
                         username: post.username,
+                        karma: post.karma,
                     })
                 }
                 else {

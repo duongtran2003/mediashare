@@ -18,7 +18,7 @@ const userSchema = new Schema<IUser> ({
     },
     avatarPath: {
         type: String,
-    }
+    },
 });
 
 const User = model<IUser> ('User', userSchema);
