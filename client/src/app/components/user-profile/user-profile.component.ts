@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ToastService } from 'src/app/services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { ImageCroppedEvent, base64ToFile } from 'ngx-image-cropper'
+import { ImageCroppedEvent } from 'ngx-image-cropper'
 
 @Component({
   selector: 'app-user-profile',
@@ -25,8 +25,17 @@ export class UserProfileComponent implements OnInit {
   isCropperVisible: boolean = false;
   isImageLoaded: boolean = false;
   isUploadingDone: boolean = true;
-  
+  posts: any = []; // all posts from database  
+
   ngOnInit(): void {
+    this.api.get('post/index').subscribe({
+      next: (response) => {
+        for (let post of response.posts) {
+          this.posts.push(post);
+        }
+        console.log(this.posts)
+      }
+    })
     this.route.params.subscribe(params => {
       const usernameFromParams = params['username'];
       this.api.post('user/getUserInfo', {

@@ -7,7 +7,7 @@ class PostController {
         const queryByUsername = res.locals.claims.username;
         let posts = await Post.find({
             username: queryByUsername,
-        }, "title content user");
+        }, "title filename username fileType");
         return res.json({
             message: "Query success",
             posts: posts,

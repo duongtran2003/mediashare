@@ -15,6 +15,7 @@ import { NavColComponent } from './components/nav-col/nav-col.component';
 import { NavColItemComponent } from './components/nav-col-item/nav-col-item.component';
 import { SearchItemComponent } from './components/search-item/search-item.component';
 import { CreatePostComponent } from './components/create-post/create-post.component';
+import { PostModule } from './modules/post/post.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { CreatePostComponent } from './components/create-post/create-post.compon
     HttpClientModule,
     FontAwesomeModule,
     BrowserAnimationsModule,
+    PostModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

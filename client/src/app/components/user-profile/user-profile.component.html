@@ -1,9 +1,9 @@
 <div class="rounded-lg bg-white drop-shadow-lg py-8 px-8">
     <div *ngIf="username && email" class="flex">
         <div
-            class="flex flex-col h-44 w-44 drop-shadow-xl bg-white rounded-full items-center relative">
+            class="flex flex-col drop-shadow-xl bg-white rounded-full items-center relative">
             <img [src]="avatarPath" (mouseenter)="showUpdateAvatarTooltip()" (mouseleave)="hideUpdateAvatarTooltip()"
-                (click)="toggleCropper()" class="select-none cursor-pointer rounded-full drop-shadow-xl">
+                (click)="toggleCropper()" class="h-44 w-44 select-none cursor-pointer rounded-full drop-shadow-xl">
             <div *ngIf="isTooltipVisible && isMyProfile"
                 class="absolute bg-gray-800 py-1 px-3 text-xs top-44 rounded-lg text-gray-50">
                 Update your avatar
@@ -41,6 +41,6 @@
         </image-cropper>
     </div>
 </div>
-<div class="rounded-lg bg-white drop-shadow-lg py-8 px-8 mt-4">
-    posts go here
+<div>
+    <app-post *ngFor="let post of posts" [post]="post"></app-post>
 </div>

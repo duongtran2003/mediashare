@@ -102,7 +102,7 @@ class UserController {
             .catch((err) => {
                 filenameToDelete = "";
             });
-        if (filenameToDelete) {
+        if (filenameToDelete && filenameToDelete != 'default.png') {
             fs.unlink(`./public/${filenameToDelete}`, (err) => {
                 console.log(err);
             })

@@ -1,0 +1,25 @@
+<div class="rounded-lg bg-white drop-shadow-lg py-8 px-8 mt-4 flex flex-col">
+    <div class="flex items-center">
+        <img [routerLink]="['user', username]" class="w-6 h-6 mr-2 rounded-full select-none cursor-pointer"
+            [src]="avatar">
+        <div class="text-sm select-none cursor-pointer" [routerLink]="['user', username]">{{ username }}</div>
+    </div>
+    <div class="mt-2 text-lg font-bold">{{ title }}</div>
+    <div class="mt-2 flex justify-center border-1 border-black">
+        <img [src]="filePath">
+    </div>
+    <div class="border-t-2 mt-2 border-blue-600 flex">
+        <button class="px-6 py-1 bg-gray-100 hover:bg-orange-500 hover:text-white duration-200">
+            <fa-icon [icon]="upvoteIcon"></fa-icon>
+            <span class="ml-2">Upvote</span>
+        </button>
+        <button class="px-6 py-1 bg-gray-100 hover:bg-blue-500 hover:text-white duration-200">
+            <fa-icon [icon]="downvoteIcon"></fa-icon>
+            <span class="ml-2">Downvote</span>
+        </button>
+        <button class="grow bg-gray-100 hover:bg-gray-300 duration-200">
+            <fa-icon [icon]="commentsIcon"></fa-icon>
+            <span class="ml-2">Comments</span>
+        </button>
+    </div>
+</div>
