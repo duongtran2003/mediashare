@@ -2,18 +2,22 @@ import mongoose, { Schema, model } from "mongoose";
 
 interface IPost {
     title: string,
-    content: string,
-    user: string,
+    filename: string,
+    fileType: string,
+    username: string,
 }
 
 const postSchema = new Schema<IPost> ({
     title: {
         type: String,
     }, 
-    content: {
+    filename: {
         type: String,
     },
-    user: {
+    fileType: {
+        type: String,
+    },
+    username: {
         type: String,
     }
 });

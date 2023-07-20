@@ -7,6 +7,7 @@
         <div class="mt-4 mb-2">Upload your file</div>
         <input #fileInput accept="video/mp4, image/*" (change)="onFileSelected($event)" class="max-w-fit bg-gray-100" type="file">
         <div class="text-red-600 text-xs" *ngIf="fileError">You have to upload something</div>
+        <div *ngIf="isUploading">Uploading file...</div>
     </div>
     <div class="flex space-x-6 justify-center">
         <button (click)="showForm()" *ngIf="!isFormVisible"
@@ -22,6 +23,4 @@
             <fa-icon class="text-white text-lg" [icon]="abortIcon"></fa-icon>
         </button>
     </div>
-
-    
 </div>

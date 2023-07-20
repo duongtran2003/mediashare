@@ -7,6 +7,7 @@ import mime from 'mime';
 
 const router: Router = express.Router();
 const userController = new UserController();
+const acceptExt = ['jpeg', 'png', 'jpg'];
 
 const storage = multer.diskStorage({
     destination: './public',
@@ -19,8 +20,8 @@ const storage = multer.diskStorage({
 const upload = multer({ 
     storage: storage, 
     fileFilter: (req, file, cb) => {
-        const fileExtension = mime.getExtension(file.mimetype);
-        if (fileExtension != 'png' && fileExtension != 'jpg' && fileExtension != 'jpeg') {
+        const fileExtension: string = <string>mime.getExtension(file.mimetype);
+        if (!acceptExt.includes(fileExtension)) {
             cb(new Error("Wrong type!!!"));
         }
         else {

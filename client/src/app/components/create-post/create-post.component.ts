@@ -3,6 +3,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { IconDefinition, faPlus, faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { state, trigger, style, transition, animate } from '@angular/animations';
 import { ApiService } from 'src/app/services/api.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-create-post',
@@ -33,11 +34,12 @@ export class CreatePostComponent implements OnInit {
   userTitle: string = "";
   filesFromInput: FileList | null = null;
   fileError: boolean = false;
+  isUploading: boolean = false;
 
   @ViewChild('fileInput', { static: false })
   fileInput!: ElementRef;
 
-  constructor(private auth: AuthService, private api: ApiService) { }
+  constructor(private auth: AuthService, private api: ApiService, private toast: ToastService) { }
   ngOnInit(): void {
     this.auth.currentUserEmitter.subscribe({
       next: (user) => {
@@ -70,6 +72,7 @@ export class CreatePostComponent implements OnInit {
     this.isFormVisible = false;
     this.formState = 'close';
     this.fileInput.nativeElement.value = "";
+    this.isUploading = false;
   }
   createPost(): void {
     if (this.userTitle == "") {
@@ -93,13 +96,32 @@ export class CreatePostComponent implements OnInit {
     const formData = new FormData();
     formData.append('title', this.userTitle);
     formData.append('file', uploadFile);
-    // this.api.post('post/createPost', formData).subscribe({
-    //   next: (response) => {
-
-    //   }
-    // })
-    console.log(formData);
-    this.resetForm();
+    this.isUploading = true;
+    this.api.post('post/create', formData).subscribe({
+      next: (response) => {
+        console.log({
+          title: response.title,
+          filename: response.filename,
+          fileType: response.fileType,
+          username: response.username,
+        });
+        this.toast.makeToast({
+          state: "close",
+          message: "Post created",
+          barClass: ['bg-lime-500']
+        });
+        this.isUploading = false;
+        this.resetForm();
+      },
+      error: (err) => {
+        this.toast.makeToast({
+          state: "close",
+          message: "Server's error",
+          barClass: ['bg-red-600'],
+        });
+        this.isUploading = false; 
+      }
+    })
   }
   onFileSelected(e: Event): void {
     this.filesFromInput = (<HTMLInputElement>e.target).files;

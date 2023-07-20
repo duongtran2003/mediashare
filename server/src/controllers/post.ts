@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { Post } from "../models/Post";
+import mime from 'mime';
 
 class PostController {
     async index(req: Request, res: Response) {
         const queryByUsername = res.locals.claims.username;
         let posts = await Post.find({
-            user: queryByUsername,
+            username: queryByUsername,
         }, "title content user");
         return res.json({
             message: "Query success",
@@ -14,26 +15,47 @@ class PostController {
     }
 
     create(req: Request, res: Response) {
-        let newPost = {
-            title: req.body.title,
-            content: req.body.content,
-            user: res.locals.claims.username,
+        const username = res.locals.claims.username;
+        const filename = req.file?.filename;
+        let ext: string = "";
+        const fileExtension: string = <string>mime.getExtension(req.file!.mimetype);
+        if (fileExtension == 'mp4') {
+            ext = 'video';
         }
-
+        else {
+            ext = 'picture'
+        }
+        const newPost = {
+            title: req.body.title,
+            filename: filename,
+            fileType: ext,
+            username: username,
+        }
+        console.log(newPost);
         Post.create(newPost)
-        .then((post) => {
-            return res.json({
-                message: "New post added",
-                title: post.title,
-                content: post.content,
-                user: post.user
-            });
-        })
-        .catch((err) => {
-            return res.json({
-                message: "Server error",
+            .then((post) => {
+                if (post) {
+                    res.statusCode = 200;
+                    return res.json({
+                        title: post.title,
+                        filename: post.filename,
+                        fileType: ext,
+                        username: post.username,
+                    })
+                }
+                else {
+                    res.statusCode = 500;
+                    return res.json({
+                        message: "Server's error",
+                    })
+                }
             })
-        });
+            .catch((err) => {
+                res.statusCode = 500;
+                return res.json({
+                    message: "Server's error",
+                })
+            })
     }
 }
 
