@@ -1,9 +1,9 @@
 <div class="rounded-lg bg-white drop-shadow-lg py-8 px-8">
     <div *ngIf="username && email" class="flex">
         <div
-            class="flex flex-col h-44 w-44 drop-shadow-xl bg-white rounded-full border-2 border-blue-400 items-center relative">
+            class="flex flex-col h-44 w-44 drop-shadow-xl bg-white rounded-full items-center relative">
             <img [src]="avatarPath" (mouseenter)="showUpdateAvatarTooltip()" (mouseleave)="hideUpdateAvatarTooltip()"
-                (click)="toggleCropper()" class="select-none cursor-pointer rounded-full">
+                (click)="toggleCropper()" class="select-none cursor-pointer rounded-full drop-shadow-xl">
             <div *ngIf="isTooltipVisible && isMyProfile"
                 class="absolute bg-gray-800 py-1 px-3 text-xs top-44 rounded-lg text-gray-50">
                 Update your avatar
@@ -21,7 +21,7 @@
     <div *ngIf="!(username && email)">
         Error
     </div>
-    <div class="mt-16 z-0" *ngIf="isCropperVisible">
+    <div  class="mt-16 z-0" *ngIf="isCropperVisible">
         <div class="bg-gray-100 rounded-lg drop-shadow-lg max-w-fit mb-4 py-2 px-4 flex flex-col">
             <div class="mb-2">Upload your picture</div>
             <input accept="image/*" class="mb-2" type="file" (change)="onFileChange($event)">
@@ -40,4 +40,7 @@
             (imageLoaded)="imgLoad()" (cropperReady)="initCropper()" (loadImageFailed)="imgFailed()" [output]="'blob'">
         </image-cropper>
     </div>
+</div>
+<div class="rounded-lg bg-white drop-shadow-lg py-8 px-8 mt-4">
+    posts go here
 </div>

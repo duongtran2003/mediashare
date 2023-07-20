@@ -9,7 +9,7 @@ import { ImageCroppedEvent, base64ToFile } from 'ngx-image-cropper'
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css']
+  styleUrls: ['./user-profile.component.css'],
 })
 export class UserProfileComponent implements OnInit {
   constructor(private auth: AuthService, private clipboard: Clipboard, private api: ApiService, private toast: ToastService, private route: ActivatedRoute) { }
@@ -25,7 +25,7 @@ export class UserProfileComponent implements OnInit {
   isCropperVisible: boolean = false;
   isImageLoaded: boolean = false;
   isUploadingDone: boolean = true;
-
+  
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const usernameFromParams = params['username'];
