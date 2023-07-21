@@ -57,6 +57,34 @@ class VoteController {
         }
     }
 
+    removeVote(req: Request, res: Response) {
+        const username = res.locals.claims.username;
+        const post_id = req.body.post_id;
+        Vote.findOneAndDelete({ username: username, post_id: post_id })
+        .then((vote) => {
+            if (vote) {
+                res.statusCode = 200;
+                return res.json({
+                    username: vote.username,
+                    post_id: vote.post_id,
+                    type: vote.type, 
+                });
+            }
+            else {
+                res.statusCode = 500;
+                return res.json({
+                    message: "Server's error",
+                })
+            }
+        })
+        .catch((err) => {
+            res.statusCode = 500;
+            return res.json({
+                message: "Server's error",
+            })
+        })
+    }
+
     getUserVote(req: Request, res: Response) {
         const username = res.locals.claims.username;
         Vote.find({ username: username })
