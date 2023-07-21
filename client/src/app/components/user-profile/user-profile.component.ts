@@ -32,6 +32,7 @@ export class UserProfileComponent implements OnInit {
       const usernameFromParams = params['username'];
       this.api.post('post/index', { username: usernameFromParams }).subscribe({
         next: (response) => {
+          this.posts = [];
           for (let post of response.posts) {
             this.posts.push(post);
           }

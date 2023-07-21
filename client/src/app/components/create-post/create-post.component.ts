@@ -75,16 +75,14 @@ export class CreatePostComponent implements OnInit {
     this.isUploading = false;
   }
   createPost(): void {
-    if (this.userTitle == "") {
+    if (this.userTitle.trim() == "") {
       this.titleError = true;
-      console.log("loi title", this.userTitle);
     }
     else {
       this.titleError = false;
     }
     if (!this.filesFromInput) {
       this.fileError = true;
-      console.log("loi file", this.filesFromInput);
     }
     else {
       this.fileError = false;

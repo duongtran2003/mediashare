@@ -26,7 +26,7 @@ class PostController {
             ext = 'picture'
         }
         const newPost = {
-            title: req.body.title,
+            title: req.body.title.trim(),
             filename: filename,
             fileType: ext,
             username: username,

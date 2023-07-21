@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faComments } from '@fortawesome/free-regular-svg-icons';
-import { IconDefinition, faAngleDown, faAngleUp, faChevronCircleDown, faChevronCircleUp } from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition, faAngleDown, faAngleUp, faChevronCircleDown, faChevronCircleUp, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-post',
@@ -20,17 +21,22 @@ export class PostComponent implements OnInit {
   karma: number = 0;
   _id: string = "";
   vote: number = 0;
+  comments: number = 0;
+  commentsContent: any[] = [];
   btnState: string = "0";
   isVoteBtnReady: boolean = false;
   upvoteIcon: IconDefinition = faChevronCircleUp;
   downvoteIcon: IconDefinition = faChevronCircleDown;
   commentsIcon: IconDefinition = faComments;
+  postCommentIcon: IconDefinition = faPaperPlane
+  userCommentInput: string = "";
+  isCommentSectionVisible: boolean = false;
 
-
-  constructor(private api: ApiService, private auth: AuthService) {
+  constructor(private api: ApiService, private auth: AuthService, private toast: ToastService) {
 
   }
   ngOnInit(): void {
+    this.comments = this.post.comments;
     this.username = this.post.username;
     this.title = this.post.title;
     this.fileType = this.post.fileType;
@@ -54,6 +60,16 @@ export class PostComponent implements OnInit {
       },
       error: (err) => {
         this.isVoteBtnReady = true;
+      }
+    });
+    this.api.post('comment/queryComment', { post_id: this._id }).subscribe({
+      next: (response) => {
+        for (let comment of response.comments) {
+          this.commentsContent.push(comment);
+        }
+      },
+      error: (err) => {
+        console.log(err);
       }
     })
   }
@@ -139,5 +155,34 @@ export class PostComponent implements OnInit {
       }
       this.vote = -1;
     }
+  }
+  updateUserCommentInput(val: string) {
+    this.userCommentInput = val;
+  }
+  postComment() {
+    if (this.userCommentInput.trim() == "") {
+      this.toast.makeToast({
+        state: "close",
+        message: "Can't create empty comment",
+        barClass: ['bg-red-600'],
+      })
+    }
+    this.api.post('comment/create', { content: this.userCommentInput, post_id: this._id }).subscribe({
+      next: (response) => {
+        this.commentsContent.push({ username: response.username, content: response.content });
+        this.userCommentInput = "";
+        this.comments = response.comments;
+      },
+      error: (err) => {
+        this.toast.makeToast({
+          state: "close",
+          message: "Server's error",
+          barClass: ['bg-red-600'],
+        })
+      }
+    })
+  }
+  toggleCommentSection() {
+    this.isCommentSectionVisible = !this.isCommentSectionVisible;
   }
 }

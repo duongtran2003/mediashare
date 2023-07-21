@@ -2,7 +2,7 @@
     <div class="flex items-center">
         <img [routerLink]="['user', username]" class="w-6 h-6 mr-2 rounded-full select-none cursor-pointer"
             [src]="avatar">
-        <div class="text-sm select-none cursor-pointer" [routerLink]="['user', username]">{{ username }}</div>
+        <div class="text-sm select-none cursor-pointer" [routerLink]="['/user', username]">{{ username }}</div>
     </div>
     <div class="mt-2 text-lg font-bold">{{ title }}</div>
     <div class="mt-2 flex justify-center border-1 border-black">
@@ -10,22 +10,35 @@
     </div>
     <div class="border-t-2 border-b-2 mt-2 border-blue-600 flex">
         <button [disabled]="!isVoteBtnReady" (click)="onUpvoteClick()" class="px-6 py-1 duration-200 active:scale-105"
-                [ngClass]="{ 'bg-orange-600': vote == 1, 'text-white': vote == 1, 'bg-gray-100': vote != 1, 'hover:bg-gray-200': vote!= 1 }">
+            [ngClass]="{ 'bg-orange-600': vote == 1, 'text-white': vote == 1, 'bg-gray-100': vote != 1, 'hover:bg-gray-200': vote!= 1 }">
             <fa-icon [icon]="upvoteIcon"></fa-icon>
             <span class="ml-2">Upvote</span>
         </button>
         <button [disabled]="!isVoteBtnReady" (click)="onDownvoteClick()" class="px-6 py-1 duration-200 active:scale-105"
-                [ngClass]="{ 'bg-blue-600': vote == -1, 'text-white': vote == -1, 'bg-gray-100': vote != -1, 'hover:bg-gray-200': vote != -1 }">
+            [ngClass]="{ 'bg-blue-600': vote == -1, 'text-white': vote == -1, 'bg-gray-100': vote != -1, 'hover:bg-gray-200': vote != -1 }">
             <fa-icon [icon]="downvoteIcon"></fa-icon>
             <span class="ml-2">Downvote</span>
         </button>
         <div class="px-4 py-1 bg-gray-100 font-bold border-r-2 border-gray-400">{{ karma }}</div>
-        <button class="grow bg-gray-100 hover:bg-gray-300 duration-200">
+        <button (click)="toggleCommentSection()" class="grow bg-gray-100 hover:bg-gray-300 duration-200">
             <fa-icon [icon]="commentsIcon"></fa-icon>
-            <span class="ml-2">Comments</span>
+            <span class="ml-2">Comments ({{ comments }})</span>
         </button>
     </div>
-    <div>
-        comment 
+    <div *ngIf="isCommentSectionVisible" class="flex flex-col mt-2">
+        <div class="flex items-center">
+            <input #commentInput type="text" [value]="userCommentInput" (input)="updateUserCommentInput(commentInput.value)"
+                class="grow bg-gray-100 border rounded-sm px-4 py-2 text-sm outline-none hover:border-blue-500 focus:border-blue-600 duration-200">
+            <button (click)="postComment()"
+                class="bg-blue-600 text-white rounded-lg px-4 py-2 ml-2 hover:bg-blue-800 duration-200 active:scale-105">
+                <fa-icon [icon]="postCommentIcon"></fa-icon>
+            </button>
+        </div>
+        <div class="flex flex-col mt-2">
+            <div *ngFor="let comment of commentsContent" class="break-words px-2 py-1 border border-gray-200 shadow-md mt-1.5 rounded-lg">
+                <div [routerLink]="['/user', comment.username]" class="font-bold text-xs select-none cursor-pointer">{{ comment.username }}</div>
+                <div>{{ comment.content }}</div>
+            </div>  
+        </div>
     </div>
 </div>
