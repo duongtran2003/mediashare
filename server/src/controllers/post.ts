@@ -4,7 +4,7 @@ import mime from 'mime';
 
 class PostController {
     async index(req: Request, res: Response) {
-        const queryByUsername = res.locals.claims.username;
+        const queryByUsername = req.body.username;
         let posts = await Post.find({
             username: queryByUsername,
         }, "title filename username fileType karma _id");

@@ -9,15 +9,17 @@
         <img [src]="filePath">
     </div>
     <div class="border-t-2 mt-2 border-blue-600 flex">
-        <button class="px-6 py-1 bg-gray-100 hover:bg-orange-500 hover:text-white duration-200">
+        <button [disabled]="!isVoteBtnReady" (click)="onUpvoteClick()" class="px-6 py-1 duration-200 active:scale-105"
+                [ngClass]="{ 'bg-orange-600': vote == 1, 'text-white': vote == 1, 'bg-gray-100': vote != 1, 'hover:bg-gray-200': vote!= 1 }">
             <fa-icon [icon]="upvoteIcon"></fa-icon>
             <span class="ml-2">Upvote</span>
         </button>
-        <button class="px-6 py-1 bg-gray-100 hover:bg-blue-500 hover:text-white duration-200">
+        <button [disabled]="!isVoteBtnReady" (click)="onDownvoteClick()" class="px-6 py-1 duration-200 active:scale-105"
+                [ngClass]="{ 'bg-blue-600': vote == -1, 'text-white': vote == -1, 'bg-gray-100': vote != -1, 'hover:bg-gray-200': vote != -1 }">
             <fa-icon [icon]="downvoteIcon"></fa-icon>
             <span class="ml-2">Downvote</span>
         </button>
-        <div class="px-4 py-1 bg-gray-100 font-bold">{{ karma }}</div>
+        <div class="px-4 py-1 bg-gray-100 font-bold border-r-2 border-gray-400">{{ karma }}</div>
         <button class="grow bg-gray-100 hover:bg-gray-300 duration-200">
             <fa-icon [icon]="commentsIcon"></fa-icon>
             <span class="ml-2">Comments</span>

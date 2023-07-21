@@ -28,16 +28,16 @@ export class UserProfileComponent implements OnInit {
   posts: any = []; // all posts from database  
 
   ngOnInit(): void {
-    this.api.get('post/index').subscribe({
-      next: (response) => {
-        for (let post of response.posts) {
-          this.posts.push(post);
-        }
-        console.log(this.posts)
-      }
-    })
     this.route.params.subscribe(params => {
       const usernameFromParams = params['username'];
+      this.api.post('post/index', { username: usernameFromParams }).subscribe({
+        next: (response) => {
+          for (let post of response.posts) {
+            this.posts.push(post);
+          }
+          console.log(this.posts)
+        }
+      })
       this.api.post('user/getUserInfo', {
         username: usernameFromParams
       }).subscribe({

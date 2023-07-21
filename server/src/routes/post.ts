@@ -31,7 +31,7 @@ const upload = multer({
 })
 
 router.post('/create', authGuard, upload.single('file'), postController.create);
-router.get('/index', authGuard, postController.index);
+router.post('/index', postController.index);
 
 export {
     router
