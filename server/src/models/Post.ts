@@ -6,6 +6,7 @@ interface IPost {
     fileType: string,
     username: string,
     karma: number,
+    comments: number,
 }
 
 const postSchema = new Schema<IPost> ({
@@ -22,6 +23,9 @@ const postSchema = new Schema<IPost> ({
         type: String,
     },
     karma: {
+        type: Number,
+    },
+    comments: {
         type: Number,
     }
 });

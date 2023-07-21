@@ -8,7 +8,7 @@
     <div class="mt-2 flex justify-center border-1 border-black">
         <img [src]="filePath">
     </div>
-    <div class="border-t-2 mt-2 border-blue-600 flex">
+    <div class="border-t-2 border-b-2 mt-2 border-blue-600 flex">
         <button [disabled]="!isVoteBtnReady" (click)="onUpvoteClick()" class="px-6 py-1 duration-200 active:scale-105"
                 [ngClass]="{ 'bg-orange-600': vote == 1, 'text-white': vote == 1, 'bg-gray-100': vote != 1, 'hover:bg-gray-200': vote!= 1 }">
             <fa-icon [icon]="upvoteIcon"></fa-icon>
@@ -24,5 +24,8 @@
             <fa-icon [icon]="commentsIcon"></fa-icon>
             <span class="ml-2">Comments</span>
         </button>
+    </div>
+    <div>
+        comment 
     </div>
 </div>

@@ -7,7 +7,7 @@ class PostController {
         const queryByUsername = req.body.username;
         let posts = await Post.find({
             username: queryByUsername,
-        }, "title filename username fileType karma _id");
+        }, "title filename username fileType karma _id comments");
         return res.json({
             message: "Query success",
             posts: posts,
@@ -31,6 +31,7 @@ class PostController {
             fileType: ext,
             username: username,
             karma: 0,
+            comments: 0,
         }
         console.log(newPost);
         Post.create(newPost)
@@ -44,6 +45,7 @@ class PostController {
                         fileType: ext,
                         username: post.username,
                         karma: post.karma,
+                        comments: post.comments,
                     })
                 }
                 else {
