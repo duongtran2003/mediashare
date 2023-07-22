@@ -4,16 +4,18 @@ import { authGuard } from '../middlewares/jwtAuthGuard';
 import multer from 'multer';
 import mime from 'mime';
 import { v4 as uuidv4 } from 'uuid';
+import slugify from 'slugify';
 
 let router = express.Router();
 let postController = new PostController();
+
 let acceptExt = ['mp4', 'jpeg', 'jpg', 'png'];
 
 const storage = multer.diskStorage({
     destination: './public',
     filename: (req, file, cb) => {
         const fileExtension = mime.getExtension(file.mimetype);
-        const newFilename = `${uuidv4()}${file.originalname}-${Date.now()}.${fileExtension}`;
+        const newFilename = `${uuidv4()}${slugify(file.originalname)}-${Date.now()}.${fileExtension}`;
         cb(null, newFilename);
     },
 })
