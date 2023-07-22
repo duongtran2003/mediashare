@@ -69,15 +69,21 @@ export class PostComponent implements OnInit {
         this.karma = data.karma;
       }
     });
+    this.socket.on('user-comment', (data: any) => {
+      if (data.post_id == this._id) {
+        this.commentsContent.push(data.comment);
+        this.comments = data.postComments;
+      }
+    })
   }
 
   onUpvoteClick(): void {
     if (this.vote == 1) {
-      this.vote = 0;
       this.isVoteBtnReady = false;
       this.api.post('vote/removeVote', { post_id: this._id, type: 1 }).subscribe({
         next: (response) => {
           this.isVoteBtnReady = true;
+          this.vote = 0;
         },
         error: (err) => {
           this.isVoteBtnReady = true;
@@ -90,6 +96,7 @@ export class PostComponent implements OnInit {
         this.api.post('vote/changeVote', { post_id: this._id, type: 1 }).subscribe({
           next: (response) => {
             this.isVoteBtnReady = true;
+            this.vote = 1;
           },
           error: (err) => {
             this.isVoteBtnReady = true;
@@ -100,22 +107,22 @@ export class PostComponent implements OnInit {
         this.api.post('vote/votePost', { post_id: this._id, type: 1 }).subscribe({
           next: (response) => {
             this.isVoteBtnReady = true;
+            this.vote = 1;
           },
           error: (err) => {
             this.isVoteBtnReady = true;
           }
         })
       }
-      this.vote = 1;
     }
   }
   onDownvoteClick(): void {
     if (this.vote == -1) {
-      this.vote = 0;
       this.isVoteBtnReady = false;
       this.api.post('vote/removeVote', { post_id: this._id, type: -1 }).subscribe({
         next: (response) => {
           this.isVoteBtnReady = true;
+          this.vote = 0;
         },
         error: (err) => {
           this.isVoteBtnReady = true;
@@ -128,6 +135,7 @@ export class PostComponent implements OnInit {
         this.api.post('vote/changeVote', { post_id: this._id, type: -1 }).subscribe({
           next: (response) => {
             this.isVoteBtnReady = true;
+            this.vote = -1;
           },
           error: (err) => {
             this.isVoteBtnReady = true;
@@ -138,13 +146,13 @@ export class PostComponent implements OnInit {
         this.api.post('vote/votePost', { post_id: this._id, type: -1 }).subscribe({
           next: (response) => {
             this.isVoteBtnReady = true;
+            this.vote = -1;
           },
           error: (err) => {
             this.isVoteBtnReady = true;
           }
         })
       }
-      this.vote = -1;
     }
   }
   updateUserCommentInput(val: string) {
@@ -161,9 +169,7 @@ export class PostComponent implements OnInit {
     }
     this.api.post('comment/create', { content: this.userCommentInput, post_id: this._id }).subscribe({
       next: (response) => {
-        this.commentsContent.push({ username: response.username, content: response.content });
         this.userCommentInput = "";
-        this.comments = response.comments;
       },
       error: (err) => {
         this.toast.makeToast({

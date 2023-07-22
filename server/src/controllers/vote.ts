@@ -38,10 +38,7 @@ class VoteController {
                             karma: karma,
                         });
                         return res.json({
-                            username: vote.username,
-                            post_id: vote.post_id,
-                            type: vote.type,
-                            karma: karma,
+                            message: "success", 
                         });
                     }
                     else {
@@ -108,10 +105,7 @@ class VoteController {
                             karma: karma,
                         });
                         return res.json({
-                            username: vote.username,
-                            post_id: vote.post_id,
-                            type: vote.type,
-                            karma: karma,
+                            message: "success", 
                         });
                     }
                     else {
@@ -173,10 +167,7 @@ class VoteController {
                             karma: karma,
                         })
                         return res.json({
-                            username: vote.username,
-                            post_id: vote.post_id,
-                            type: vote.type,
-                            karma: karma,
+                            message: "success",
                         });
                     }
                     else {

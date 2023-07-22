@@ -21,6 +21,7 @@ class CommentController {
     }
 
     create(req: Request, res: Response) {
+        const io = req.app.get('io');
         const username = res.locals.claims.username;
         const content = req.body.content.trim();
         if (content == "") {
@@ -37,15 +38,20 @@ class CommentController {
         })
             .then((comment) => {
                 if (comment) {
-                    console.log(post_id);
                     Post.findOneAndUpdate({ _id: post_id }, { $inc: { comments: 1 } }, { new: true })
                         .then((post) => {
                             if (post) {
                                 res.statusCode = 200;
+                                io.emit('user-comment', {
+                                    post_id: post._id,
+                                    comment: {
+                                        username: comment.username,
+                                        content: comment.content,
+                                    },
+                                    postComments: post.comments,
+                                })
                                 return res.json({
-                                    username: comment.username,
-                                    content: comment.content,
-                                    comments: post.comments,
+                                    message: "success",
                                 });
                             }
                             else {
