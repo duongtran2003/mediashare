@@ -16,6 +16,11 @@ import { NavColItemComponent } from './components/nav-col-item/nav-col-item.comp
 import { SearchItemComponent } from './components/search-item/search-item.component';
 import { CreatePostComponent } from './components/create-post/create-post.component';
 import { PostModule } from './modules/post/post.module';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+
+const config: SocketIoConfig = { url: 'http://localhost:8000' };
+
 
 @NgModule({
   declarations: [
@@ -36,7 +41,7 @@ import { PostModule } from './modules/post/post.module';
     HttpClientModule,
     FontAwesomeModule,
     BrowserAnimationsModule,
-    PostModule
+    SocketIoModule.forRoot(config),
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

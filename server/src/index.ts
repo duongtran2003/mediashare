@@ -13,7 +13,7 @@ app.use('/static', express.static('public'));
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
-    origin: true,
+    origin: 'http://localhost:4200',
 }));
 app.use(express.json());
 app.use(express.urlencoded({
@@ -24,5 +24,9 @@ let server = app.listen('8000', () => {
     console.log("server's running");
 });
 
-let ioInstance = new io.Server(server);
+let ioInstance = new io.Server(server, {
+    cors: {
+        origin: 'http://localhost:4200'
+    }
+});
 app.set('io', ioInstance);

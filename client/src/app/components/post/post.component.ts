@@ -4,6 +4,7 @@ import { IconDefinition, faAngleDown, faAngleUp, faChevronCircleDown, faChevronC
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-post',
@@ -32,9 +33,10 @@ export class PostComponent implements OnInit {
   userCommentInput: string = "";
   isCommentSectionVisible: boolean = false;
 
-  constructor(private api: ApiService, private auth: AuthService, private toast: ToastService) {
+  constructor(private socket: Socket, private api: ApiService, private auth: AuthService, private toast: ToastService) {
 
   }
+
   ngOnInit(): void {
     this.comments = this.post.comments;
     this.username = this.post.username;
@@ -62,6 +64,11 @@ export class PostComponent implements OnInit {
         this.isVoteBtnReady = true;
       }
     });
+    this.socket.on('user-vote', (data: any) => {
+      if (data.post_id == this._id) {
+        this.karma = data.karma;
+      }
+    });
   }
 
   onUpvoteClick(): void {
@@ -71,7 +78,6 @@ export class PostComponent implements OnInit {
       this.api.post('vote/removeVote', { post_id: this._id, type: 1 }).subscribe({
         next: (response) => {
           this.isVoteBtnReady = true;
-          this.karma = response.karma;
         },
         error: (err) => {
           this.isVoteBtnReady = true;
@@ -84,7 +90,6 @@ export class PostComponent implements OnInit {
         this.api.post('vote/changeVote', { post_id: this._id, type: 1 }).subscribe({
           next: (response) => {
             this.isVoteBtnReady = true;
-            this.karma = response.karma;
           },
           error: (err) => {
             this.isVoteBtnReady = true;
@@ -95,7 +100,6 @@ export class PostComponent implements OnInit {
         this.api.post('vote/votePost', { post_id: this._id, type: 1 }).subscribe({
           next: (response) => {
             this.isVoteBtnReady = true;
-            this.karma = response.karma;
           },
           error: (err) => {
             this.isVoteBtnReady = true;
@@ -112,7 +116,6 @@ export class PostComponent implements OnInit {
       this.api.post('vote/removeVote', { post_id: this._id, type: -1 }).subscribe({
         next: (response) => {
           this.isVoteBtnReady = true;
-          this.karma = response.karma;
         },
         error: (err) => {
           this.isVoteBtnReady = true;
@@ -125,7 +128,6 @@ export class PostComponent implements OnInit {
         this.api.post('vote/changeVote', { post_id: this._id, type: -1 }).subscribe({
           next: (response) => {
             this.isVoteBtnReady = true;
-            this.karma = response.karma;
           },
           error: (err) => {
             this.isVoteBtnReady = true;
@@ -136,7 +138,6 @@ export class PostComponent implements OnInit {
         this.api.post('vote/votePost', { post_id: this._id, type: -1 }).subscribe({
           next: (response) => {
             this.isVoteBtnReady = true;
-            this.karma = response.karma;
           },
           error: (err) => {
             this.isVoteBtnReady = true;

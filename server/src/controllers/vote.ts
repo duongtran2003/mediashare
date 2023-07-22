@@ -3,13 +3,6 @@ import { Vote } from '../models/Vote';
 import { Post } from '../models/Post';
 
 class VoteController {
-    emitVote(io: any, post_id: string, karma: number): void {
-        io.emit('user-vote', {
-            post_id: post_id,
-            karma: karma,
-        });
-        return;
-    }
     async votePost(req: Request, res: Response) {
         const io = req.app.get('io');
         const username = res.locals.claims.username;
@@ -23,7 +16,6 @@ class VoteController {
                 if (post) {
                     foundPost = 1;
                     karma = post.karma;
-                    console.log(post);
                 }
                 else {
                     foundPost = 0;
@@ -41,7 +33,10 @@ class VoteController {
                 .then((vote) => {
                     if (vote) {
                         res.statusCode = 200;
-                        this.emitVote(io, vote.post_id, karma);
+                        io.emit('user-vote', {
+                            post_id: vote.post_id,
+                            karma: karma,
+                        });
                         return res.json({
                             username: vote.username,
                             post_id: vote.post_id,
@@ -51,12 +46,14 @@ class VoteController {
                     }
                     else {
                         res.statusCode = 500;
+                        console.log(1);
                         return res.json({
                             message: "Server's error",
                         })
                     }
                 })
                 .catch((err) => {
+                    console.log(err);
                     res.statusCode = 500;
                     return res.json({
                         message: "Server's error",
@@ -106,7 +103,10 @@ class VoteController {
                 .then((vote) => {
                     if (vote) {
                         res.statusCode = 200;
-                        this.emitVote(io, vote.post_id, karma);
+                        io.emit('user-vote', {
+                            post_id: vote.post_id,
+                            karma: karma,
+                        });
                         return res.json({
                             username: vote.username,
                             post_id: vote.post_id,
@@ -168,7 +168,10 @@ class VoteController {
                 .then((vote) => {
                     if (vote) {
                         res.statusCode = 200;
-                        this.emitVote(io, vote.post_id, karma);
+                        io.emit('user-vote', {
+                            post_id: vote.post_id,
+                            karma: karma,
+                        })
                         return res.json({
                             username: vote.username,
                             post_id: vote.post_id,
