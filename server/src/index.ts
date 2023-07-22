@@ -4,6 +4,7 @@ import { connect as dbConnect } from '../config/db';
 import cookieParser = require('cookie-parser');
 const dotenv = require('dotenv').config();
 import cors from 'cors';
+import io from 'socket.io';
 
 let app = express();
 dbConnect();
@@ -19,6 +20,9 @@ app.use(express.urlencoded({
     extended: true,
 }));
 app.use(route);
-app.listen('8000', () => {
+let server = app.listen('8000', () => {
     console.log("server's running");
 });
+
+let ioInstance = new io.Server(server);
+app.set('io', ioInstance);

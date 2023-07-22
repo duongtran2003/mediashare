@@ -23,6 +23,12 @@ class CommentController {
     create(req: Request, res: Response) {
         const username = res.locals.claims.username;
         const content = req.body.content.trim();
+        if (content == "") {
+            res.statusCode = 400;
+            return res.json({
+                message: "Bad request",
+            });
+        }
         const post_id = req.body.post_id;
         Comment.create({
             username: username,

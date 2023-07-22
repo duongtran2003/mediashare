@@ -62,16 +62,6 @@ export class PostComponent implements OnInit {
         this.isVoteBtnReady = true;
       }
     });
-    this.api.post('comment/queryComment', { post_id: this._id }).subscribe({
-      next: (response) => {
-        for (let comment of response.comments) {
-          this.commentsContent.push(comment);
-        }
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    })
   }
 
   onUpvoteClick(): void {
@@ -166,6 +156,7 @@ export class PostComponent implements OnInit {
         message: "Can't create empty comment",
         barClass: ['bg-red-600'],
       })
+      return;
     }
     this.api.post('comment/create', { content: this.userCommentInput, post_id: this._id }).subscribe({
       next: (response) => {
@@ -184,5 +175,18 @@ export class PostComponent implements OnInit {
   }
   toggleCommentSection() {
     this.isCommentSectionVisible = !this.isCommentSectionVisible;
+    if (this.isCommentSectionVisible) {
+      this.api.post('comment/queryComment', { post_id: this._id }).subscribe({
+        next: (response) => {
+          this.commentsContent = response.comments;
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      });
+    }
+    else {
+      this.commentsContent = [];
+    }
   }
 }

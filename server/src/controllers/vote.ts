@@ -3,7 +3,15 @@ import { Vote } from '../models/Vote';
 import { Post } from '../models/Post';
 
 class VoteController {
+    emitVote(io: any, post_id: string, karma: number): void {
+        io.emit('user-vote', {
+            post_id: post_id,
+            karma: karma,
+        });
+        return;
+    }
     async votePost(req: Request, res: Response) {
+        const io = req.app.get('io');
         const username = res.locals.claims.username;
         const post_id = req.body.post_id;
         const type = req.body.type;
@@ -33,6 +41,7 @@ class VoteController {
                 .then((vote) => {
                     if (vote) {
                         res.statusCode = 200;
+                        this.emitVote(io, vote.post_id, karma);
                         return res.json({
                             username: vote.username,
                             post_id: vote.post_id,
@@ -63,6 +72,7 @@ class VoteController {
     }
 
     async changeVote(req: Request, res: Response) {
+        const io = req.app.get('io');
         const username = res.locals.claims.username;
         const post_id = req.body.post_id;
         const type = req.body.type;
@@ -96,6 +106,7 @@ class VoteController {
                 .then((vote) => {
                     if (vote) {
                         res.statusCode = 200;
+                        this.emitVote(io, vote.post_id, karma);
                         return res.json({
                             username: vote.username,
                             post_id: vote.post_id,
@@ -126,6 +137,7 @@ class VoteController {
     }
 
     async removeVote(req: Request, res: Response) {
+        const io = req.app.get('io');
         const username = res.locals.claims.username;
         const post_id = req.body.post_id;
         const type = req.body.type;
@@ -156,6 +168,7 @@ class VoteController {
                 .then((vote) => {
                     if (vote) {
                         res.statusCode = 200;
+                        this.emitVote(io, vote.post_id, karma);
                         return res.json({
                             username: vote.username,
                             post_id: vote.post_id,

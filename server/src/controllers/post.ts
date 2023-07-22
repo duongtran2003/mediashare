@@ -17,6 +17,13 @@ class PostController {
     create(req: Request, res: Response) {
         const username = res.locals.claims.username;
         const filename = req.file?.filename;
+        const title = req.body.title.trim();
+        if (title == "") {
+            res.statusCode = 400;
+            return res.json({
+                message: "Bad request",
+            })
+        }
         let ext: string = "";
         const fileExtension: string = <string>mime.getExtension(req.file!.mimetype);
         if (fileExtension == 'mp4') {
@@ -26,7 +33,7 @@ class PostController {
             ext = 'picture'
         }
         const newPost = {
-            title: req.body.title.trim(),
+            title: title,
             filename: filename,
             fileType: ext,
             username: username,

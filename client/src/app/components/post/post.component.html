@@ -35,7 +35,7 @@
             </button>
         </div>
         <div class="flex flex-col mt-2">
-            <div *ngFor="let comment of commentsContent" class="break-words px-2 py-1 border border-gray-200 shadow-md mt-1.5 rounded-lg">
+            <div *ngFor="let comment of commentsContent" class="break-words px-2 py-1 border border-gray-200 shadow-md mt-1 rounded-lg">
                 <div [routerLink]="['/user', comment.username]" class="font-bold text-xs select-none cursor-pointer">{{ comment.username }}</div>
                 <div>{{ comment.content }}</div>
             </div>  
