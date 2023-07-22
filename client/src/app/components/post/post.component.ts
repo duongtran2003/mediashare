@@ -70,7 +70,7 @@ export class PostComponent implements OnInit {
       }
     });
     this.socket.on('user-comment', (data: any) => {
-      if (data.post_id == this._id) {
+      if (data.post_id == this._id && this.isCommentSectionVisible) {
         this.commentsContent.push(data.comment);
         this.comments = data.postComments;
       }
