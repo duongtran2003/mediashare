@@ -56,7 +56,8 @@ export class UserProfileComponent implements OnInit {
         error: (err) => {
           console.log(err.error.message);
         }
-      })
+      });
+      this.resetState();
     })
   }
 
