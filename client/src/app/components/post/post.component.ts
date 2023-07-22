@@ -70,11 +70,13 @@ export class PostComponent implements OnInit {
       }
     });
     this.socket.on('user-comment', (data: any) => {
-      if (data.post_id == this._id && this.isCommentSectionVisible) {
-        this.commentsContent.push(data.comment);
+      if (data.post_id == this._id) {
+        if (this.isCommentSectionVisible) {
+          this.commentsContent.push(data.comment);
+        }
         this.comments = data.postComments;
       }
-    })
+    });
   }
 
   onUpvoteClick(): void {
@@ -186,6 +188,7 @@ export class PostComponent implements OnInit {
       this.api.post('comment/queryComment', { post_id: this._id }).subscribe({
         next: (response) => {
           this.commentsContent = response.comments;
+          this.comments = response.comments.length;
         },
         error: (err) => {
           console.log(err);
