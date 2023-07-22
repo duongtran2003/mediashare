@@ -36,6 +36,8 @@ class VoteController {
                         io.emit('user-vote', {
                             post_id: vote.post_id,
                             karma: karma,
+                            username: vote.username,
+                            voteType: vote.type,
                         });
                         return res.json({
                             message: "success", 
@@ -96,13 +98,15 @@ class VoteController {
             Vote.findOneAndUpdate({
                 username: username,
                 post_id: post_id,
-            }, { type: type })
+            }, { type: type }, { new: true })
                 .then((vote) => {
                     if (vote) {
                         res.statusCode = 200;
                         io.emit('user-vote', {
                             post_id: vote.post_id,
                             karma: karma,
+                            username: vote.username,
+                            voteType: vote.type,
                         });
                         return res.json({
                             message: "success", 
@@ -165,6 +169,8 @@ class VoteController {
                         io.emit('user-vote', {
                             post_id: vote.post_id,
                             karma: karma,
+                            username: vote.username,
+                            voteType: 0,
                         })
                         return res.json({
                             message: "success",

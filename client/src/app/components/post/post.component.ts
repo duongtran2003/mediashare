@@ -67,6 +67,10 @@ export class PostComponent implements OnInit {
     this.socket.on('user-vote', (data: any) => {
       if (data.post_id == this._id) {
         this.karma = data.karma;
+        if (data.username == this.auth.getCurrentUser()) {
+          this.vote = data.voteType;
+        }
+        console.log(data);
       }
     });
     this.socket.on('user-comment', (data: any) => {
@@ -85,7 +89,6 @@ export class PostComponent implements OnInit {
       this.api.post('vote/removeVote', { post_id: this._id, type: 1 }).subscribe({
         next: (response) => {
           this.isVoteBtnReady = true;
-          this.vote = 0;
         },
         error: (err) => {
           this.isVoteBtnReady = true;
@@ -98,7 +101,6 @@ export class PostComponent implements OnInit {
         this.api.post('vote/changeVote', { post_id: this._id, type: 1 }).subscribe({
           next: (response) => {
             this.isVoteBtnReady = true;
-            this.vote = 1;
           },
           error: (err) => {
             this.isVoteBtnReady = true;
@@ -109,7 +111,6 @@ export class PostComponent implements OnInit {
         this.api.post('vote/votePost', { post_id: this._id, type: 1 }).subscribe({
           next: (response) => {
             this.isVoteBtnReady = true;
-            this.vote = 1;
           },
           error: (err) => {
             this.isVoteBtnReady = true;
@@ -124,7 +125,6 @@ export class PostComponent implements OnInit {
       this.api.post('vote/removeVote', { post_id: this._id, type: -1 }).subscribe({
         next: (response) => {
           this.isVoteBtnReady = true;
-          this.vote = 0;
         },
         error: (err) => {
           this.isVoteBtnReady = true;
@@ -137,7 +137,6 @@ export class PostComponent implements OnInit {
         this.api.post('vote/changeVote', { post_id: this._id, type: -1 }).subscribe({
           next: (response) => {
             this.isVoteBtnReady = true;
-            this.vote = -1;
           },
           error: (err) => {
             this.isVoteBtnReady = true;
@@ -148,7 +147,6 @@ export class PostComponent implements OnInit {
         this.api.post('vote/votePost', { post_id: this._id, type: -1 }).subscribe({
           next: (response) => {
             this.isVoteBtnReady = true;
-            this.vote = -1;
           },
           error: (err) => {
             this.isVoteBtnReady = true;
