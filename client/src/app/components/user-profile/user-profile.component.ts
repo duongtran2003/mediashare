@@ -36,7 +36,6 @@ export class UserProfileComponent implements OnInit {
           for (let post of response.posts) {
             this.posts.push(post);
           }
-          console.log(this.posts)
         }
       })
       this.api.post('user/getUserInfo', {

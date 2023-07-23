@@ -5,7 +5,7 @@
             <fa-icon class="text-orange-600 text-lg" *ngIf="vote == 1" [icon]="upvoteIconActive"></fa-icon>
         </button>
         <div [ngClass]="{ 'text-orange-600': vote == 1, 'text-blue-600': vote == -1 }"
-            class="font-bold">{{ karma }}</div>
+            class="font-bold text-sm">{{ karma }}</div>
         <button (click)="onDownvoteClick()" class="mx-2 border border-gray-100 px-2 py-1 rounded mt-2 hover:border-gray-300 active:scale-105 duration-200">
             <fa-icon class="text-lg" *ngIf="vote == 1 || vote == 0" [icon]="downvoteIcon"></fa-icon>
             <fa-icon class="text-blue-600 text-lg" *ngIf="vote == -1" [icon]="downvoteIconActive"></fa-icon>
@@ -19,7 +19,10 @@
         </div>
         <a [routerLink]="['/post', _id]" class="mt-2 text-lg font-bold" target="_blank">{{ title }}</a>
         <div class="mt-2 flex justify-center border-1 border-black">
-            <img [src]="filePath">
+            <img *ngIf="fileType == 'picture'" [src]="filePath">
+            <video id="video" *ngIf="fileType == 'video'" controls volumn="0.4">
+                <source [src]="filePath" type="video/mp4">
+            </video>
         </div>
         <button [disabled]="isCommentSectionVisible" class="mt-2 self-end hover:bg-gray-200 hover:border-gray-400 px-4 py-1 bg-gray-100 rounded border duration-200 ">
             <a [ngClass]="{ 'pointer-events-none': isCommentSectionVisible}" class="text-xs" [routerLink]="['/post', _id]" target="_blank">

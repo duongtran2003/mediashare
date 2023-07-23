@@ -40,7 +40,6 @@ export class PostComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.post);
     this.comments = this.post.comments;
     this.username = this.post.username;
     this.title = this.post.title;
