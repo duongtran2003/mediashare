@@ -102,6 +102,13 @@ export class PostComponent implements OnInit {
           this.isVoteBtnReady = true;
         },
         error: (err) => {
+          if (err.status == 401) {
+            this.toast.makeToast({
+              state: "close",
+              message: "Login first!",
+              barClass: ['bg-red-600']
+            })
+          }
           this.isVoteBtnReady = true;
         }
       });
@@ -115,6 +122,13 @@ export class PostComponent implements OnInit {
           },
           error: (err) => {
             this.isVoteBtnReady = true;
+            if (err.status == 401) {
+              this.toast.makeToast({
+                state: "close",
+                message: "Login first!",
+                barClass: ['bg-red-600']
+              })
+            }
           }
         })
       }
@@ -125,6 +139,13 @@ export class PostComponent implements OnInit {
           },
           error: (err) => {
             this.isVoteBtnReady = true;
+            if (err.status == 401) {
+              this.toast.makeToast({
+                state: "close",
+                message: "Login first!",
+                barClass: ['bg-red-600']
+              })
+            }
           }
         })
       }
@@ -139,6 +160,13 @@ export class PostComponent implements OnInit {
         },
         error: (err) => {
           this.isVoteBtnReady = true;
+          if (err.status == 401) {
+            this.toast.makeToast({
+              state: "close",
+              message: "Login first!",
+              barClass: ['bg-red-600']
+            })
+          }
         }
       });
     }
@@ -151,6 +179,13 @@ export class PostComponent implements OnInit {
           },
           error: (err) => {
             this.isVoteBtnReady = true;
+            if (err.status == 401) {
+              this.toast.makeToast({
+                state: "close",
+                message: "Login first!",
+                barClass: ['bg-red-600']
+              })
+            }
           }
         })
       }
@@ -161,6 +196,13 @@ export class PostComponent implements OnInit {
           },
           error: (err) => {
             this.isVoteBtnReady = true;
+            if (err.status == 401) {
+              this.toast.makeToast({
+                state: "close",
+                message: "Login first!",
+                barClass: ['bg-red-600']
+              })
+            }
           }
         })
       }
@@ -183,11 +225,20 @@ export class PostComponent implements OnInit {
         this.userCommentInput = "";
       },
       error: (err) => {
-        this.toast.makeToast({
-          state: "close",
-          message: "Server's error",
-          barClass: ['bg-red-600'],
-        })
+        if (err.status == 401) {
+          this.toast.makeToast({
+            state: "close",
+            message: "Login first!",
+            barClass: ['bg-red-600'],
+          })
+        }
+        else {
+          this.toast.makeToast({
+            state: "close",
+            message: "Server's error",
+            barClass: ['bg-red-600'],
+          })
+        }
       }
     })
   }
