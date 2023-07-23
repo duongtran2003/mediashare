@@ -1,48 +1,49 @@
-<div class="rounded-lg bg-white drop-shadow-lg py-8 px-8 mt-4 flex flex-col">
-    <div class="flex items-center">
-        <img [routerLink]="['user', username]" class="w-6 h-6 mr-2 rounded-full select-none cursor-pointer"
-            [src]="avatar">
-        <div class="text-sm select-none cursor-pointer" [routerLink]="['/user', username]">{{ username }}</div>
-    </div>
-    <a [routerLink]="['/post', _id]" class="mt-2 text-lg font-bold" target="_blank">{{ title }}</a>
-    <div class="mt-2 flex justify-center border-1 border-black">
-        <img [src]="filePath">
-    </div>
-    <div class="border-t-2 border-b-2 mt-2 border-blue-600 flex">
-        <button [disabled]="!isVoteBtnReady" (click)="onUpvoteClick()" class="px-6 py-1 duration-200 active:scale-105"
-            [ngClass]="{ 'bg-orange-600': vote == 1, 'text-white': vote == 1, 'bg-gray-100': vote != 1, 'hover:bg-gray-200': vote!= 1 }">
-            <fa-icon [icon]="upvoteIcon"></fa-icon>
-            <span class="ml-2">Upvote</span>
+<div class="rounded-lg bg-white drop-shadow-lg pr-8 mt-4 flex overflow-hidden">
+    <div class="bg-gray-100 flex flex-col items-center py-8">
+        <button (click)="onUpvoteClick()" class="mx-2 border border-gray-100 px-2 py-1 rounded mb-2 hover:border-gray-300 active:scale-105 duration-200">
+            <fa-icon class="text-lg" *ngIf="vote == -1 || vote == 0" [icon]="upvoteIcon"></fa-icon>
+            <fa-icon class="text-orange-600 text-lg" *ngIf="vote == 1" [icon]="upvoteIconActive"></fa-icon>
         </button>
-        <button [disabled]="!isVoteBtnReady" (click)="onDownvoteClick()" class="px-6 py-1 duration-200 active:scale-105"
-            [ngClass]="{ 'bg-blue-600': vote == -1, 'text-white': vote == -1, 'bg-gray-100': vote != -1, 'hover:bg-gray-200': vote != -1 }">
-            <fa-icon [icon]="downvoteIcon"></fa-icon>
-            <span class="ml-2">Downvote</span>
+        <div [ngClass]="{ 'text-orange-600': vote == 1, 'text-blue-600': vote == -1 }"
+            class="font-bold">{{ karma }}</div>
+        <button (click)="onDownvoteClick()" class="mx-2 border border-gray-100 px-2 py-1 rounded mt-2 hover:border-gray-300 active:scale-105 duration-200">
+            <fa-icon class="text-lg" *ngIf="vote == 1 || vote == 0" [icon]="downvoteIcon"></fa-icon>
+            <fa-icon class="text-blue-600 text-lg" *ngIf="vote == -1" [icon]="downvoteIconActive"></fa-icon>
         </button>
-        <div class="px-4 py-1 bg-gray-100 font-bold border-r-2 border-gray-400">{{ karma }}</div>
-        <button class="grow bg-gray-100 hover:bg-gray-300 duration-200">
-            <a [routerLink]="['/post', _id]" target="_blank">
-                <fa-icon [icon]="commentsIcon"></fa-icon>
-                <span class="ml-2">Comments ({{ comments }})</span>
+    </div>
+    <div class="flex flex-col ml-2 py-8">
+        <div class="flex items-center">
+            <img [routerLink]="['user', username]" class="w-6 h-6 mr-2 rounded-full select-none cursor-pointer pointer-events-none"
+                [src]="avatar">
+            <div class="text-sm select-none cursor-pointer font-bold" [routerLink]="['/user', username]">{{ username }}</div>
+        </div>
+        <a [routerLink]="['/post', _id]" class="mt-2 text-lg font-bold" target="_blank">{{ title }}</a>
+        <div class="mt-2 flex justify-center border-1 border-black">
+            <img [src]="filePath">
+        </div>
+        <button [disabled]="isCommentSectionVisible" class="mt-2 self-end hover:bg-gray-200 hover:border-gray-400 px-4 py-1 bg-gray-100 rounded border duration-200 ">
+            <a [ngClass]="{ 'pointer-events-none': isCommentSectionVisible}" class="text-xs" [routerLink]="['/post', _id]" target="_blank">
+                Comments ({{ comments }}) 
             </a>
         </button>
-    </div>
-    <div *ngIf="isCommentSectionVisible" class="flex flex-col mt-2">
-        <div class="flex items-center">
-            <input #commentInput type="text" [value]="userCommentInput"
-                (input)="updateUserCommentInput(commentInput.value)"
-                class="grow bg-gray-100 border rounded-sm px-4 py-2 text-sm outline-none hover:border-blue-500 focus:border-blue-600 duration-200">
-            <button (click)="postComment()"
-                class="bg-blue-600 text-white rounded-lg px-4 py-2 ml-2 hover:bg-blue-800 duration-200 active:scale-105">
-                <fa-icon [icon]="postCommentIcon"></fa-icon>
-            </button>
-        </div>
-        <div class="flex flex-col mt-2">
-            <div *ngFor="let comment of commentsContent"
-                class="break-words px-2 py-1 border border-gray-200 shadow-md mt-1 rounded-lg">
-                <div [routerLink]="['/user', comment.username]" class="font-bold text-xs select-none cursor-pointer">{{
-                    comment.username }}</div>
-                <div>{{ comment.content }}</div>
+        <div *ngIf="isCommentSectionVisible" class="flex flex-col mt-4 border-t-2 border-blue-500 pt-4">
+            <div class="flex items-center">
+                <input #commentInput type="text" [value]="userCommentInput"
+                    (input)="updateUserCommentInput(commentInput.value)"
+                    class="grow bg-gray-100 border rounded-sm px-4 py-2 text-sm outline-none hover:border-blue-500 focus:border-blue-600 duration-200">
+                <button (click)="postComment()"
+                    class="bg-blue-600 text-white rounded-lg px-4 py-1.5 ml-2 hover:bg-blue-800 duration-200 active:scale-105">
+                    <fa-icon [icon]="postCommentIcon"></fa-icon>
+                </button>
+            </div>
+            <div class="flex flex-col mt-2">
+                <div *ngFor="let comment of commentsContent"
+                    class="break-words px-2 py-1 border border-gray-200 shadow-md mt-1 rounded-lg">
+                    <div [routerLink]="['/user', comment.username]"
+                        class="font-bold text-xs select-none cursor-pointer">{{
+                        comment.username }}</div>
+                    <div>{{ comment.content }}</div>
+                </div>
             </div>
         </div>
     </div>

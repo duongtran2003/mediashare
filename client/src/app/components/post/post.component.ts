@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { faComments } from '@fortawesome/free-regular-svg-icons';
-import { IconDefinition, faAngleDown, faAngleUp, faChevronCircleDown, faChevronCircleUp, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faComments, faThumbsDown, faThumbsUp } from '@fortawesome/free-regular-svg-icons';
+import { IconDefinition, faThumbsDown as fasThumbsDown, faThumbsUp as fasThumbsUp, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -27,10 +27,12 @@ export class PostComponent implements OnInit {
   commentsContent: any[] = [];
   btnState: string = "0";
   isVoteBtnReady: boolean = false;
-  upvoteIcon: IconDefinition = faChevronCircleUp;
-  downvoteIcon: IconDefinition = faChevronCircleDown;
+  upvoteIcon: IconDefinition = faThumbsUp;
+  downvoteIcon: IconDefinition = faThumbsDown;
   commentsIcon: IconDefinition = faComments;
-  postCommentIcon: IconDefinition = faPaperPlane
+  downvoteIconActive: IconDefinition = fasThumbsDown;
+  upvoteIconActive: IconDefinition = fasThumbsUp;
+  postCommentIcon: IconDefinition = faPaperPlane;
   userCommentInput: string = "";
 
   constructor(private socket: Socket, private api: ApiService, private auth: AuthService, private toast: ToastService) {
@@ -59,6 +61,7 @@ export class PostComponent implements OnInit {
       this.api.post('comment/queryComment', { post_id: this._id }).subscribe({
         next: (response) => {
           this.commentsContent = response.comments;
+          this.commentsContent.reverse();
           this.comments = response.comments.length;
         },
         error: (err) => {
@@ -87,7 +90,7 @@ export class PostComponent implements OnInit {
     this.socket.on('user-comment', (data: any) => {
       if (data.post_id == this._id) {
         if (this.isCommentSectionVisible) {
-          this.commentsContent.push(data.comment);
+          this.commentsContent.unshift(data.comment);
         }
         this.comments = data.postComments;
       }
