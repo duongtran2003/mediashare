@@ -12,6 +12,7 @@ import { Socket } from 'ngx-socket-io';
   styleUrls: ['./post.component.css'],
 })
 export class PostComponent implements OnInit {
+  @Input() isCommentSectionVisible!: boolean;
   @Input() post: any;
   username: string = "";
   title: string = "";
@@ -31,13 +32,13 @@ export class PostComponent implements OnInit {
   commentsIcon: IconDefinition = faComments;
   postCommentIcon: IconDefinition = faPaperPlane
   userCommentInput: string = "";
-  isCommentSectionVisible: boolean = false;
 
   constructor(private socket: Socket, private api: ApiService, private auth: AuthService, private toast: ToastService) {
 
   }
 
   ngOnInit(): void {
+    console.log(this.post);
     this.comments = this.post.comments;
     this.username = this.post.username;
     this.title = this.post.title;
@@ -54,7 +55,17 @@ export class PostComponent implements OnInit {
         this.avatar = 'http://localhost:8000/static/default.png';
       }
     });
-    console.log({ username: this.auth.getCurrentUser(), post_id: this._id })
+    if (this.isCommentSectionVisible) {
+      this.api.post('comment/queryComment', { post_id: this._id }).subscribe({
+        next: (response) => {
+          this.commentsContent = response.comments;
+          this.comments = response.comments.length;
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      });
+    }
     this.api.post('vote/getUserVote', { post_id: this._id }).subscribe({
       next: (response) => {
         this.vote = response.type;
@@ -179,22 +190,5 @@ export class PostComponent implements OnInit {
         })
       }
     })
-  }
-  toggleCommentSection() {
-    this.isCommentSectionVisible = !this.isCommentSectionVisible;
-    if (this.isCommentSectionVisible) {
-      this.api.post('comment/queryComment', { post_id: this._id }).subscribe({
-        next: (response) => {
-          this.commentsContent = response.comments;
-          this.comments = response.comments.length;
-        },
-        error: (err) => {
-          console.log(err);
-        }
-      });
-    }
-    else {
-      this.commentsContent = [];
-    }
   }
 }

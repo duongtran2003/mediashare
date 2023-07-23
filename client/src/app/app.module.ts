@@ -16,6 +16,7 @@ import { NavColItemComponent } from './components/nav-col-item/nav-col-item.comp
 import { SearchItemComponent } from './components/search-item/search-item.component';
 import { CreatePostComponent } from './components/create-post/create-post.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { DetailedPostComponent } from './components/detailed-post/detailed-post.component';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:8000' };

@@ -14,6 +14,31 @@ class PostController {
         });
     }
 
+    queryById(req: Request, res: Response) {
+        const id = req.body.post_id;
+        Post.findById(id, "title filename username fileType karma _id comments")
+        .then((post) => {
+            if (post) {
+                res.statusCode = 200;
+                return res.json({
+                    post: post,
+                })
+            }
+            else {
+                res.statusCode = 400;
+                return res.json({
+                    message: "Bad request",
+                })
+            }
+        })
+        .catch((err) => {
+            res.statusCode = 500;
+            return res.json({
+                message: "Server's error",
+            })
+        })
+    }
+
     create(req: Request, res: Response) {
         const username = res.locals.claims.username;
         const filename = req.file?.filename;
@@ -40,7 +65,6 @@ class PostController {
             karma: 0,
             comments: 0,
         }
-        console.log(newPost);
         Post.create(newPost)
             .then((post) => {
                 if (post) {
