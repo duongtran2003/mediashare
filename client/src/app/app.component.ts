@@ -5,7 +5,6 @@ import { ApiService } from './services/api.service';
 import { AuthService } from './services/auth.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { NavigationEnd, Router } from '@angular/router';
-import { NotificationService } from './services/notification.service';
 import { ToastService } from './services/toast.service';
 
 @Component({
@@ -54,7 +53,7 @@ export class AppComponent implements OnInit {
     this.isEscapeKeyPressed = false;
   }
 
-  constructor(private toast: ToastService, private notification: NotificationService, private router: Router, private api: ApiService, private auth: AuthService, private cookie: CookieService) { }
+  constructor(private toast: ToastService, private router: Router, private api: ApiService, private auth: AuthService, private cookie: CookieService) { }
   ngOnInit(): void {
     this.router.events.subscribe({
       next: (event) => {
@@ -77,21 +76,6 @@ export class AppComponent implements OnInit {
         }
       },
     });
-    this.notification.notification$.subscribe({
-      next: (noti) => {
-        if (noti.source == this.auth.getCurrentUser()) {
-          return;
-        }
-        this.toast.makeToast({
-          state: "close",
-          message: noti.message,
-          barClass: ['bg-blue-600'],
-        });
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    })
   }
 
   toggleLogin(): void {

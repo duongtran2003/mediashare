@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
+import { ApiService } from './api.service';
 
 interface INotification {
   message: string,  /** message to be shown in the toast */
@@ -17,7 +18,7 @@ export class NotificationService {
 
 
   notification$: Subject<INotification> = new Subject<INotification>();
-  constructor(private socket: Socket) {
+  constructor(private socket: Socket, private api: ApiService) {
     this.socket.on('user-vote', (data: any) => {
       const newNotification = {
          message: "",

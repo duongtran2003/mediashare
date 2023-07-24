@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
 import { Vote } from '../models/Vote';
 import { Post } from '../models/Post';
+import { Notification } from '../models/Notification';
 
 class VoteController {
     async votePost(req: Request, res: Response) {
@@ -42,8 +43,15 @@ class VoteController {
                             username: vote.username,
                             voteType: vote.type,
                         });
+                        Notification.create({
+                            source: vote.username,
+                            target: op,
+                            message: vote.type == 1 ? `${vote.username} has upvoted your post` : `${vote.username} has downvoted your post`,
+                            status: "unseen",
+                            dest: `http://localhost:4200/post/${vote.post_id}`,
+                        });
                         return res.json({
-                            message: "success", 
+                            message: "success",
                         });
                     }
                     else {
@@ -114,8 +122,15 @@ class VoteController {
                             username: vote.username,
                             voteType: vote.type,
                         });
+                        Notification.create({
+                            source: vote.username,
+                            target: op,
+                            message: vote.type == 1 ? `${vote.username} has upvoted your post` : `${vote.username} has downvoted your post`,
+                            status: "unseen",
+                            dest: `http://localhost:4200/post/${vote.post_id}`,
+                        });
                         return res.json({
-                            message: "success", 
+                            message: "success",
                         });
                     }
                     else {
@@ -180,7 +195,14 @@ class VoteController {
                             op: op,
                             username: vote.username,
                             voteType: 0,
-                        })
+                        });
+                        Notification.create({
+                            source: vote.username,
+                            target: op,
+                            message: vote.type == 1 ? `${vote.username} has upvoted your post` : `${vote.username} has downvoted your post`,
+                            status: "unseen",
+                            dest: `http://localhost:4200/post/${vote.post_id}`,
+                        });
                         return res.json({
                             message: "success",
                         });
