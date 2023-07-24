@@ -7,6 +7,7 @@ const router = express.Router();
 const notificationController = new NotificationController();
 
 router.get('/query', authGuard, notificationController.query);
+router.post('/delete', authGuard, notificationController.delete);
 
 export {
     router

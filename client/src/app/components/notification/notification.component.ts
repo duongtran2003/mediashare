@@ -23,6 +23,7 @@ export class NotificationComponent implements OnInit {
   bellIcon: IconDefinition = faBell;
   dropdownState = 'close';
   notificationContent: any[] = [];
+  unseenNotifications: number = 0;
 
   constructor(private toast: ToastService, private notification: NotificationService, private auth: AuthService, private api: ApiService) { }
 
@@ -33,6 +34,13 @@ export class NotificationComponent implements OnInit {
           this.api.get('notification/query').subscribe({
             next: (res) => {
               this.notificationContent = res.notifications;
+              let unseen = 0;
+              for (let noti of this.notificationContent) {
+                if (noti.status == 'unseen') {
+                  unseen += 1;
+                }
+              }
+              this.unseenNotifications = unseen;
             },
           })
         }
@@ -47,6 +55,7 @@ export class NotificationComponent implements OnInit {
     this.notification.notification$.subscribe({
       next: (res) => {
         this.notificationContent.push(res);
+        this.unseenNotifications += 1;
         this.toast.makeToast({
           state: "close",
           message: res.message,
@@ -59,11 +68,29 @@ export class NotificationComponent implements OnInit {
   toggleDropdown(): void {
     if (this.dropdownState == 'close') {
       this.dropdownState = 'open';
-      console.log(this.dropdownState);
     }
     else {
       this.dropdownState = 'close';
-      console.log(this.dropdownState);
+      // delete all seen notification;
+      this.notificationContent = this.notificationContent.filter((noti) => {
+        if (noti.status == 'unseen') {
+          return true;
+        }
+        return false;
+      });
+    }
+  }
+
+  onNotiHover(noti: any) {
+    if (noti.status == 'unseen') {
+      noti.status = 'seen';
+      this.unseenNotifications -= 1;
+      this.api.post('notification/delete', { _id: noti._id }).subscribe({
+        next: (res) => {
+        }, 
+        error: (err) => {
+        }
+      })
     }
   }
 }
