@@ -12,7 +12,6 @@ export class AuthService {
   setCurrentUser(user: { username: string, avatarPath: string }) {
     this.currentUserEmitter.next({ username: user.username, avatarPath: user.avatarPath });
     this.currentUser = user.username; 
-    console.log(this.currentUser);
   }
   getCurrentUser(): string {
     return this.currentUser;

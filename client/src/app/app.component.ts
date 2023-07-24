@@ -53,7 +53,19 @@ export class AppComponent implements OnInit {
     this.isEscapeKeyPressed = false;
   }
 
-  constructor(private toast: ToastService, private router: Router, private api: ApiService, private auth: AuthService, private cookie: CookieService) { }
+  constructor(private toast: ToastService, private router: Router, private api: ApiService, private auth: AuthService, private cookie: CookieService) {
+    this.api.get('auth/getUsername').subscribe({
+      next: (response) => {
+        if (response.username) {
+          this.auth.setCurrentUser({ username: response.username, avatarPath: response.avatarPath });
+        }
+      },
+      error: (err) => {
+        this.auth.setCurrentUser({ username: "", avatarPath: "" });
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.router.events.subscribe({
       next: (event) => {
@@ -69,13 +81,7 @@ export class AppComponent implements OnInit {
         }
       }
     })
-    this.api.get('auth/getUsername').subscribe({
-      next: (response) => {
-        if (response.username) {
-          this.auth.setCurrentUser({ username: response.username, avatarPath: response.avatarPath });
-        }
-      },
-    });
+
   }
 
   toggleLogin(): void {

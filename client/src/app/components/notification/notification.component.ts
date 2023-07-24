@@ -29,8 +29,6 @@ export class NotificationComponent implements OnInit {
   ngOnInit(): void {
     this.auth.currentUserEmitter.subscribe({
       next: (res) => {
-        console.log(res);
-        console.log(this.auth.getCurrentUser());
         if (res.username != "") {
           this.api.get('notification/query').subscribe({
             next: (res) => {
