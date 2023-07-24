@@ -10,11 +10,13 @@ class VoteController {
         const type = req.body.type;
         let foundPost = 0;
         let karma = 0;
+        let op = "";
         const point = type;
         await Post.findOneAndUpdate({ _id: post_id }, { $inc: { karma: point } }, { new: true })
             .then((post) => {
                 if (post) {
                     foundPost = 1;
+                    op = post.username;
                     karma = post.karma;
                 }
                 else {
@@ -35,6 +37,7 @@ class VoteController {
                         res.statusCode = 200;
                         io.emit('user-vote', {
                             post_id: vote.post_id,
+                            op: op,
                             karma: karma,
                             username: vote.username,
                             voteType: vote.type,
@@ -73,6 +76,7 @@ class VoteController {
         const post_id = req.body.post_id;
         const type = req.body.type;
         let foundPost = 0;
+        let op = "";
         let point = 0;
         let karma = 0;
         if (type == 1) {
@@ -86,6 +90,7 @@ class VoteController {
                 if (post) {
                     foundPost = 1;
                     karma = post.karma;
+                    op = post.username;
                 }
                 else {
                     foundPost = 0;
@@ -104,6 +109,7 @@ class VoteController {
                         res.statusCode = 200;
                         io.emit('user-vote', {
                             post_id: vote.post_id,
+                            op: op,
                             karma: karma,
                             username: vote.username,
                             voteType: vote.type,
@@ -139,6 +145,7 @@ class VoteController {
         const username = res.locals.claims.username;
         const post_id = req.body.post_id;
         const type = req.body.type;
+        let op = "";
         let point = 0;
         if (type == 1) {
             point = -1;
@@ -153,6 +160,7 @@ class VoteController {
                 if (post) {
                     foundPost = 1;
                     karma = post.karma;
+                    op = post.username;
                 }
                 else {
                     foundPost = 0;
@@ -169,6 +177,7 @@ class VoteController {
                         io.emit('user-vote', {
                             post_id: vote.post_id,
                             karma: karma,
+                            op: op,
                             username: vote.username,
                             voteType: 0,
                         })
