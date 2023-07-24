@@ -83,7 +83,6 @@ export class PostComponent implements OnInit {
         if (data.username == this.auth.getCurrentUser()) {
           this.vote = data.voteType;
         }
-        console.log(data);
       }
     });
     this.socket.on('user-comment', (data: any) => {

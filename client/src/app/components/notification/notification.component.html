@@ -1,1 +1,10 @@
-<p>notification works!</p>
+<div *ngIf="isVisible" class="flex flex-col fixed bottom-0 left-0 m-2 rounded-xl shadow-lg bg-white w-[20%] overflow-hidden">
+    <div [@inOutAnimation]="dropdownState" class="max-h-80 overflow-scroll">
+        <div class="text-sm px-4 py-2 overflow-clip hover:bg-red-600 hover:text-white cursor-pointer select-none" *ngFor="let noti of notificationContent">
+            <div>{{ noti.message }}</div>
+        </div>
+    </div>
+    <div (click)="toggleDropdown()" class="flex items-center text-md hover:bg-red-600 hover:text-white px-4 py-2 select-none cursor-pointer duration-200">
+        <fa-icon class="text-2xl mr-2" [icon]="bellIcon"></fa-icon><span class="mr-1">Notifications</span><span>({{ notificationContent.length }})</span>
+    </div>
+</div>

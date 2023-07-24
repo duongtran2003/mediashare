@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
 import { ApiService } from './api.service';
+import { AuthService } from './auth.service';
 
 interface INotification {
   message: string,  /** message to be shown in the toast */
@@ -18,8 +19,11 @@ export class NotificationService {
 
 
   notification$: Subject<INotification> = new Subject<INotification>();
-  constructor(private socket: Socket, private api: ApiService) {
+  constructor(private socket: Socket, private api: ApiService, private auth: AuthService) {
     this.socket.on('user-vote', (data: any) => {
+      if (data.username == this.auth.getCurrentUser() || data.op != this.auth.getCurrentUser()) {
+        return;
+      }
       const newNotification = {
          message: "",
          source: "",

@@ -4,7 +4,7 @@ import { Notification } from '../models/Notification';
 class NotificationController {
     query(req: Request, res: Response) {
         const username = res.locals.claims.username;
-        Notification.find({ target: username })
+        Notification.find({ target: username }, "dest message source status target -_id")
         .then((notifications) => {
             res.statusCode = 200;
             return res.json({
