@@ -28,12 +28,14 @@ class FriendController {
             if (friend) {
                 res.statusCode = 200;
                 return res.json({
-                    status: friend.status,
+                    friend, 
                 });
             }
             else {
                 res.statusCode = 200;
                 return res.json({
+                    source: username,
+                    target: target,
                     status: "none",
                 })
             }

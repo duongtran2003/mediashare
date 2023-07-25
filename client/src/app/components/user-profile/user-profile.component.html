@@ -16,6 +16,24 @@
             <div (click)="onEmailClick()"
                 class="duration-200 hover:shadow-blue-500/20 cursor-pointer select-none ml-4 my-2 bg-gray-100 pl-2 pr-12 py-2 rounded-lg shadow-lg">
                 Email: {{ email }}</div>
+            <div *ngIf="friendCase == 1" class="ml-4">
+                You sent {{ usernameFromParams }} a friend request. <span class="text-blue-600 select-none cursor-pointer hover:text-blue-700">Cancel?</span>
+            </div>
+            <div *ngIf="friendCase == 2" class="ml-4">
+                {{ usernameFromParams }} sent your a friend request. 
+                <button class="ml-2 bg-green-500 text-white rounded-sm px-4 py-1 hover:bg-green-600 duration-100 active:scale-105">
+                    Yes
+                </button>
+                <button class="ml-2 bg-red-600 text-white rounded-sm px-4 py-1 hover:bg-red-700 duration-100 active:scale-105">
+                    No
+                </button>
+            </div>
+            <div *ngIf="friendCase" class="ml-4">
+                You guys aren't friend. 
+                <button class="ml-2 bg-blue-600 text-white rounded-sm px-4 py-1 hover:bg-blue-700 duration-100 active:scale-105">
+                    Add friend
+                </button>
+            </div>
         </div>
     </div>
     <div *ngIf="!(username && email)">

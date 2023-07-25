@@ -26,11 +26,13 @@ export class UserProfileComponent implements OnInit {
   isImageLoaded: boolean = false;
   isUploadingDone: boolean = true;
   posts: any = []; // all posts from database  
+  usernameFromParams: string = "";
+  friendCase: number = 0;
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const usernameFromParams = params['username'];
-      this.api.post('post/index', { username: usernameFromParams }).subscribe({
+      this.usernameFromParams = params['username'];
+      this.api.post('post/index', { username: this.usernameFromParams }).subscribe({
         next: (response) => {
           this.posts = [];
           for (let post of response.posts) {
@@ -39,7 +41,7 @@ export class UserProfileComponent implements OnInit {
         }
       })
       this.api.post('user/getUserInfo', {
-        username: usernameFromParams
+        username: this.usernameFromParams
       }).subscribe({
         next: (response) => {
           this.username = response.username;
@@ -56,6 +58,24 @@ export class UserProfileComponent implements OnInit {
           console.log(err.error.message);
         }
       });
+      if (!this.isMyProfile && this.auth.getCurrentUser() != "") {
+        this.api.post('friend/checkStatus', { target: this.usernameFromParams }).subscribe({
+          next: (res) => {
+            //case 1: u sent them a request and its still pending: source: your username, target: their username, 
+            if (res.source == this.auth.getCurrentUser() && res.target == this.usernameFromParams && res.status == 'pending') {
+              this.friendCase = 1;
+            }
+            //case 2: they sent u a request and its still pending: source: their username, target: your username,
+            if (res.source == this.usernameFromParams && res.target == this.auth.getCurrentUser() && res.status == 'pending') {
+              this.friendCase = 2;
+            }
+            //case 3: no relationship => status: none 
+            if (res.status == 'none') {
+              this.friendCase = 3;
+            }
+          }
+        })
+      }
       this.resetState();
     })
   }
