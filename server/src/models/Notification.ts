@@ -4,7 +4,7 @@ interface INotification {
   message: string,  /** message to be shown in the toast */
   source: string,  /** notification sender */
   target: string, /** the one who is supposed to receive the msg */
-  status: string, /** unseen, seen, pending: reserved for friend request, it stays pending as long as it should be */
+  status: string, /** unseen, seen */
   dest: string, /** target link when user clicks on the notification */
 }
 
