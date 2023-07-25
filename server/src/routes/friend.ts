@@ -10,6 +10,7 @@ router.post('/checkStatus', authGuard, friendController.checkStatus);
 router.post('/sendRequest', authGuard, friendController.sendRequest);
 router.post('/cancelRequest', authGuard, friendController.cancelRequest);
 router.post('/confirmRequest', authGuard, friendController.confirmRequest);
+router.post('/removeFriend', authGuard, friendController.removeFriend);
 
 export {
     router
