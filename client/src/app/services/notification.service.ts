@@ -38,8 +38,8 @@ export class NotificationService {
         newNotification.message = data.voteType == 1 ? `${data.username} has upvoted your post` : `${data.username} has downvoted your post`;
         newNotification.status = "unseen";
         newNotification.dest = `http://localhost:4200/post/${data.post_id}`;
+        this.notification$.next(newNotification);
       }
-      this.notification$.next(newNotification);
     });
 
     //todo: listen for friend request notification and new post notification

@@ -196,13 +196,6 @@ class VoteController {
                             username: vote.username,
                             voteType: 0,
                         });
-                        Notification.create({
-                            source: vote.username,
-                            target: op,
-                            message: vote.type == 1 ? `${vote.username} has upvoted your post` : `${vote.username} has downvoted your post`,
-                            status: "unseen",
-                            dest: `http://localhost:4200/post/${vote.post_id}`,
-                        });
                         return res.json({
                             message: "success",
                         });

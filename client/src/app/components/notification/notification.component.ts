@@ -93,4 +93,8 @@ export class NotificationComponent implements OnInit {
       })
     }
   }
+
+  onScroll(e: any) {
+    console.log(e);
+  }
 }
