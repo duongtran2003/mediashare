@@ -3,9 +3,8 @@ import { Friend } from '../models/Friend';
 
 class FriendController {
     query(req: Request, res: Response) {
-        const friends: any[] = [];
         const username = res.locals.claims.username;
-        Friend.find({ $or: [{ source: username }, { target: username }], status: "active" }, "target source -_id")
+        Friend.find({ $or: [{ source: username }, { target: username }], status: "active" }, "target source _id")
             .then((friends) => {
                 res.statusCode = 200;
                 return res.json({
@@ -18,6 +17,23 @@ class FriendController {
                     message: "Server's error",
                 })
             })
+    }
+
+    getRequest(req: Request, res: Response) {
+        const username = res.locals.claims.username;
+        Friend.find({ target: username, status: "pending" })
+        .then((requests) => {
+            res.statusCode = 200;
+            return res.json({
+                requests: requests,
+            })
+        })
+        .catch((err) => {
+            res.statusCode = 500;
+            return res.json({
+                message: "Server's error",
+            })
+        });
     }
 
     checkStatus(req: Request, res: Response) {

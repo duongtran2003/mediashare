@@ -18,6 +18,7 @@ import { CreatePostComponent } from './components/create-post/create-post.compon
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { DetailedPostComponent } from './components/detailed-post/detailed-post.component';
 import { NotificationComponent } from './components/notification/notification.component';
+import { FriendListComponent } from './components/friend-list/friend-list.component';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:8000' };
@@ -36,6 +37,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8000' };
     CreatePostComponent,
     SearchItemComponent,
     NotificationComponent,
+    FriendListComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Comment } from '../models/Comment';
 import { Post } from '../models/Post';
+import { Notification } from '../models/Notification';
 
 class CommentController {
     queryComment(req: Request, res: Response) {
@@ -20,7 +21,7 @@ class CommentController {
             })
     }
 
-    create(req: Request, res: Response) {
+    async create(req: Request, res: Response) {
         const io = req.app.get('io');
         const username = res.locals.claims.username;
         const content = req.body.content.trim();
@@ -31,58 +32,52 @@ class CommentController {
             });
         }
         const post_id = req.body.post_id;
-        Comment.create({
-            username: username,
-            post_id: post_id,
-            content: content,
-        })
-            .then((comment) => {
-                if (comment) {
-                    Post.findOneAndUpdate({ _id: post_id }, { $inc: { comments: 1 } }, { new: true })
-                        .then((post) => {
-                            if (post) {
-                                res.statusCode = 200;
-                                io.emit('user-comment', {
-                                    post_id: post._id,
-                                    comment: {
-                                        username: comment.username,
-                                        content: comment.content,
-                                    },
-                                    postComments: post.comments,
-                                })
-                                return res.json({
-                                    message: "success",
-                                });
-                            }
-                            else {
-                                console.log(post);
-                                res.statusCode = 500;
-                                return res.json({
-                                    message: "Server's error",
-                                })
-                            }
-                        })
-                        .catch((err) => {
-                            res.statusCode = 500;
-                            return res.json({
-                                message: "Server's error",
-                            })
-                        });
 
-                }
-                else {
-                    res.statusCode = 500;
-                    return res.json({
-                        message: "Server's error",
-                    })
-                }
-            })
-            .catch((err) => {
+        const post = await Post.findOneAndUpdate({ _id: post_id }, { $inc: { comments: 1 } }, { new: true });
+        if (post) {
+            const comment = await Comment.create({
+                username: username,
+                post_id: post_id,
+                content: content,
+            });
+            if (comment) {
+                const noti = await Notification.create({
+                    source: comment.username,
+                    target: post.username,
+                    message: `${comment.username} has commented on your post`,
+                    status: "unseen",
+                    segs: '/post',
+                    dest: post._id,
+                }) 
+                res.statusCode = 200;
+                io.emit('user-comment', {
+                    noti_id: noti._id,
+                    post_id: post._id,
+                    comment: {
+                        username: comment.username,
+                        content: comment.content,
+                    },
+                    message: noti.message,
+                    postComments: post.comments,
+                    target: post.username,
+                });
+                return res.json({
+                    message: "success",
+                })
+            }
+            else {
                 res.statusCode = 500;
                 return res.json({
                     message: "Server's error",
                 })
+            }
+        }        
+        else {
+            res.statusCode = 500;
+            return res.json({
+                message: "Server's error",
             })
+        }
     }
 }
 

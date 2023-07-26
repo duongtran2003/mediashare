@@ -36,20 +36,25 @@ class VoteController {
                 .then((vote) => {
                     if (vote) {
                         res.statusCode = 200;
-                        io.emit('user-vote', {
-                            post_id: vote.post_id,
-                            op: op,
-                            karma: karma,
-                            username: vote.username,
-                            voteType: vote.type,
-                        });
+
                         Notification.create({
                             source: vote.username,
                             target: op,
                             message: vote.type == 1 ? `${vote.username} has upvoted your post` : `${vote.username} has downvoted your post`,
                             status: "unseen",
-                            dest: `http://localhost:4200/post/${vote.post_id}`,
-                        });
+                            segs: '/post',
+                            dest: vote.post_id,
+                        })
+                            .then((noti) => {
+                                io.emit('user-vote', {
+                                    noti_id: noti._id,
+                                    post_id: vote.post_id,
+                                    op: op,
+                                    karma: karma,
+                                    username: vote.username,
+                                    voteType: vote.type,
+                                });
+                            })
                         return res.json({
                             message: "success",
                         });
@@ -115,20 +120,24 @@ class VoteController {
                 .then((vote) => {
                     if (vote) {
                         res.statusCode = 200;
-                        io.emit('user-vote', {
-                            post_id: vote.post_id,
-                            op: op,
-                            karma: karma,
-                            username: vote.username,
-                            voteType: vote.type,
-                        });
                         Notification.create({
                             source: vote.username,
                             target: op,
                             message: vote.type == 1 ? `${vote.username} has upvoted your post` : `${vote.username} has downvoted your post`,
                             status: "unseen",
-                            dest: `http://localhost:4200/post/${vote.post_id}`,
-                        });
+                            segs: '/post',
+                            dest: vote.post_id,
+                        })
+                            .then((noti) => {
+                                io.emit('user-vote', {
+                                    noti_id: noti._id,
+                                    post_id: vote.post_id,
+                                    op: op,
+                                    karma: karma,
+                                    username: vote.username,
+                                    voteType: vote.type,
+                                });
+                            })
                         return res.json({
                             message: "success",
                         });

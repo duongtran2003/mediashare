@@ -55,6 +55,7 @@ export class NotificationComponent implements OnInit {
     this.notification.notification$.subscribe({
       next: (res) => {
         this.notificationContent.push(res);
+        console.log(res);
         this.unseenNotifications += 1;
         this.toast.makeToast({
           state: "close",
@@ -87,8 +88,10 @@ export class NotificationComponent implements OnInit {
       this.unseenNotifications -= 1;
       this.api.post('notification/delete', { _id: noti._id }).subscribe({
         next: (res) => {
+          console.log(res);
         }, 
         error: (err) => {
+          console.log(err);
         }
       })
     }

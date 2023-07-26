@@ -7,7 +7,6 @@
     display: flex;
     min-width: 300px;
     min-height: 60px;
-    max-height: 80px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.351);
     overflow: hidden;
     flex-direction: column;

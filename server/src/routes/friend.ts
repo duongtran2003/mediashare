@@ -6,6 +6,7 @@ const router = express.Router();
 const friendController = new FriendController();
 
 router.get('/query', authGuard, friendController.query);
+router.get('/getRequest', authGuard, friendController.getRequest);
 router.post('/checkStatus', authGuard, friendController.checkStatus);
 router.post('/sendRequest', authGuard, friendController.sendRequest);
 router.post('/cancelRequest', authGuard, friendController.cancelRequest);

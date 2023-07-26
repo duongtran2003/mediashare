@@ -4,7 +4,7 @@ import { Notification } from '../models/Notification';
 class NotificationController {
     query(req: Request, res: Response) {
         const username = res.locals.claims.username;
-        Notification.find({ target: username }, "dest message source status target _id")
+        Notification.find({ target: username }, "dest message source status target _id segs")
         .then((notifications) => {
             res.statusCode = 200;
             return res.json({
@@ -21,10 +21,10 @@ class NotificationController {
     delete(req: Request, res: Response) {
         const username = res.locals.claims.username;
         Notification.deleteOne({ _id: req.body._id })
-        .then((notis) => {
+        .then((noti) => {
             res.statusCode = 200;
             return res.json({
-                message: "success",
+                noti,
             })
         })
         .catch((err) => {

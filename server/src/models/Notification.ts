@@ -5,6 +5,7 @@ interface INotification {
   source: string,  /** notification sender */
   target: string, /** the one who is supposed to receive the msg */
   status: string, /** unseen, seen */
+  segs: string,
   dest: string, /** target link when user clicks on the notification */
 }
 
@@ -19,6 +20,9 @@ const notificationModel = new Schema<INotification> ({
         type: String,
     },
     status: {
+        type: String,
+    },
+    segs: {
         type: String,
     },
     dest: {
