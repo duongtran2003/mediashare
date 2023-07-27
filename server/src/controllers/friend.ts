@@ -77,6 +77,7 @@ class FriendController {
                     req.app.get('io').emit('friend-request-send', {
                         source: username,
                         target: target,
+                        _id: request._id,
                     })
                     return res.json({
                         message: "success",
@@ -134,6 +135,7 @@ class FriendController {
                 }
                 res.statusCode = 200;
                 req.app.get('io').emit('friend-request-accept', {
+                    _id: request._id,
                     source: username,
                     target: target,
                 })
@@ -149,10 +151,11 @@ class FriendController {
             })
         }
         else {
-            Friend.deleteOne({ username: target, target: username })
+            Friend.deleteOne({ source: target, target: username, status: "pending" })
             .then((request) => {
                 res.statusCode = 200;
                 req.app.get('io').emit('friend-request-decline', {
+                    _id: "",
                     source: username,
                     target: target,
                 })
