@@ -6,6 +6,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { Socket } from 'ngx-socket-io';
+import { FriendService } from 'src/app/services/friend.service';
 
 @Component({
   selector: 'app-friend-list',
@@ -26,7 +27,7 @@ export class FriendListComponent implements OnInit {
   currentFriends: any[] = [];
   currentRequests: any[] = [];
 
-  constructor(private toast: ToastService, protected auth: AuthService, private api: ApiService, private socket: Socket) { }
+  constructor(private friendState: FriendService, private toast: ToastService, protected auth: AuthService, private api: ApiService, private socket: Socket) { }
 
   ngOnInit(): void {
     this.auth.currentUserEmitter.subscribe({
@@ -41,6 +42,7 @@ export class FriendListComponent implements OnInit {
                   avatarPath: "",
                 }
               });
+              this.friendState.updateFriendList(this.currentFriends);
               for (let friend of this.currentFriends) {
                 this.api.post('user/getUserInfo', { username: friend.name }).subscribe({
                   next: (res) => {
@@ -95,6 +97,11 @@ export class FriendListComponent implements OnInit {
             return;
           }
         }
+        this.toast.makeToast({
+          state: "close",
+          message: `${data.source} has sent you a friend request`,
+          barClass: ['bg-blue-600'],
+        })
         this.api.post('user/getUserInfo', { username: newRequest.name }).subscribe({
           next: (res) => {
             newRequest.avatarPath = res.avatarPath;
@@ -125,10 +132,18 @@ export class FriendListComponent implements OnInit {
             break;
           }
         }
+        if (data.target == this.auth.getCurrentUser()) {
+          this.toast.makeToast({
+            state: "close",
+            message: `${data.target} has accepted your friend request`,
+            barClass: ['bg-blue-600'],
+          })
+        }
         this.api.post('user/getUserInfo', { username: newFriend.name }).subscribe({
           next: (res) => {
             newFriend.avatarPath = res.avatarPath;
             this.currentFriends.push(newFriend);
+            this.friendState.updateFriendList(this.currentFriends);
           },
           error: (err) => {
             newFriend.avatarPath = 'http:/localhost:8000/static/default.png';
@@ -165,6 +180,7 @@ export class FriendListComponent implements OnInit {
         for (let i = 0; i < this.currentFriends.length; i++) {
           if (this.currentFriends[i].name == name) {
             this.currentFriends.splice(i, 1);
+            this.friendState.updateFriendList(this.currentFriends);
             break;
           }
         }
