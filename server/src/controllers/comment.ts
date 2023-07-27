@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Comment } from '../models/Comment';
 import { Post } from '../models/Post';
 import { Notification } from '../models/Notification';
+import { Friend } from '../models/Friend';
 
 class CommentController {
     queryComment(req: Request, res: Response) {
@@ -41,23 +42,24 @@ class CommentController {
                 content: content,
             });
             if (comment) {
-                const noti = await Notification.create({
+                const friend = await Friend.findOne({ $or: [{ source: comment.username, target: post.username }, { source: post.username, target: comment.username }] });
+                const noti = friend ? await Notification.create({
                     source: comment.username,
                     target: post.username,
                     message: `${comment.username} has commented on your post`,
                     status: "unseen",
                     segs: '/post',
                     dest: post._id,
-                }) 
+                }) : null;
                 res.statusCode = 200;
                 io.emit('user-comment', {
-                    noti_id: noti._id,
+                    noti_id: noti ? noti._id : "",
                     post_id: post._id,
                     comment: {
                         username: comment.username,
                         content: comment.content,
                     },
-                    message: noti.message,
+                    message: noti ? noti.message : "",
                     postComments: post.comments,
                     target: post.username,
                 });

@@ -11,6 +11,7 @@ export class FriendService {
 
   updateFriendList(friends: any[]) {
     this.currentFriendList = friends.map(friend => friend.name);
+    console.log(this.currentFriendList);
   }
 
   isFriend(name: string) {

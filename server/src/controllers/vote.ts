@@ -2,6 +2,7 @@ import { Response, Request } from 'express';
 import { Vote } from '../models/Vote';
 import { Post } from '../models/Post';
 import { Notification } from '../models/Notification';
+import { Friend } from '../models/Friend';
 
 class VoteController {
     async votePost(req: Request, res: Response) {
@@ -13,73 +14,57 @@ class VoteController {
         let karma = 0;
         let op = "";
         const point = type;
-        await Post.findOneAndUpdate({ _id: post_id }, { $inc: { karma: point } }, { new: true })
-            .then((post) => {
-                if (post) {
-                    foundPost = 1;
-                    op = post.username;
-                    karma = post.karma;
-                }
-                else {
-                    foundPost = 0;
-                }
-            })
-            .catch((err) => {
-                foundPost = 0;
-            });
+        let post = await Post.findOneAndUpdate({ _id: post_id }, { $inc: { karma: point } }, { new: true });
+        if (post) {
+            foundPost = 1;
+            op = post.username;
+            karma = post.karma;
+        }
+        else {
+            foundPost = 0;
+        }
         if (foundPost) {
-            Vote.create({
+            const vote = await Vote.create({
                 username: username,
                 post_id: post_id,
                 type: type,
-            })
-                .then((vote) => {
-                    if (vote) {
-                        res.statusCode = 200;
-
-                        Notification.create({
-                            source: vote.username,
-                            target: op,
-                            message: vote.type == 1 ? `${vote.username} has upvoted your post` : `${vote.username} has downvoted your post`,
-                            status: "unseen",
-                            segs: '/post',
-                            dest: vote.post_id,
-                        })
-                            .then((noti) => {
-                                io.emit('user-vote', {
-                                    noti_id: noti._id,
-                                    post_id: vote.post_id,
-                                    op: op,
-                                    karma: karma,
-                                    username: vote.username,
-                                    voteType: vote.type,
-                                });
-                            })
-                        return res.json({
-                            message: "success",
-                        });
-                    }
-                    else {
-                        res.statusCode = 500;
-                        console.log(1);
-                        return res.json({
-                            message: "Server's error",
-                        })
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                    res.statusCode = 500;
-                    return res.json({
-                        message: "Server's error",
-                    })
-                })
+            });
+            if (vote) {
+                res.statusCode = 200;
+                const friend = await Friend.findOne({ $or: [{ source: vote.username, target: post!.username }, { source: post!.username, target: vote.username }] });
+                const noti = friend ? await Notification.create({
+                    source: vote.username,
+                    target: op,
+                    message: vote.type == 1 ? `${vote.username} has upvoted your post` : `${vote.username} has downvoted your post`,
+                    status: "unseen",
+                    segs: '/post',
+                    dest: vote.post_id,
+                }) : null;
+                io.emit('user-vote', {
+                    noti_id: noti ? noti._id : "",
+                    post_id: vote.post_id,
+                    op: op,
+                    karma: karma,
+                    username: vote.username,
+                    voteType: vote.type,
+                });
+                res.statusCode = 200;
+                return res.json({
+                    message: "success",
+                });
+            }
+            else {
+                res.statusCode = 500;
+                return res.json({
+                    message: "Server's error",
+                });
+            }
         }
         else {
             res.statusCode = 404;
             return res.json({
-                message: "Post not found."
-            });
+                message: "post not found",
+            })
         }
     }
 
@@ -98,63 +83,46 @@ class VoteController {
         if (type == -1) {
             point = -2;
         }
-        await Post.findOneAndUpdate({ _id: post_id }, { $inc: { karma: point } }, { new: true })
-            .then((post) => {
-                if (post) {
-                    foundPost = 1;
-                    karma = post.karma;
-                    op = post.username;
-                }
-                else {
-                    foundPost = 0;
-                }
-            })
-            .catch((err) => {
-                foundPost = 0;
-            });
+        const post = await Post.findOneAndUpdate({ _id: post_id }, { $inc: { karma: point } }, { new: true });
+        if (post) {
+            foundPost = 1;
+            karma = post.karma;
+            op = post.username;
+        }
+        else {
+            foundPost = 0;
+        }
         if (foundPost) {
-            Vote.findOneAndUpdate({
-                username: username,
-                post_id: post_id,
-            }, { type: type }, { new: true })
-                .then((vote) => {
-                    if (vote) {
-                        res.statusCode = 200;
-                        Notification.create({
-                            source: vote.username,
-                            target: op,
-                            message: vote.type == 1 ? `${vote.username} has upvoted your post` : `${vote.username} has downvoted your post`,
-                            status: "unseen",
-                            segs: '/post',
-                            dest: vote.post_id,
-                        })
-                            .then((noti) => {
-                                io.emit('user-vote', {
-                                    noti_id: noti._id,
-                                    post_id: vote.post_id,
-                                    op: op,
-                                    karma: karma,
-                                    username: vote.username,
-                                    voteType: vote.type,
-                                });
-                            })
-                        return res.json({
-                            message: "success",
-                        });
-                    }
-                    else {
-                        res.statusCode = 500;
-                        return res.json({
-                            message: "Server's error",
-                        })
-                    }
+            const vote = await Vote.findOneAndUpdate({ username: username, post_id: post_id }, { type: type }, { new: true });
+            if (vote) {
+                const friend = await Friend.findOne({ $or: [{ source: vote.username, target: post!.username }, { source: post!.username, target: vote.username }] });
+                const noti = friend ? await Notification.create({
+                    source: vote.username,
+                    target: op,
+                    message: vote.type == 1 ? `${vote.username} has upvoted your post` : `${vote.username} has downvoted your post`,
+                    status: "unseen",
+                    segs: '/post',
+                    dest: vote.post_id,
+                }) : null;
+                io.emit('user-vote', {
+                    noti_id: noti ? noti._id : "",
+                    post_id: vote.post_id,
+                    op: op,
+                    karma: karma,
+                    username: vote.username,
+                    voteType: vote.type,
+                });
+                res.statusCode = 200;
+                return res.json({
+                    message: "success",
+                });
+            }
+            else {
+                res.statusCode = 500;
+                return res.json({
+                    message: "Server's error",
                 })
-                .catch((err) => {
-                    res.statusCode = 500;
-                    return res.json({
-                        message: "Server's error",
-                    })
-                })
+            }
         }
         else {
             res.statusCode = 404;
@@ -179,49 +147,36 @@ class VoteController {
         }
         let karma = 0;
         let foundPost = 0;
-        await Post.findOneAndUpdate({ _id: post_id }, { $inc: { karma: point } }, { new: true })
-            .then((post) => {
-                if (post) {
-                    foundPost = 1;
-                    karma = post.karma;
-                    op = post.username;
-                }
-                else {
-                    foundPost = 0;
-                }
-            })
-            .catch((err) => {
-                foundPost = 0;
-            })
+        const post = await Post.findOneAndUpdate({ _id: post_id }, { $inc: { karma: point } }, { new: true });
+        if (post) {
+            foundPost = 1;
+            karma = post.karma;
+            op = post.username;
+        }
+        else {
+            foundPost = 0;
+        }
         if (foundPost) {
-            Vote.findOneAndDelete({ username: username, post_id: post_id })
-                .then((vote) => {
-                    if (vote) {
-                        res.statusCode = 200;
-                        io.emit('user-vote', {
-                            post_id: vote.post_id,
-                            karma: karma,
-                            op: op,
-                            username: vote.username,
-                            voteType: 0,
-                        });
-                        return res.json({
-                            message: "success",
-                        });
-                    }
-                    else {
-                        res.statusCode = 500;
-                        return res.json({
-                            message: "Server's error",
-                        })
-                    }
+            const vote = await Vote.findOneAndDelete({ username: username, post_id: post_id });
+            if (vote) {
+                io.emit('user-vote', {
+                    post_id: vote.post_id,
+                    karma: karma,
+                    op: op,
+                    username: vote.username,
+                    voteType: 0,
+                });
+                res.statusCode = 200;
+                return res.json({
+                    message: "success",
+                });
+            }
+            else {
+                res.statusCode = 500;
+                return res.json({
+                    message: "Server's error",
                 })
-                .catch((err) => {
-                    res.statusCode = 500;
-                    return res.json({
-                        message: "Server's error",
-                    })
-                })
+            }
         }
         else {
             res.statusCode = 404;
