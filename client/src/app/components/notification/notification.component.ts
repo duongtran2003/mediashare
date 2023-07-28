@@ -37,6 +37,13 @@ export class NotificationComponent implements OnInit {
           this.api.get('notification/query').subscribe({
             next: (res) => {
               this.notificationContent = res.notifications;
+              for (let noti of this.notificationContent) {
+                this.api.post('user/getUserInfo', { username: noti.source }).subscribe({
+                  next: (res) => {
+                    noti.avatarPath = res.avatarPath;
+                  }
+                });
+              }
               let unseen = 0;
               for (let noti of this.notificationContent) {
                 if (noti.status == 'unseen') {
@@ -57,8 +64,14 @@ export class NotificationComponent implements OnInit {
     });
     this.notification.notification$.subscribe({
       next: (res) => {
-        this.notificationContent.push(res);
-        this.unseenNotifications += 1;
+        let newNoti = res;
+        this.api.post('user/getUserInfo', { username: res.source }).subscribe({
+          next: (res) => {
+            newNoti.avatarPath = res.avatarPath;
+            this.notificationContent.push(newNoti);
+            this.unseenNotifications += 1;
+          }
+        })
         this.toast.makeToast({
           state: "close",
           message: res.message,
@@ -90,7 +103,7 @@ export class NotificationComponent implements OnInit {
       this.unseenNotifications -= 1;
       this.api.post('notification/delete', { _id: noti._id }).subscribe({
         next: (res) => {
-        }, 
+        },
         error: (err) => {
         }
       })

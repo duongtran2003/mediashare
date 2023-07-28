@@ -2,9 +2,10 @@
     class="flex flex-col fixed bottom-0 left-0 m-2 rounded-xl shadow-lg bg-white w-[20%] overflow-hidden">
     <div [@inOutAnimation]="dropdownState" class="max-h-80 overflow-y-scroll overscroll-contain">
         <div [ngClass]="{ 'bg-red-100': noti.status == 'unseen' }" (mouseenter)="onNotiHover(noti)"
-            class="text-sm overflow-clip hover:bg-red-600 hover:text-white cursor-pointer select-none"
+            class="text-sm overflow-clip hover:bg-red-600 hover:text-white cursor-pointer select-none flex items-center"
             *ngFor="let noti of notificationContent">
-            <a target="_blank" class="px-4 py-2 block" [routerLink]="[noti.segs, noti.dest]">{{ noti.message }}</a>
+            <img [src]="noti.avatarPath" class="h-8 w-8 my-2 ml-4 rounded-full border-2 border-white">
+            <a target="_blank" class="px-2 py-2 block grow" [routerLink]="[noti.segs, noti.dest]">{{ noti.message }}</a>
     </div>
         <div class="text-sm px-4 py-2 overflow-clip select-none" *ngIf="notificationContent.length == 0">
             No notifications

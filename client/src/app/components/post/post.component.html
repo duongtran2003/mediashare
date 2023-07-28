@@ -1,21 +1,24 @@
 <div class="rounded-lg bg-white drop-shadow-lg pr-8 mt-4 flex overflow-hidden">
     <div class="bg-gray-100 flex flex-col items-center py-8">
-        <button (click)="onUpvoteClick()" class="mx-2 border border-gray-100 px-2 py-1 rounded mb-2 hover:border-gray-300 active:scale-105 duration-200">
+        <button (click)="onUpvoteClick()"
+            class="mx-2 border border-gray-100 px-2 py-1 rounded mb-2 hover:border-gray-300 active:scale-105 duration-200">
             <fa-icon class="text-lg" *ngIf="vote == -1 || vote == 0" [icon]="upvoteIcon"></fa-icon>
             <fa-icon class="text-orange-600 text-lg" *ngIf="vote == 1" [icon]="upvoteIconActive"></fa-icon>
         </button>
-        <div [ngClass]="{ 'text-orange-600': vote == 1, 'text-blue-600': vote == -1 }"
-            class="font-bold text-sm">{{ karma }}</div>
-        <button (click)="onDownvoteClick()" class="mx-2 border border-gray-100 px-2 py-1 rounded mt-2 hover:border-gray-300 active:scale-105 duration-200">
+        <div [ngClass]="{ 'text-orange-600': vote == 1, 'text-blue-600': vote == -1 }" class="font-bold text-sm">{{
+            karma }}</div>
+        <button (click)="onDownvoteClick()"
+            class="mx-2 border border-gray-100 px-2 py-1 rounded mt-2 hover:border-gray-300 active:scale-105 duration-200">
             <fa-icon class="text-lg" *ngIf="vote == 1 || vote == 0" [icon]="downvoteIcon"></fa-icon>
             <fa-icon class="text-blue-600 text-lg" *ngIf="vote == -1" [icon]="downvoteIconActive"></fa-icon>
         </button>
     </div>
     <div class="flex flex-col ml-2 py-8">
         <div class="flex items-center">
-            <img [routerLink]="['user', username]" class="w-6 h-6 mr-2 rounded-full select-none cursor-pointer pointer-events-none"
-                [src]="avatar">
-            <div class="text-sm select-none cursor-pointer font-bold" [routerLink]="['/user', username]">{{ username }}</div>
+            <img [routerLink]="['user', username]"
+                class="w-6 h-6 mr-2 rounded-full select-none cursor-pointer pointer-events-none" [src]="avatar">
+            <div class="text-sm select-none cursor-pointer font-bold" [routerLink]="['/user', username]">{{ username }}
+            </div>
         </div>
         <a [routerLink]="['/post', _id]" class="mt-2 text-lg font-bold" target="_blank">{{ title }}</a>
         <div class="mt-2 flex justify-center border-1 border-black">
@@ -24,9 +27,11 @@
                 <source [src]="filePath" type="video/mp4">
             </video>
         </div>
-        <button [disabled]="isCommentSectionVisible" class="mt-2 self-end hover:bg-gray-200 hover:border-gray-400 px-4 py-1 bg-gray-100 rounded border duration-200 ">
-            <a [ngClass]="{ 'pointer-events-none': isCommentSectionVisible}" class="text-xs" [routerLink]="['/post', _id]" target="_blank">
-                Comments ({{ comments }}) 
+        <button [disabled]="isCommentSectionVisible"
+            class="mt-2 self-end hover:bg-gray-200 hover:border-gray-400 px-4 py-1 bg-gray-100 rounded border duration-200 ">
+            <a [ngClass]="{ 'pointer-events-none': isCommentSectionVisible}" class="text-xs"
+                [routerLink]="['/post', _id]" target="_blank">
+                Comments ({{ comments }})
             </a>
         </button>
         <div *ngIf="isCommentSectionVisible" class="flex flex-col mt-4 border-t-2 border-blue-500 pt-4">
@@ -42,10 +47,11 @@
             <div class="flex flex-col mt-2">
                 <div *ngFor="let comment of commentsContent"
                     class="break-words px-2 py-1 border border-gray-200 shadow-md mt-1 rounded-lg">
-                    <div [routerLink]="['/user', comment.username]"
-                        class="font-bold text-xs select-none cursor-pointer">{{
-                        comment.username }}</div>
-                    <div>{{ comment.content }}</div>
+                    <div class="font-bold text-xs select-none cursor-pointer flex items-center">
+                        <img [src]="comment.avatarPath" class="h-8 w-8 rounded-full border-2 border-white">
+                        <a target="_blank" [routerLink]="['/user', comment.username]" class="ml-1">{{ comment.username }}</a>
+                    </div>
+                    <div class="ml-2">{{ comment.content }}</div>
                 </div>
             </div>
         </div>

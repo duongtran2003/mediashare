@@ -62,6 +62,14 @@ export class PostComponent implements OnInit {
         next: (response) => {
           this.commentsContent = response.comments;
           this.commentsContent.reverse();
+          console.log(this.commentsContent);
+          for (let comment of this.commentsContent) {
+            this.api.post('user/getUserInfo', { username: comment.username }).subscribe({
+              next: (res) => {
+                comment.avatarPath = res.avatarPath;
+              }
+            })
+          }
           this.comments = response.comments.length;
         },
         error: (err) => {
@@ -88,7 +96,12 @@ export class PostComponent implements OnInit {
     this.socket.on('user-comment', (data: any) => {
       if (data.post_id == this._id) {
         if (this.isCommentSectionVisible) {
-          this.commentsContent.unshift(data.comment);
+          this.api.post('user/getUserInfo', { username: data.comment.username }).subscribe({
+            next: (res) => {
+              data.comment.avatarPath = res.avatarPath;
+              this.commentsContent.unshift(data.comment);
+            }
+          })
         }
         this.comments = data.postComments;
       }

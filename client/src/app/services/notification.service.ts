@@ -12,6 +12,7 @@ interface INotification {
   status: string, /** unseen, seen, */
   segs: string,
   dest: string, /** target link when user clicks on the notification */
+  avatarPath: string,
 }
 
 @Injectable({
@@ -39,6 +40,7 @@ export class NotificationService {
           status: "unseen",
           segs: '/post',
           dest: data.post_id,
+          avatarPath: "",
         });
       }
     });
@@ -55,6 +57,7 @@ export class NotificationService {
         status: "unseen",
         segs: '/post',
         dest: data.post_id,
+        avatarPath: "",
       })
     })
   }
