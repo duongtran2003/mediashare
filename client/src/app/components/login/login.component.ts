@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, inject } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -17,7 +17,10 @@ export class LoginComponent {
   @Output() onLoginToggle = new EventEmitter();
   @Output() onRegisterToggle = new EventEmitter();
 
-  constructor(private api: ApiService, private auth: AuthService, private toast: ToastService) { }
+  private api = inject(ApiService);
+  private auth = inject(AuthService); 
+  private toast = inject(ToastService); 
+
   onLoginClick(): void {
 
     //validate input start:

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { faComments, faThumbsDown, faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 import { IconDefinition, faThumbsDown as fasThumbsDown, faThumbsUp as fasThumbsUp, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from 'src/app/services/api.service';
@@ -35,9 +35,10 @@ export class PostComponent implements OnInit {
   postCommentIcon: IconDefinition = faPaperPlane;
   userCommentInput: string = "";
 
-  constructor(private socket: Socket, private api: ApiService, private auth: AuthService, private toast: ToastService) {
-
-  }
+  private socket = inject(Socket);
+  private api = inject(ApiService); 
+  private auth = inject(AuthService); 
+  private toast = inject(ToastService); 
 
   ngOnInit(): void {
     this.comments = this.post.comments;
@@ -64,7 +65,6 @@ export class PostComponent implements OnInit {
           this.comments = response.comments.length;
         },
         error: (err) => {
-          console.log(err);
         }
       });
     }

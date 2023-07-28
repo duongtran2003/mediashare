@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { AuthService } from 'src/app/services/auth.service';
@@ -27,7 +27,11 @@ export class FriendListComponent implements OnInit {
   currentFriends: any[] = [];
   currentRequests: any[] = [];
 
-  constructor(private friendState: FriendService, private toast: ToastService, protected auth: AuthService, private api: ApiService, private socket: Socket) { }
+  private friendState = inject(FriendService);
+  private toast = inject(ToastService); 
+  private auth = inject(AuthService);
+  private api = inject(ApiService);
+  private socket = inject(Socket); 
 
   ngOnInit(): void {
     this.auth.currentUserEmitter.subscribe({

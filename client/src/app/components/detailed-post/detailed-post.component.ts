@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -10,7 +10,9 @@ import { ApiService } from 'src/app/services/api.service';
 export class DetailedPostComponent implements OnInit {
 
   posts: any[] = [];
-  constructor(private router: ActivatedRoute, private api: ApiService) {  }
+
+  private router = inject(ActivatedRoute);
+  private api = inject(ApiService);
 
   ngOnInit(): void {
     this.router.params.subscribe(async (params) => {
@@ -18,10 +20,8 @@ export class DetailedPostComponent implements OnInit {
       this.api.post('post/queryById', { post_id: post_id }).subscribe({
         next: (res) => {
           this.posts = [res.post];
-          console.log(this.posts);
         },
         error: (err) => {
-          console.log(err);
         }
       })
     });

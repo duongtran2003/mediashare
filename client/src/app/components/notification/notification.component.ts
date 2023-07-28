@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { IconDefinition, faBell } from '@fortawesome/free-regular-svg-icons';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { AuthService } from 'src/app/services/auth.service';
@@ -25,7 +25,10 @@ export class NotificationComponent implements OnInit {
   notificationContent: any[] = [];
   unseenNotifications: number = 0;
 
-  constructor(private toast: ToastService, private notification: NotificationService, private auth: AuthService, private api: ApiService) { }
+  private toast = inject(ToastService);
+  private notification = inject(NotificationService);
+  private auth = inject(AuthService);
+  private api = inject(ApiService);
 
   ngOnInit(): void {
     this.auth.currentUserEmitter.subscribe({
@@ -55,7 +58,6 @@ export class NotificationComponent implements OnInit {
     this.notification.notification$.subscribe({
       next: (res) => {
         this.notificationContent.push(res);
-        console.log(res);
         this.unseenNotifications += 1;
         this.toast.makeToast({
           state: "close",
@@ -88,16 +90,11 @@ export class NotificationComponent implements OnInit {
       this.unseenNotifications -= 1;
       this.api.post('notification/delete', { _id: noti._id }).subscribe({
         next: (res) => {
-          console.log(res);
         }, 
         error: (err) => {
-          console.log(err);
         }
       })
     }
   }
 
-  onScroll(e: any) {
-    console.log(e);
-  }
 }

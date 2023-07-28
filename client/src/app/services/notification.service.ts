@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
-import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
 import { FriendService } from './friend.service';
 
@@ -20,31 +19,27 @@ interface INotification {
 })
 export class NotificationService {
 
-
   notification$: Subject<INotification> = new Subject<INotification>();
-  constructor(private friendState: FriendService, private socket: Socket, private api: ApiService, private auth: AuthService) {
+
+  private friendState = inject(FriendService);
+  private socket = inject(Socket);
+  private auth = inject(AuthService);
+
+  constructor() {
     this.socket.on('user-vote', (data: any) => {
       if (!(this.friendState.isFriend(data.username) && data.op == this.auth.getCurrentUser())) {
         return;
       }
-      const newNotification = {
-        _id: "",
-        message: "",
-        source: "",
-        target: "",
-        status: "",
-        segs: "",
-        dest: "",
-      }
       if (data.voteType != 0) {
-        newNotification._id = data.noti_id,
-          newNotification.source = data.username;
-        newNotification.target = data.op;
-        newNotification.message = data.voteType == 1 ? `${data.username} has upvoted your post` : `${data.username} has downvoted your post`;
-        newNotification.status = "unseen";
-        newNotification.segs = '/post'
-        newNotification.dest = data.post_id;
-        this.notification$.next(newNotification);
+        this.notification$.next({
+          _id: data.noti_id,
+          source: data.username,
+          target: data.op,
+          message: data.voteType == 1 ? `${data.username} has upvoted your post` : `${data.username} has downvoted your post`,
+          status: "unseen",
+          segs: '/post',
+          dest: data.post_id,
+        });
       }
     });
 

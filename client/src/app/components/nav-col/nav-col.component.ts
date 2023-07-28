@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
@@ -8,7 +8,9 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 export class NavColComponent implements OnInit {
   navIndex: number = 1;
-  constructor(private router: Router) { }
+  
+  private router = inject(Router);
+
   ngOnInit(): void {
     this.router.events.subscribe({
       next: (event) => {

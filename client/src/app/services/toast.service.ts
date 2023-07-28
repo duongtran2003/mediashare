@@ -12,9 +12,7 @@ interface IToast {
 })
 export class ToastService {
   public toastList$: Subject<IToast> = new Subject<IToast>;
-  constructor() { }
   makeToast(toast: IToast): void {
     this.toastList$.next(toast);
-    console.log("toast fired");
   }
 }

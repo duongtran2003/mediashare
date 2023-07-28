@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, inject } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ApiService } from 'src/app/services/api.service';
 import { Router } from '@angular/router';
@@ -34,9 +34,11 @@ export class NavBarComponent implements OnInit {
   currentUser: string = "";
   avatarPath: string = "";
   isDropdownVisible: boolean = false;
-  constructor(private auth: AuthService, private api: ApiService, private toast: ToastService, private router: Router) {
-    this.currentUser = "";
-  }
+
+  private auth = inject(AuthService);
+  private api = inject(ApiService); 
+  private toast = inject(ToastService); 
+  private router = inject(Router); 
 
   ngOnInit() {
     this.auth.currentUserEmitter.subscribe({
@@ -45,7 +47,6 @@ export class NavBarComponent implements OnInit {
         this.avatarPath = user.avatarPath
       },
       error: (err) => {
-        console.log("idk man");
       }
     })
   }
@@ -53,7 +54,6 @@ export class NavBarComponent implements OnInit {
   logOut(): void {
     this.api.get('auth/logout').subscribe({
       next: (response) => {
-        console.log(response.message);
         this.auth.setCurrentUser({ username: "", avatarPath: "" });
         this.toast.makeToast({
           state: "close",
@@ -83,11 +83,9 @@ export class NavBarComponent implements OnInit {
 
   showDropdown(): void {
     this.isDropdownVisible = true;
-    console.log("mouseenter");
   }
   hideDropdown(): void {
     this.isDropdownVisible = false;
-    console.log("mouseleave");
   }
   onInput(val: string): void {
     this.showResult(val);

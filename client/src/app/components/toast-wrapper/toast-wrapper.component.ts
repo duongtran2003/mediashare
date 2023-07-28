@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ToastService } from 'src/app/services/toast.service';
 
 interface IToast {
@@ -14,12 +14,12 @@ interface IToast {
 })
 export class ToastWrapperComponent implements OnInit {
   toastList: IToast[] = [];
-  constructor(public toastService: ToastService) { }
+
+  private toast = inject(ToastService);
 
   ngOnInit(): void {
-    this.toastService.toastList$.subscribe({
+    this.toast.toastList$.subscribe({
       next: (newToast: IToast) => {
-        console.log("toast received");
         this.toastList.unshift(newToast);
       }
     })

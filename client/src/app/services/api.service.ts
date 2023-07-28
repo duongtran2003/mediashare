@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, debounceTime, delay } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ export class ApiService {
 
   private rootUrl = "http://localhost:8000/"
 
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
 
   get(endpoint: string): Observable<any> {
     const url: string = this.rootUrl + endpoint;

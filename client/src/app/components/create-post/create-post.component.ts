@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, inject } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { IconDefinition, faPlus, faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { state, trigger, style, transition, animate } from '@angular/animations';
@@ -39,7 +39,10 @@ export class CreatePostComponent implements OnInit {
   @ViewChild('fileInput', { static: false })
   fileInput!: ElementRef;
 
-  constructor(private auth: AuthService, private api: ApiService, private toast: ToastService) { }
+  private auth = inject(AuthService);
+  private api = inject(ApiService);
+  private toast = inject(ToastService);
+
   ngOnInit(): void {
     this.auth.currentUserEmitter.subscribe({
       next: (user) => {
@@ -97,12 +100,6 @@ export class CreatePostComponent implements OnInit {
     this.isUploading = true;
     this.api.post('post/create', formData).subscribe({
       next: (response) => {
-        console.log({
-          title: response.title,
-          filename: response.filename,
-          fileType: response.fileType,
-          username: response.username,
-        });
         this.toast.makeToast({
           state: "close",
           message: "Post created",

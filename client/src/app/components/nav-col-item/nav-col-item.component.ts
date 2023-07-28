@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { IconDefinition, faFire, faHome, faSun } from '@fortawesome/free-solid-svg-icons';
 import { NavigationEnd, Router } from '@angular/router';
 
@@ -25,10 +25,11 @@ export class NavColItemComponent implements OnInit {
   currentIcon!: IconDefinition;
   currentState: string = 'deactive';
 
-  constructor(private router: Router) {
+  private router = inject(Router);
+
+  constructor() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd && event.url) {
-        console.log(event.url);
         if (this.content == "Home") {
           if (event.url == '/home') {
             this.currentState = 'active';

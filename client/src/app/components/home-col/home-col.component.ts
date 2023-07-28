@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 
@@ -8,8 +8,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./home-col.component.css']
 })
 export class HomeColComponent implements OnInit {
-  constructor(private auth: AuthService, private router: Router) { }
-  
+
+  private auth = inject(AuthService);
+  private router = inject(Router); 
+
   ngOnInit(): void {
     
   }

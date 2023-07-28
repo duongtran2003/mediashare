@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { ActivatedRoute } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -13,7 +13,14 @@ import { Socket } from 'ngx-socket-io';
   styleUrls: ['./user-profile.component.css'],
 })
 export class UserProfileComponent implements OnInit {
-  constructor(private socket: Socket, private auth: AuthService, private clipboard: Clipboard, private api: ApiService, private toast: ToastService, private route: ActivatedRoute) { }
+  
+  private socket = inject(Socket);
+  private auth = inject(AuthService); 
+  private clipboard = inject(Clipboard); 
+  private api = inject(ApiService);
+  private toast = inject(ToastService);
+  private route = inject(ActivatedRoute);
+
   username: string = "";
   email: string = "";
   avatarPath: string = "";
@@ -107,10 +114,8 @@ export class UserProfileComponent implements OnInit {
             this.isMyProfile = false;
           }
           if (!this.isMyProfile && this.auth.getCurrentUser() != "") {
-            console.log(this.isMyProfile);
             this.api.post('friend/checkStatus', { target: this.usernameFromParams }).subscribe({
               next: (res) => {
-                console.log(res.source, res.target, res.status);
                 //case 1: u sent them a request and its still pending: source: your username, target: their username, 
                 if (res.source == this.auth.getCurrentUser() && res.target == this.usernameFromParams && res.status == 'pending') {
                   this.friendCase = 1;
@@ -133,7 +138,6 @@ export class UserProfileComponent implements OnInit {
           this.resetState();
         },
         error: (err) => {
-          console.log(err.error.message);
         }
       });
       this.resetState();
@@ -235,7 +239,6 @@ export class UserProfileComponent implements OnInit {
 
   imgLoad() {
     this.isImageLoaded = true;
-    console.log("uploaded");
   }
 
   initCropper() {
@@ -262,7 +265,6 @@ export class UserProfileComponent implements OnInit {
     const username = this.auth.getCurrentUser();
     this.cropImgFile = this.imageCroppedEvent.blob;
     const file = new File([this.cropImgFile], `avatar${username}`, { type: this.cropImgFile.type });
-    console.log(file);
     if (this.isImageLoaded) {
       const formData = new FormData();
       formData.append('file', file);

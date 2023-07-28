@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, inject } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations'
 import { ToastService } from 'src/app/services/toast.service';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
@@ -36,8 +36,8 @@ export class ToastComponent implements OnInit, AfterViewInit {
     this.destroyToast.emit(this.index);
   }, 2500);
 
-  constructor(public toast: ToastService) {
-  }
+  private toast = inject(ToastService);
+  
   ngOnInit(): void {
     this.newToast.state = 'open';
     // this.closeToast;
