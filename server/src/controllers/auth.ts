@@ -22,19 +22,19 @@ class AuthController {
                 message: "nice try dude",
             });
         }
-        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(req.body.email)) {
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email!)) {
             res.statusCode = 400;
             return res.json({
                 message: "nice try dude",
             });
         }
-        if (!/^[a-zA-Z0-9_]{6,20}$/.test(req.body.username)) {
+        if (!/^[a-zA-Z0-9_]{6,20}$/.test(username)) {
             res.statusCode = 400;
             return res.json({
                 message: "nice try dude",
             });
         }
-        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(req.body.password)) {
+        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(password)) {
             res.statusCode = 400;
             return res.json({
                 message: "nice try dude",
@@ -44,17 +44,36 @@ class AuthController {
 
         let salt = await bcrypt.genSalt(10);
         let hashedPassword = await bcrypt.hash(password, salt);
-        await User.findOne({
-            email: req.body.email
+
+        //fuck need to rewrite this mess
+
+        const user = await User.findOne({ $or: [{ email: email }, { username: username }] });
+        if (user) {
+            res.statusCode = 409;
+            if (user.username == username) {
+                return res.json({
+                    type: "username",
+                    message: "Username's already been used",
+                })
+            }
+            else {
+                return res.json({
+                    type: "email",
+                    message: "Email's already been used",
+                });
+            }
+        }
+        User.create({
+            email: email,
+            username: username,
+            password: hashedPassword,
+            avatarPath: 'http://localhost:8000/static/default.png',
         })
             .then((user) => {
-                if (user) {
-                    res.statusCode = 409;
-                    return res.json({
-                        type: "email",
-                        message: "Email's already been used",
-                    });
-                }
+                res.statusCode = 200;
+                return res.json({
+                    message: "Account created",
+                });
             })
             .catch((err) => {
                 res.statusCode = 500;
@@ -62,42 +81,6 @@ class AuthController {
                     message: "Server's error",
                 })
             });
-        await User.findOne({
-            username: req.body.username,
-        })
-            .then((user) => {
-                if (user) {
-                    res.statusCode = 409;
-                    return res.json({
-                        type: "username",
-                        message: "Username's already been used",
-                    });
-                }
-            })
-            .catch(() => {
-                res.statusCode = 500;
-                return res.json({
-                    message: "Server's error",
-                })
-            });
-        User.create({
-            email: req.body.email,
-            username: req.body.username,
-            password: hashedPassword,
-            avatarPath: 'http://localhost:8000/static/default.png',
-        })
-        .then((user) => {
-            res.statusCode = 200;
-            return res.json({
-                message: "Account created",
-            });
-        })
-        .catch((err) => {
-            res.statusCode = 500;
-            return res.json({
-                message: "Server's error",
-            })
-        });
     }
 
     async login(req: Request, res: Response) {
@@ -130,35 +113,35 @@ class AuthController {
         });
     }
 
-     
+
 
     async getUsername(req: Request, res: Response) {
         const claims = res.locals.claims;
         User.findOne({
             username: claims.username,
         })
-        .then((user) => {
-            if (user) {
-                res.statusCode = 200;
+            .then((user) => {
+                if (user) {
+                    res.statusCode = 200;
+                    return res.json({
+                        username: claims.username,
+                        avatarPath: user.avatarPath,
+                    });
+                }
+                else {
+                    res.statusCode = 200;
+                    return res.json({
+                        username: "",
+                        avatarPath: "",
+                    })
+                }
+            })
+            .catch((err) => {
+                res.statusCode = 500;
                 return res.json({
-                    username: claims.username,
-                    avatarPath: user.avatarPath,
+                    message: err,
                 });
-            }
-            else {
-                res.statusCode = 200;
-                return res.json({
-                    username: "",
-                    avatarPath: "",
-                })
-            }
-        })
-        .catch((err) => {
-            res.statusCode = 500;
-            return res.json({
-                message: err,
             });
-        });
     }
 
     logout(req: Request, res: Response) {

@@ -51,7 +51,13 @@ export class RegisterComponent {
     else {
       this.userPasswordError = "";
     }
-    if (this.userNameError != "" || this.userPasswordError != "" || this.userEmailError != "") {
+    if (this.userPasswordConf != this.userPassword) {
+      this.userPasswordConfError = "Password doesn't match";
+    }
+    else {
+      this.userPasswordConfError = "";
+    }
+    if (this.userNameError != "" || this.userPasswordError != "" || this.userEmailError != "" || this.userPasswordConfError != "") {
       return;
     }
     //input validation end:
@@ -70,7 +76,8 @@ export class RegisterComponent {
         this.onLoginToggle.emit();
       },
       error: (err) => {
-        if (err.type == "user") {
+        console.log(err);
+        if (err.error.type == "username") {
           this.userNameError = err.error.message;
         }
         else {
@@ -91,8 +98,10 @@ export class RegisterComponent {
   updateUserEmail(val: string): void {
     this.userEmail = val;
   }
+  updateUserPasswordConf(val: string) {
+    this.userPasswordConf = val;
+  }
   checkDuplicate(val: string) {
-    this.userNameError = "";
     if (this.timeoutDup) {
       clearTimeout(this.timeoutDup);
     }
@@ -105,22 +114,13 @@ export class RegisterComponent {
             if (response.message != "OK") {
               this.userNameError = response.message;
             }
+            else {
+              this.userNameError = "";
+            }
           },
           error: (err) => {
           }
         })
-    }, 300);
-  }
-  checkPasswordConf(val: string) {
-    this.userPasswordConfError = "";
-    this.userPasswordConf = val;
-    if (this.timeoutConf) {
-      clearTimeout(this.timeoutConf);
-    }
-    this.timeoutConf = window.setTimeout(() => {
-      if (this.userPassword != this.userPasswordConf) {
-        this.userPasswordConfError = "Password don't match";
-      }
     }, 300);
   }
 }

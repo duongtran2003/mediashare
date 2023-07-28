@@ -37,7 +37,7 @@
         <div *ngIf="isCommentSectionVisible" class="flex flex-col mt-4 border-t-2 border-blue-500 pt-4">
             <div class="flex items-center">
                 <input #commentInput type="text" [value]="userCommentInput"
-                    (input)="updateUserCommentInput(commentInput.value)"
+                    (input)="updateUserCommentInput(commentInput.value)" (keyup.enter)="postComment()"
                     class="grow bg-gray-100 border rounded-sm px-4 py-2 text-sm outline-none hover:border-blue-500 focus:border-blue-600 duration-200">
                 <button (click)="postComment()"
                     class="bg-blue-600 text-white rounded-lg px-4 py-1.5 ml-2 hover:bg-blue-800 duration-200 active:scale-105">
