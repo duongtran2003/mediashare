@@ -13,7 +13,7 @@
             <fa-icon class="text-blue-600 text-lg" *ngIf="vote == -1" [icon]="downvoteIconActive"></fa-icon>
         </button>
     </div>
-    <div class="flex flex-col ml-2 py-8">
+    <div class="flex flex-col ml-2 py-8 min-w-full pr-14">
         <div class="flex items-center">
             <img [routerLink]="['user', username]"
                 class="w-6 h-6 mr-2 rounded-full select-none cursor-pointer pointer-events-none" [src]="avatar">
