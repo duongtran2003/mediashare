@@ -56,6 +56,7 @@ class CommentController {
                     noti_id: noti ? noti._id : "",
                     post_id: post._id,
                     comment: {
+                        _id: comment._id,
                         username: comment.username,
                         content: comment.content,
                     },
@@ -78,6 +79,38 @@ class CommentController {
             res.statusCode = 500;
             return res.json({
                 message: "Server's error",
+            })
+        }
+    }
+
+    async delete(req: Request, res: Response) {
+        const username = res.locals.claims.username;
+        const comment_id = req.body.comment_id;
+        const comment = await Comment.findOneAndDelete({ username: username, _id: comment_id });
+        if (comment) {
+            const post = await Post.findOneAndUpdate({ _id: comment.post_id }, { $inc: { comments: -1 } }, { new: true });
+            if (post) {
+                req.app.get('io').emit('comment-delete', {
+                    post_id: post._id,
+                    comments: post.comments,
+                    comment_id: comment_id,
+                });
+                res.statusCode = 200;
+                return res.json({
+                    message: "success",
+                })
+            }
+            else {
+                res.statusCode = 404;
+                return res.json({
+                    message: "Post not found",
+                })
+            }
+        }
+        else {
+            res.statusCode = 404;
+            return res.json({
+                message: "Comment not found",
             })
         }
     }

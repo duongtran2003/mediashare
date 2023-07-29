@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { faComments, faThumbsDown, faThumbsUp } from '@fortawesome/free-regular-svg-icons';
-import { IconDefinition, faThumbsDown as fasThumbsDown, faThumbsUp as fasThumbsUp, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition, faThumbsDown as fasThumbsDown, faThumbsUp as fasThumbsUp, faPaperPlane, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -34,6 +34,9 @@ export class PostComponent implements OnInit {
   upvoteIconActive: IconDefinition = fasThumbsUp;
   postCommentIcon: IconDefinition = faPaperPlane;
   userCommentInput: string = "";
+  deleteIcon: IconDefinition = faTimes;
+
+  isCommentDeletionVisible = false;
 
   private socket = inject(Socket);
   private api = inject(ApiService); 
@@ -62,7 +65,6 @@ export class PostComponent implements OnInit {
         next: (response) => {
           this.commentsContent = response.comments;
           this.commentsContent.reverse();
-          console.log(this.commentsContent);
           for (let comment of this.commentsContent) {
             this.api.post('user/getUserInfo', { username: comment.username }).subscribe({
               next: (res) => {
@@ -104,6 +106,17 @@ export class PostComponent implements OnInit {
           })
         }
         this.comments = data.postComments;
+      }
+    });
+    this.socket.on('comment-delete', (data: any) => {
+      if (data.post_id == this._id) {
+        this.comments = data.comments;
+        for (let i = 0; i < this.commentsContent.length; i++) {
+          if (data.comment_id == this.commentsContent[i]._id) {
+            this.commentsContent.splice(i, 1);
+            break;
+          }
+        }
       }
     });
   }
@@ -253,6 +266,24 @@ export class PostComponent implements OnInit {
             barClass: ['bg-red-600'],
           })
         }
+      }
+    })
+  }
+  onDeleteClick(commentId: string) {
+    this.api.post('comment/delete', { comment_id: commentId }).subscribe({
+      next: (res) => {
+        this.toast.makeToast({
+          state: "close",
+          message: "Comment deleted",
+          barClass: ['bg-lime-500'],
+        })
+      },
+      error: (err) => {
+        this.toast.makeToast({
+          state: "close",
+          message: "Comment not found or it's not yours",
+          barClass: ['bg-red-600'],
+        })
       }
     })
   }

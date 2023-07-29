@@ -7,6 +7,7 @@ let commentController = new CommentController();
 
 router.post('/queryComment', commentController.queryComment);
 router.post('/create', authGuard, commentController.create);
+router.post('/delete', authGuard, commentController.delete);
 
 export {
     router
