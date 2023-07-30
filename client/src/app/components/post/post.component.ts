@@ -34,7 +34,6 @@ export class PostComponent implements OnInit {
   upvoteIconActive: IconDefinition = fasThumbsUp;
   postCommentIcon: IconDefinition = faPaperPlane;
   userCommentInput: string = "";
-  deleteIcon: IconDefinition = faTimes;
 
   isCommentDeletionVisible = false;
 
@@ -269,22 +268,5 @@ export class PostComponent implements OnInit {
       }
     })
   }
-  onDeleteClick(commentId: string) {
-    this.api.post('comment/delete', { comment_id: commentId }).subscribe({
-      next: (res) => {
-        this.toast.makeToast({
-          state: "close",
-          message: "Comment deleted",
-          barClass: ['bg-lime-500'],
-        })
-      },
-      error: (err) => {
-        this.toast.makeToast({
-          state: "close",
-          message: "Comment not found or it's not yours",
-          barClass: ['bg-red-600'],
-        })
-      }
-    })
-  }
+   
 }

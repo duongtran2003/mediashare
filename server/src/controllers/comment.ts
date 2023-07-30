@@ -114,6 +114,30 @@ class CommentController {
             })
         }
     }
+
+    async edit(req: Request, res: Response) {
+        const username = res.locals.claims.username;
+        const comment_id = req.body.comment_id;
+        const newContent = req.body.content;
+        const comment = await Comment.findOneAndUpdate({ username: username, _id: comment_id }, { content: newContent }, { new: true });
+        if (comment) {
+            req.app.get('io').emit('comment-edit', {
+                comment_id: comment._id,
+                post_id: comment.post_id,
+                content: comment.content,
+            });
+            res.statusCode = 200;
+            return res.json({
+                message: "success",
+            })
+        } 
+        else {
+            res.statusCode = 404;
+            return res.json({
+                message: "Comment not found",
+            })
+        }
+    }
 }
 
 export {
