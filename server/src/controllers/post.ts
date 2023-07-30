@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { Post } from "../models/Post";
 import mime from 'mime';
+import { Vote } from "../models/Vote";
+import { Comment } from "../models/Comment";
+import fs from 'fs';
 
 class PostController {
     async index(req: Request, res: Response) {
@@ -17,26 +20,26 @@ class PostController {
     queryById(req: Request, res: Response) {
         const id = req.body.post_id;
         Post.findById(id, "title filename username fileType karma _id comments")
-        .then((post) => {
-            if (post) {
-                res.statusCode = 200;
-                return res.json({
-                    post: post,
-                })
-            }
-            else {
-                res.statusCode = 400;
-                return res.json({
-                    message: "Bad request",
-                })
-            }
-        })
-        .catch((err) => {
-            res.statusCode = 500;
-            return res.json({
-                message: "Server's error",
+            .then((post) => {
+                if (post) {
+                    res.statusCode = 200;
+                    return res.json({
+                        post: post,
+                    })
+                }
+                else {
+                    res.statusCode = 404;
+                    return res.json({
+                        message: "",
+                    })
+                }
             })
-        })
+            .catch((err) => {
+                res.statusCode = 500;
+                return res.json({
+                    message: "Server's error",
+                })
+            })
     }
 
     create(req: Request, res: Response) {
@@ -92,6 +95,32 @@ class PostController {
                     message: "Server's error",
                 })
             })
+    }
+
+    async delete(req: Request, res: Response) {
+        const username = res.locals.claims.username;
+        const post_id = req.body.post_id;
+        const post = await Post.findOneAndDelete({ username: username, _id: post_id });
+        if (post) {
+            //too complicated, not gonna emit anything with this one
+            await Vote.deleteMany({ post_id: post_id });
+            await Comment.deleteMany({ post_id: post_id });
+            const fileToDelete = post.filename;
+            fs.unlink(`./public/${fileToDelete}`, (err) => {
+                console.log(err);
+            });
+            res.statusCode = 200;
+            return res.json({
+                message: "success",
+                post_id: post_id,
+            })
+        }
+        else {
+            res.statusCode = 404;
+            return res.json({
+                message: "post not found",
+            })
+        }
     }
 }
 

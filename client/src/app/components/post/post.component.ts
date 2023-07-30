@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, Output, EventEmitter } from '@angular/core';
 import { faComments, faThumbsDown, faThumbsUp } from '@fortawesome/free-regular-svg-icons';
-import { IconDefinition, faThumbsDown as fasThumbsDown, faThumbsUp as fasThumbsUp, faPaperPlane, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition, faThumbsDown as fasThumbsDown, faThumbsUp as fasThumbsUp, faPaperPlane, faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -14,6 +14,9 @@ import { Socket } from 'ngx-socket-io';
 export class PostComponent implements OnInit {
   @Input() isCommentSectionVisible!: boolean;
   @Input() post: any;
+
+  @Output() deleted = new EventEmitter<any>();
+
   username: string = "";
   title: string = "";
   filename: string = "";
@@ -27,6 +30,7 @@ export class PostComponent implements OnInit {
   commentsContent: any[] = [];
   btnState: string = "0";
   isVoteBtnReady: boolean = false;
+  isDeletionPromptVisible: boolean = false;
   upvoteIcon: IconDefinition = faThumbsUp;
   downvoteIcon: IconDefinition = faThumbsDown;
   commentsIcon: IconDefinition = faComments;
@@ -34,13 +38,14 @@ export class PostComponent implements OnInit {
   upvoteIconActive: IconDefinition = fasThumbsUp;
   postCommentIcon: IconDefinition = faPaperPlane;
   userCommentInput: string = "";
-
-  isCommentDeletionVisible = false;
+  deleteIcon: IconDefinition = faTimes;
+  confirmIcon: IconDefinition = faCheck;
+  cancelIcon: IconDefinition = faTimes;
 
   private socket = inject(Socket);
-  private api = inject(ApiService); 
-  private auth = inject(AuthService); 
-  private toast = inject(ToastService); 
+  private api = inject(ApiService);
+  private auth = inject(AuthService);
+  private toast = inject(ToastService);
 
   ngOnInit(): void {
     this.comments = this.post.comments;
@@ -133,6 +138,13 @@ export class PostComponent implements OnInit {
               state: "close",
               message: "Login first!",
               barClass: ['bg-red-600']
+            });
+          }
+          else {
+            this.toast.makeToast({
+              state: "close",
+              message: "Post not found",
+              barClass: ['bg-red-600'],
             })
           }
           this.isVoteBtnReady = true;
@@ -155,6 +167,13 @@ export class PostComponent implements OnInit {
                 barClass: ['bg-red-600']
               })
             }
+            else {
+              this.toast.makeToast({
+                state: "close",
+                message: "Post not found",
+                barClass: ['bg-red-600'],
+              })
+            }
           }
         })
       }
@@ -170,6 +189,13 @@ export class PostComponent implements OnInit {
                 state: "close",
                 message: "Login first!",
                 barClass: ['bg-red-600']
+              })
+            }
+            else {
+              this.toast.makeToast({
+                state: "close",
+                message: "Post not found",
+                barClass: ['bg-red-600'],
               })
             }
           }
@@ -193,6 +219,13 @@ export class PostComponent implements OnInit {
               barClass: ['bg-red-600']
             })
           }
+          else {
+            this.toast.makeToast({
+              state: "close",
+              message: "Post not found",
+              barClass: ['bg-red-600'],
+            })
+          }
         }
       });
     }
@@ -212,6 +245,13 @@ export class PostComponent implements OnInit {
                 barClass: ['bg-red-600']
               })
             }
+            else {
+              this.toast.makeToast({
+                state: "close",
+                message: "Post not found",
+                barClass: ['bg-red-600'],
+              })
+            }
           }
         })
       }
@@ -227,6 +267,13 @@ export class PostComponent implements OnInit {
                 state: "close",
                 message: "Login first!",
                 barClass: ['bg-red-600']
+              })
+            }
+            else {
+              this.toast.makeToast({
+                state: "close",
+                message: "Post not found",
+                barClass: ['bg-red-600'],
               })
             }
           }
@@ -258,6 +305,13 @@ export class PostComponent implements OnInit {
             barClass: ['bg-red-600'],
           })
         }
+        if (err.status == 404) {
+          this.toast.makeToast({
+            state: "close", 
+            message: "Post not found",
+            barClass: ['bg-red-600'],
+          })
+        }
         else {
           this.toast.makeToast({
             state: "close",
@@ -268,5 +322,28 @@ export class PostComponent implements OnInit {
       }
     })
   }
-   
+  toggleDeletionPrompt() {
+    this.isDeletionPromptVisible = !this.isDeletionPromptVisible;
+  }
+  onDeleteClick() {
+    this.api.post('post/delete', { post_id: this._id }).subscribe({
+      next: (res) => {
+        this.toast.makeToast({
+          state: "close",
+          message: "Post deleted",
+          barClass: ['bg-lime-500'],
+        });
+        this.toggleDeletionPrompt();
+        this.deleted.emit(this._id);
+      },
+      error: (err) => {
+        this.toast.makeToast({
+          state: "close",
+          message: "Post not found or it's not yours",
+          barClass: ['bg-red-600'],
+        })
+        this.toggleDeletionPrompt();
+      }
+    })
+  }
 }

@@ -76,9 +76,9 @@ class CommentController {
             }
         }        
         else {
-            res.statusCode = 500;
+            res.statusCode = 404;
             return res.json({
-                message: "Server's error",
+                message: "Post not found",
             })
         }
     }

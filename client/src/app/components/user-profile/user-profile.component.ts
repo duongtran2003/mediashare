@@ -327,4 +327,13 @@ export class UserProfileComponent implements OnInit {
       }
     })
   }
+
+  deleteThis(id: string) {
+    for (let i = 0; i < this.posts.length; i++) {
+      if (this.posts[i]._id == id) {
+        this.posts.splice(i, 1);
+        break;
+      }
+    }
+  }
 }
