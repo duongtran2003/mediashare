@@ -88,14 +88,17 @@ class CommentController {
     async delete(req: Request, res: Response) {
         const username = res.locals.claims.username;
         const comment_id = req.body.comment_id;
-        const comment = await Comment.findOneAndDelete({ username: username, _id: comment_id });
+        const comment = await Comment.findOneAndUpdate({ username: username, _id: comment_id }, { content: '[deleted]' }, { new: true });
         if (comment) {
-            const post = await Post.findOneAndUpdate({ _id: comment.post_id }, { $inc: { comments: -1 } }, { new: true });
+            const post = await Post.findOne({ _id: comment.post_id });
             if (post) {
                 req.app.get('io').emit('comment-delete', {
                     post_id: post._id,
-                    comments: post.comments,
-                    comment_id: comment_id,
+                    comment_id: comment._id,
+                    content: comment.content,
+                    username: comment.username,
+                    createdAt: comment.createdAt,
+                    updatedAt: comment.updatedAt, 
                 });
                 res.statusCode = 200;
                 return res.json({

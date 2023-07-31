@@ -33,11 +33,21 @@ export class CommentComponent implements OnInit {
         this.timestamp = `${data.updatedAt} (edited)`;
       }
     });
-    if (this.comment.createdAt == this.comment.updatedAt) {
+    this.socket.on('comment-delete', (data: any) => {
+      if (data.comment_id == this.comment._id) {
+        this.comment.content = data.content;
+        this.timestamp = `${data.updatedAt} (deleted)`;
+        this.comment.username = data.username;
+      }
+    });
+    if (this.comment.content == '[deleted]') {
+      this.timestamp = `${this.comment.updatedAt} (deleted)`;
+    }
+    else if (this.comment.createdAt == this.comment.updatedAt) {
       this.timestamp = this.comment.createdAt;
     }
     else {
-      this.timestamp = `${this.comment.updatedAt} (edited)`
+      this.timestamp = `${this.comment.updatedAt} (edited)`;
     }
   }
 
@@ -60,7 +70,6 @@ export class CommentComponent implements OnInit {
     })
   }
   onEditClick(commentId: string, newContent: string) {
-    console.log(commentId);
     this.api.post('comment/edit', { comment_id: commentId, content: newContent }).subscribe({
       next: (res) => {
         this.toast.makeToast({

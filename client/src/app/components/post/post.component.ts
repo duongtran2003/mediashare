@@ -112,17 +112,6 @@ export class PostComponent implements OnInit {
         this.comments = data.postComments;
       }
     });
-    this.socket.on('comment-delete', (data: any) => {
-      if (data.post_id == this._id) {
-        this.comments = data.comments;
-        for (let i = 0; i < this.commentsContent.length; i++) {
-          if (data.comment_id == this.commentsContent[i]._id) {
-            this.commentsContent.splice(i, 1);
-            break;
-          }
-        }
-      }
-    });
   }
 
   onUpvoteClick(): void {
