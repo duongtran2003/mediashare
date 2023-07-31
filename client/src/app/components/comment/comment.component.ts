@@ -4,6 +4,8 @@ import { ToastService } from 'src/app/services/toast.service';
 import { IconDefinition, faEdit } from '@fortawesome/free-regular-svg-icons';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Socket } from 'ngx-socket-io';
+import { convertToGMT7 } from 'src/app/helpers/timeConverter';
+
 
 @Component({
   selector: 'app-comment',
@@ -30,24 +32,26 @@ export class CommentComponent implements OnInit {
     this.socket.on('comment-edit', (data: any) => {
       if (data.comment_id == this.comment._id) {
         this.comment.content = data.content;
-        this.timestamp = `${data.updatedAt} (edited)`;
+        const formatted = convertToGMT7(data.updatedAt);
+        this.timestamp = `${formatted} (edited)`;
       }
     });
     this.socket.on('comment-delete', (data: any) => {
       if (data.comment_id == this.comment._id) {
         this.comment.content = data.content;
-        this.timestamp = `${data.updatedAt} (deleted)`;
+        const formatted = convertToGMT7(data.updatedAt);
+        this.timestamp = `${formatted} (deleted)`;
         this.comment.username = data.username;
       }
     });
     if (this.comment.content == '[deleted]') {
-      this.timestamp = `${this.comment.updatedAt} (deleted)`;
+      this.timestamp = `${convertToGMT7(this.comment.updatedAt)} (deleted)`;
     }
     else if (this.comment.createdAt == this.comment.updatedAt) {
-      this.timestamp = this.comment.createdAt;
+      this.timestamp = convertToGMT7(this.comment.createdAt);
     }
     else {
-      this.timestamp = `${this.comment.updatedAt} (edited)`;
+      this.timestamp = `${convertToGMT7(this.comment.updatedAt)} (edited)`;
     }
   }
 
