@@ -3,6 +3,8 @@ interface IVote {
     username: string,
     post_id: string,
     type: number,
+    createdAt: string,
+    updatedAt: string,
 }
 
 const voteSchema = new Schema<IVote> ({
@@ -15,7 +17,7 @@ const voteSchema = new Schema<IVote> ({
     type: {
         type: Number,
     }
-});
+}, { timestamps: true });
 
 const Vote = model<IVote> ('Vote', voteSchema);
 

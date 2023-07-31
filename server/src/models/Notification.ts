@@ -7,6 +7,8 @@ interface INotification {
   status: string, /** unseen, seen */
   segs: string,
   dest: string, /** target link when user clicks on the notification */
+  createdAt: string,
+  updatedAt: string,
 }
 
 const notificationModel = new Schema<INotification> ({
@@ -28,7 +30,7 @@ const notificationModel = new Schema<INotification> ({
     dest: {
         type: String,
     },
-});
+}, { timestamps: true });
 
 const Notification = model<INotification> ('Notification', notificationModel);
 

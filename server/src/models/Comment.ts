@@ -3,6 +3,8 @@ interface IComment {
     username: string,
     post_id: string,
     content: string,
+    createdAt: string,
+    updatedAt: string,
 }
 
 const commentSchema = new Schema<IComment> ({
@@ -15,7 +17,7 @@ const commentSchema = new Schema<IComment> ({
     content: {
         type: String,
     }
-});
+}, { timestamps: true });
 
 const Comment = model<IComment> ('Comment', commentSchema);
 

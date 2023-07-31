@@ -7,6 +7,8 @@ interface IPost {
     username: string,
     karma: number,
     comments: number,
+    createdAt: string,
+    updatedAt: string,
 }
 
 const postSchema = new Schema<IPost> ({
@@ -27,8 +29,8 @@ const postSchema = new Schema<IPost> ({
     },
     comments: {
         type: Number,
-    }
-});
+    },
+}, { timestamps: true });
 
 const Post = model("Post", postSchema);
 

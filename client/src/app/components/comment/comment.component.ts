@@ -12,13 +12,15 @@ import { Socket } from 'ngx-socket-io';
 })
 export class CommentComponent implements OnInit {
   @Input() comment: any;
-  
+
   deleteIcon: IconDefinition = faTimes;
   editIcon: IconDefinition = faEdit;
   confirmIcon: IconDefinition = faCheck;
-  cancelIcon: IconDefinition = faTimes;  
+  cancelIcon: IconDefinition = faTimes;
 
   isInEditMode: boolean = false;
+
+  timestamp: string = "";
 
   private socket = inject(Socket);
   private toast = inject(ToastService);
@@ -28,8 +30,15 @@ export class CommentComponent implements OnInit {
     this.socket.on('comment-edit', (data: any) => {
       if (data.comment_id == this.comment._id) {
         this.comment.content = data.content;
+        this.timestamp = `${data.updatedAt} (edited)`;
       }
     });
+    if (this.comment.createdAt == this.comment.updatedAt) {
+      this.timestamp = this.comment.createdAt;
+    }
+    else {
+      this.timestamp = `${this.comment.updatedAt} (edited)`
+    }
   }
 
   onDeleteClick(commentId: string) {
@@ -60,7 +69,7 @@ export class CommentComponent implements OnInit {
           barClass: ['bg-lime-500'],
         });
         this.toggleEditMode();
-      }, 
+      },
       error: (err) => {
         this.toast.makeToast({
           state: "close",

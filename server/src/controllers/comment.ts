@@ -7,7 +7,7 @@ import { Friend } from '../models/Friend';
 class CommentController {
     queryComment(req: Request, res: Response) {
         const post_id = req.body.post_id;
-        Comment.find({ post_id: post_id }, "username content")
+        Comment.find({ post_id: post_id }, "username content _id createdAt updatedAt")
             .then((comments) => {
                 res.statusCode = 200;
                 return res.json({
@@ -59,6 +59,8 @@ class CommentController {
                         _id: comment._id,
                         username: comment.username,
                         content: comment.content,
+                        createdAt: comment.createdAt,
+                        updatedAt: comment.updatedAt,
                     },
                     message: noti ? noti.message : "",
                     postComments: post.comments,
@@ -125,6 +127,8 @@ class CommentController {
                 comment_id: comment._id,
                 post_id: comment.post_id,
                 content: comment.content,
+                createdAt: comment.createdAt,
+                updatedAt: comment.updatedAt,
             });
             res.statusCode = 200;
             return res.json({
