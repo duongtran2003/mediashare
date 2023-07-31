@@ -1,6 +1,6 @@
-<div class="text-xs select-none cursor-pointer flex items-center">
+<div class="text-xs flex items-center">
     <img [src]="comment.avatarPath" class="h-8 w-8 rounded-full border-2 border-white">
-    <a target="_blank" [routerLink]="['/user', comment.username]" class="ml-1 font-bold">{{ comment.username }}</a>
+    <a target="_blank" [routerLink]="['/user', comment.username]" class="ml-1 font-bold cursor-pointer select-none">{{ comment.username }}</a>
     <div class="text-gray-400 ml-2">•</div>
     <div class="grow text-gray-400 ml-2">{{ timestamp }}</div>
     <button (click)="toggleEditMode()" class="text-gray-300 hover:text-gray-400 duration-100 px-2 py-2">
