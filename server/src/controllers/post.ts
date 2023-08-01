@@ -5,6 +5,7 @@ import { Vote } from "../models/Vote";
 import { Comment } from "../models/Comment";
 import fs from 'fs';
 import mongoose from "mongoose";
+import { Friend } from "../models/Friend";
 
 class PostController {
     async topBatchQuery(req: Request, res: Response) {
@@ -41,15 +42,74 @@ class PostController {
                 $replaceRoot: { newRoot: '$documents' },
             }
         ]);
+        res.statusCode = 200;
         return res.json(documents);
     }
 
-    authBatchQuery(req: Request, res: Response) {}
+    async friendTopBatchQuery(req: Request, res: Response) {
+        const excluded = req.body.excluded ? req.body.excluded : []; 
+        const username = res.locals.claims.username;
+        const batchSize = req.body.batchSize;
+        const excludedID = excluded.map((id: string) => new mongoose.Types.ObjectId(id));
+        const friends = await Friend.find({ $or: [{ source: username }, { target: username }], status: "active" });
+        friends.push(username);
+        const documents = await Post.aggregate([
+            {
+                $match: {
+                    _id: { $nin: excludedID },
+                    karma: { $gt: 5 },
+                    username: { $in: friends },
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt" },
+                        month: { $month: "$createdAt" },
+                        day: { $dayOfMonth: "$createdAt" },
+                    },
+                    documents: { $push: '$$ROOT' }
+                }
+            },
+            {
+                $unwind: "$documents"
+            },
+            {
+                $sort: { "_id.year": -1, "_id.month": -1, "_id.day": -1, "documents.karma": -1 },
+            },
+            {
+                $limit: batchSize,
+            },
+            {
+                $replaceRoot: { newRoot: '$documents' },
+            }
+        ]);
+        res.statusCode = 200;
+        return res.json(documents);
+    }
+
+    async friendNewQuery(req: Request, res: Response) {
+        const username = res.locals.claims.username;
+        const excluded = req.body.excluded ? req.body.excluded : [];
+        const batchSize = req.body.batchSize;
+        // const excludedID = excluded.map((id: string) => new mongoose.Types.ObjectId(id));
+        const friends = await Friend.find({ $or: [{ source: username }, { target: username }], status: "active" });
+        friends.push(username);
+        const documents = await Post.find({ _id: { $nin: excluded }, username: { $in: friends } }, null, { sort: { createdAt: -1 }, limit: batchSize });
+        res.statusCode = 200;
+        return res.json(documents);
+    }
 
     async index(req: Request, res: Response) {
         const queryByUsername = req.body.username;
+        const batchSize = req.body.batchSize;
+        const excluded = req.body.excluded ? req.body.excluded : [];
         let posts = await Post.find({
             username: queryByUsername,
+            _id: { $nin: excluded },
+        }, null, {
+            sort: { createdAt: -1 },
+            limit: batchSize,
         });
         return res.json({
             message: "Query success",
