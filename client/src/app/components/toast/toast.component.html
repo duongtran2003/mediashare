@@ -1,8 +1,8 @@
 <div [@toastTrigger]="newToast.state" class="toastr z-20">
-    <div class="flex p-5">
+    <div class="flex p-5 items-center">
         <div style="max-width: 250px;" class="grow">{{newToast.message}}</div>
-        <div class="close-btn cursor-pointer text-xl" (click)="dismiss()">
-            <fa-icon [icon]="closeIcon"></fa-icon>
+        <div class="ml-2 close-btn cursor-pointer text-xl" (click)="dismiss()">
+            <fa-icon class="duration-200 hover:text-red-600" [icon]="closeIcon"></fa-icon>
         </div>
     </div>
     <div class="flex justify-end">

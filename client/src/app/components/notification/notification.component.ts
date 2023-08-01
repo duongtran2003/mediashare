@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ApiService } from 'src/app/services/api.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { convertToGMT7 } from 'src/app/helpers/timeConverter';
 
 @Component({
   selector: 'app-notification',
@@ -29,6 +30,7 @@ export class NotificationComponent implements OnInit {
   private notification = inject(NotificationService);
   private auth = inject(AuthService);
   private api = inject(ApiService);
+  convertToGMT7 = convertToGMT7;
 
   ngOnInit(): void {
     this.auth.currentUserEmitter.subscribe({

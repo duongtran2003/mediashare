@@ -47,6 +47,8 @@ class VoteController {
                     karma: karma,
                     username: vote.username,
                     voteType: vote.type,
+                    createdAt: noti ? noti.createdAt : "",
+                    updatedAt: noti ? noti.updatedAt : "",
                 });
                 res.statusCode = 200;
                 return res.json({
@@ -111,6 +113,8 @@ class VoteController {
                     karma: karma,
                     username: vote.username,
                     voteType: vote.type,
+                    createdAt: noti ? noti.createdAt : "",
+                    updatedAt: noti ? noti.updatedAt : "",
                 });
                 res.statusCode = 200;
                 return res.json({

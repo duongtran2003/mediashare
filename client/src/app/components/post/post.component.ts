@@ -5,6 +5,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Socket } from 'ngx-socket-io';
+import { convertToGMT7 } from 'src/app/helpers/timeConverter';
 
 @Component({
   selector: 'app-post',
@@ -28,6 +29,10 @@ export class PostComponent implements OnInit {
   vote: number = 0;
   comments: number = 0;
   commentsContent: any[] = [];
+  createdAt: string = "";
+  updatedAt: string = "";
+  timestamp: string = "";
+
   btnState: string = "0";
   isVoteBtnReady: boolean = false;
   isDeletionPromptVisible: boolean = false;
@@ -53,6 +58,10 @@ export class PostComponent implements OnInit {
     this.title = this.post.title;
     this.fileType = this.post.fileType;
     this.filename = this.post.filename;
+    this.createdAt = this.post.createdAt;
+    this.updatedAt = this.post.updatedAt;
+    this.timestamp = `${convertToGMT7(this.createdAt)}`;
+
     this.filePath = `http://localhost:8000/static/${this.filename}`;
     this.karma = this.post.karma;
     this._id = this.post._id;
@@ -296,7 +305,7 @@ export class PostComponent implements OnInit {
         }
         if (err.status == 404) {
           this.toast.makeToast({
-            state: "close", 
+            state: "close",
             message: "Post not found",
             barClass: ['bg-red-600'],
           })

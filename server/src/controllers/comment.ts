@@ -63,6 +63,7 @@ class CommentController {
                         updatedAt: comment.updatedAt,
                     },
                     message: noti ? noti.message : "",
+                    createdAt: noti ? noti.createdAt : "",
                     postComments: post.comments,
                     target: post.username,
                 });

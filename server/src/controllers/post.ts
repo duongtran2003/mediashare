@@ -10,7 +10,7 @@ class PostController {
         const queryByUsername = req.body.username;
         let posts = await Post.find({
             username: queryByUsername,
-        }, "title filename username fileType karma _id comments");
+        });
         return res.json({
             message: "Query success",
             posts: posts,
@@ -19,7 +19,7 @@ class PostController {
 
     queryById(req: Request, res: Response) {
         const id = req.body.post_id;
-        Post.findById(id, "title filename username fileType karma _id comments")
+        Post.findById(id)
             .then((post) => {
                 if (post) {
                     res.statusCode = 200;

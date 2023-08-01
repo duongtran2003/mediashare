@@ -13,6 +13,7 @@ interface INotification {
   segs: string,
   dest: string, /** target link when user clicks on the notification */
   avatarPath: string,
+  createdAt: string,
 }
 
 @Injectable({
@@ -41,6 +42,7 @@ export class NotificationService {
           segs: '/post',
           dest: data.post_id,
           avatarPath: "",
+          createdAt: data.createdAt,
         });
       }
     });
@@ -58,6 +60,7 @@ export class NotificationService {
         segs: '/post',
         dest: data.post_id,
         avatarPath: "",
+        createdAt: data.createdAt,
       })
     })
   }
