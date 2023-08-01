@@ -34,6 +34,7 @@ const upload = multer({
 
 router.post('/create', authGuard, upload.single('file'), postController.create);
 router.post('/index', postController.index);
+router.post('/topQuery', postController.topBatchQuery);
 router.post('/queryById', postController.queryById);
 router.post('/delete', authGuard, postController.delete);
 

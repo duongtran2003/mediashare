@@ -4,8 +4,48 @@ import mime from 'mime';
 import { Vote } from "../models/Vote";
 import { Comment } from "../models/Comment";
 import fs from 'fs';
+import mongoose from "mongoose";
 
 class PostController {
+    async topBatchQuery(req: Request, res: Response) {
+        const excluded = req.body.excluded ? req.body.excluded : [];
+        const batchSize = req.body.batchSize;
+        const excludedID = excluded.map((id: string) => new mongoose.Types.ObjectId(id));
+        const documents = await Post.aggregate([
+            {
+                $match: {
+                    _id: { $nin: excludedID },
+                    karma: { $gt: 5 }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt" },
+                        month: { $month: "$createdAt" },
+                        day: { $dayOfMonth: "$createdAt" },
+                    },
+                    documents: { $push: '$$ROOT' }
+                }
+            },
+            {
+                $unwind: "$documents"
+            },
+            {
+                $sort: { "_id.year": -1, "_id.month": -1, "_id.day": -1, "documents.karma": -1 },
+            },
+            {
+                $limit: batchSize,
+            },
+            {
+                $replaceRoot: { newRoot: '$documents' },
+            }
+        ]);
+        return res.json(documents);
+    }
+
+    authBatchQuery(req: Request, res: Response) {}
+
     async index(req: Request, res: Response) {
         const queryByUsername = req.body.username;
         let posts = await Post.find({
