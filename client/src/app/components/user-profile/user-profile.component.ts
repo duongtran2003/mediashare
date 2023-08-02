@@ -21,6 +21,8 @@ export class UserProfileComponent implements OnInit {
   private toast = inject(ToastService);
   private route = inject(ActivatedRoute);
 
+  excluded: string[] = [];
+
   username: string = "";
   email: string = "";
   avatarPath: string = "";
@@ -40,7 +42,7 @@ export class UserProfileComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.usernameFromParams = params['username'];
-      this.api.post('post/index', { username: this.usernameFromParams }).subscribe({
+      this.api.post('post/index', { username: this.usernameFromParams, batchSize: 2, excluded: this.excluded }).subscribe({
         next: (response) => {
           this.posts = [];
           for (let post of response.posts) {
