@@ -11,6 +11,4 @@
 <app-notification></app-notification>
 <app-nav-col *ngIf="isNavTabVisible" (forceLogin)="toggleLogin()"></app-nav-col>
 <app-create-post *ngIf="isCreatePostVisible"></app-create-post>
-<div class="w-[50%] m-auto pt-20 pb-12">
-    <router-outlet></router-outlet>
-</div>
+<router-outlet></router-outlet>

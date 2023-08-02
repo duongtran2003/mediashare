@@ -1,76 +1,83 @@
-<div class="rounded-lg bg-white drop-shadow-lg py-8 px-8">
-    <div *ngIf="username && email" class="flex">
-        <div class="flex flex-col drop-shadow-xl bg-white rounded-full items-center relative">
-            <img [src]="avatarPath" (mouseenter)="showUpdateAvatarTooltip()" (mouseleave)="hideUpdateAvatarTooltip()"
-                (click)="toggleCropper()" class="h-44 w-44 select-none cursor-pointer rounded-full drop-shadow-xl">
-            <div *ngIf="isTooltipVisible && isMyProfile"
-                class="absolute bg-gray-800 py-1 px-3 text-xs top-44 rounded-lg text-gray-50">
-                Update your avatar
+<div class="w-[50%] m-auto pt-20 pb-12" infiniteScroll (scrolled)="onScroll()" [infiniteScrollThrottle]="1000"
+    [infiniteScrollDisabled]="isIndexCallPending" [infiniteScrollDistance]="0" [scrollWindow]="true">
+    <div class="rounded-lg bg-white drop-shadow-lg py-8 px-8 mb-3">
+        <div *ngIf="username && email" class="flex">
+            <div class="flex flex-col drop-shadow-xl bg-white rounded-full items-center relative">
+                <img [src]="avatarPath" (mouseenter)="showUpdateAvatarTooltip()"
+                    (mouseleave)="hideUpdateAvatarTooltip()" (click)="toggleCropper()"
+                    class="h-44 w-44 select-none cursor-pointer rounded-full drop-shadow-xl">
+                <div *ngIf="isTooltipVisible && isMyProfile"
+                    class="absolute bg-gray-800 py-1 px-3 text-xs top-44 rounded-lg text-gray-50">
+                    Update your avatar
+                </div>
+            </div>
+            <div class="flex flex-col justify-center ml-8">
+                <div (click)="onUsernameClick()"
+                    class="duration-200 hover:shadow-blue-500/20 cursor-pointer select-none ml-4 my-2 bg-gray-100 pl-2 pr-12 py-2 rounded-lg shadow-lg max-w-fit">
+                    Username: {{ username }}</div>
+                <div (click)="onEmailClick()"
+                    class="duration-200 hover:shadow-blue-500/20 cursor-pointer select-none ml-4 my-2 bg-gray-100 pl-2 pr-12 py-2 rounded-lg shadow-lg max-w-fit">
+                    Email: {{ email }}</div>
+                <div *ngIf="friendCase == 1" class="ml-4">
+                    You've sent {{ usernameFromParams }} a friend request.
+                    <button (click)="cancelRequest()"
+                        class="ml-2 bg-blue-600 text-white rounded-sm px-4 py-1 hover:bg-blue-700 duration-100 active:scale-105">
+                        Cancel
+                    </button>
+                </div>
+                <div *ngIf="friendCase == 2" class="ml-4">
+                    {{ usernameFromParams }}'s sent your a friend request.
+                    <button (click)="confRequest(1)"
+                        class="ml-2 bg-green-500 text-white rounded-sm px-4 py-1 hover:bg-green-600 duration-100 active:scale-105">
+                        Yes
+                    </button>
+                    <button (click)="confRequest(0)"
+                        class="ml-2 bg-red-600 text-white rounded-sm px-4 py-1 hover:bg-red-700 duration-100 active:scale-105">
+                        No
+                    </button>
+                </div>
+                <div *ngIf="friendCase == 3" class="ml-4">
+                    You guys aren't friend.
+                    <button (click)="sendFriendRequest()"
+                        class="ml-2 bg-blue-600 text-white rounded-sm px-4 py-1 hover:bg-blue-700 duration-100 active:scale-105">
+                        Add friend
+                    </button>
+                </div>
+                <div *ngIf="friendCase == 4" class="ml-4">
+                    <button (click)="removeFriend()"
+                        class="ml-2 bg-red-600 text-white rounded-sm px-4 py-1 hover:bg-red-700 duration-100 active:scale-105">
+                        Remove friend
+                    </button>
+                </div>
             </div>
         </div>
-        <div class="flex flex-col justify-center ml-8">
-            <div (click)="onUsernameClick()"
-                class="duration-200 hover:shadow-blue-500/20 cursor-pointer select-none ml-4 my-2 bg-gray-100 pl-2 pr-12 py-2 rounded-lg shadow-lg max-w-fit">
-                Username: {{ username }}</div>
-            <div (click)="onEmailClick()"
-                class="duration-200 hover:shadow-blue-500/20 cursor-pointer select-none ml-4 my-2 bg-gray-100 pl-2 pr-12 py-2 rounded-lg shadow-lg max-w-fit">
-                Email: {{ email }}</div>
-            <div *ngIf="friendCase == 1" class="ml-4">
-                You've sent {{ usernameFromParams }} a friend request.
-                <button (click)="cancelRequest()"
-                    class="ml-2 bg-blue-600 text-white rounded-sm px-4 py-1 hover:bg-blue-700 duration-100 active:scale-105">
-                    Cancel
-                </button>
+        <div *ngIf="!(username && email)">
+            Error
+        </div>
+        <div class="mt-16 z-0" *ngIf="isCropperVisible">
+            <div class="bg-gray-100 rounded-lg drop-shadow-lg max-w-fit mb-4 py-2 px-4 flex flex-col">
+                <div class="mb-2">Upload your picture</div>
+                <input accept="image/*" class="mb-2" type="file" (change)="onFileChange($event)">
+                <button (click)="changeAvatar()" *ngIf="isImageLoaded"
+                    class="rounded-lg bg-blue-500 text-gray-50 px-4 py-2 hover:bg-blue-700 duration-200">Upload</button>
+                <div class="mt-2" *ngIf="!isUploadingDone">Uploading...</div>
             </div>
-            <div *ngIf="friendCase == 2" class="ml-4">
-                {{ usernameFromParams }}'s sent your a friend request.
-                <button (click)="confRequest(1)"
-                    class="ml-2 bg-green-500 text-white rounded-sm px-4 py-1 hover:bg-green-600 duration-100 active:scale-105">
-                    Yes
-                </button>
-                <button (click)="confRequest(0)"
-                    class="ml-2 bg-red-600 text-white rounded-sm px-4 py-1 hover:bg-red-700 duration-100 active:scale-105">
-                    No
-                </button>
+            <div class="flex flex-col items-center mb-2" *ngIf="isImageLoaded">
+                <div>
+                    Image Preview
+                </div>
+                <img class="h-44 w-44 rounded-full" [src]="cropImgPreview">
             </div>
-            <div *ngIf="friendCase == 3" class="ml-4">
-                You guys aren't friend.
-                <button (click)="sendFriendRequest()"
-                    class="ml-2 bg-blue-600 text-white rounded-sm px-4 py-1 hover:bg-blue-700 duration-100 active:scale-105">
-                    Add friend
-                </button>
-            </div>
-            <div *ngIf="friendCase == 4" class="ml-4">
-                <button (click)="removeFriend()"
-                    class="ml-2 bg-red-600 text-white rounded-sm px-4 py-1 hover:bg-red-700 duration-100 active:scale-105">
-                    Remove friend
-                </button>
-            </div>
+            <image-cropper [ngClass]="['cropper']" [roundCropper]="true" [imageChangedEvent]="imgChangeEvent"
+                [maintainAspectRatio]="true" [aspectRatio]="1/1" format="png" (imageCropped)="cropImg($event)"
+                (imageLoaded)="imgLoad()" (cropperReady)="initCropper()" (loadImageFailed)="imgFailed()"
+                [output]="'blob'">
+            </image-cropper>
         </div>
     </div>
-    <div *ngIf="!(username && email)">
-        Error
+    <div>
+        <app-post (deleted)="deleteThis($event)" *ngFor="let post of posts" [post]="post"
+            [isCommentSectionVisible]="false"></app-post>
+        <!-- <div class="flex justify-center mt-2" *ngIf="isIndexCallPending">Loading...</div> -->
     </div>
-    <div class="mt-16 z-0" *ngIf="isCropperVisible">
-        <div class="bg-gray-100 rounded-lg drop-shadow-lg max-w-fit mb-4 py-2 px-4 flex flex-col">
-            <div class="mb-2">Upload your picture</div>
-            <input accept="image/*" class="mb-2" type="file" (change)="onFileChange($event)">
-            <button (click)="changeAvatar()" *ngIf="isImageLoaded"
-                class="rounded-lg bg-blue-500 text-gray-50 px-4 py-2 hover:bg-blue-700 duration-200">Upload</button>
-            <div class="mt-2" *ngIf="!isUploadingDone">Uploading...</div>
-        </div>
-        <div class="flex flex-col items-center mb-2" *ngIf="isImageLoaded">
-            <div>
-                Image Preview
-            </div>
-            <img class="h-44 w-44 rounded-full" [src]="cropImgPreview">
-        </div>
-        <image-cropper [ngClass]="['cropper']" [roundCropper]="true" [imageChangedEvent]="imgChangeEvent"
-            [maintainAspectRatio]="true" [aspectRatio]="1/1" format="png" (imageCropped)="cropImg($event)"
-            (imageLoaded)="imgLoad()" (cropperReady)="initCropper()" (loadImageFailed)="imgFailed()" [output]="'blob'">
-        </image-cropper>
-    </div>
-</div>
-<div>
-    <app-post (deleted)="deleteThis($event)" *ngFor="let post of posts" [post]="post" [isCommentSectionVisible]="false"></app-post>
 </div>

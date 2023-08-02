@@ -26,6 +26,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "ngx-cookie-service": "^16.0.0",
     "ngx-image-cropper": "^7.0.1",
+    "ngx-infinite-scroll": "^16.0.0",
     "ngx-socket-io": "^4.5.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

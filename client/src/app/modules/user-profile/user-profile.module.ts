@@ -4,13 +4,14 @@ import { UserProfileComponent } from 'src/app/components/user-profile/user-profi
 import { RouterModule, Routes } from '@angular/router';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { PostModule } from '../post/post.module';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 const profileRoutes: Routes = [{ path: '', component: UserProfileComponent }];
 
 @NgModule({
   declarations: [UserProfileComponent],
   imports: [
-    CommonModule, RouterModule.forChild(profileRoutes), ImageCropperModule, PostModule
+    CommonModule, RouterModule.forChild(profileRoutes), ImageCropperModule, PostModule, InfiniteScrollModule,
   ]
 })
 export class UserProfileModule { }

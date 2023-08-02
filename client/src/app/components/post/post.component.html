@@ -1,4 +1,4 @@
-<div class="rounded-lg bg-white drop-shadow-lg pr-1.5 mt-4 flex overflow-hidden">
+<div class="rounded-lg bg-white drop-shadow-lg pr-1.5 mb-3 flex overflow-hidden">
     <div class="bg-gray-100 flex flex-col items-center py-8">
         <button (click)="onUpvoteClick()"
             class="mx-2 border border-gray-100 px-2 py-1 rounded mb-2 hover:border-gray-300 active:scale-105 duration-200">
@@ -30,10 +30,10 @@
             <div class="mb-1">{{ timestamp }}</div>
         </div>
         <div class="flex items-center">
-            <img [routerLink]="['user', username]"
+            <img
                 class="w-6 h-6 mr-2 rounded-full select-none cursor-pointer pointer-events-none" [src]="avatar">
-            <div class="text-sm select-none cursor-pointer font-bold" [routerLink]="['/user', username]">{{ username }}
-            </div>
+            <a target="_blank" class="text-sm select-none cursor-pointer font-bold" [routerLink]="['/user', username]">{{ username }}
+            </a>
         </div>
         <div class="mt-2">
             <a [routerLink]="['/post', _id]" class="text-lg font-bold" target="_blank">{{ title }}</a>

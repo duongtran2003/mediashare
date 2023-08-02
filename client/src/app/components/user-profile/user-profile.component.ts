@@ -13,10 +13,10 @@ import { Socket } from 'ngx-socket-io';
   styleUrls: ['./user-profile.component.css'],
 })
 export class UserProfileComponent implements OnInit {
-  
+
   private socket = inject(Socket);
-  private auth = inject(AuthService); 
-  private clipboard = inject(Clipboard); 
+  private auth = inject(AuthService);
+  private clipboard = inject(Clipboard);
   private api = inject(ApiService);
   private toast = inject(ToastService);
   private route = inject(ActivatedRoute);
@@ -39,6 +39,8 @@ export class UserProfileComponent implements OnInit {
   usernameFromParams: string = "";
   friendCase!: number;
 
+  isIndexCallPending: boolean = false;
+
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.usernameFromParams = params['username'];
@@ -47,6 +49,7 @@ export class UserProfileComponent implements OnInit {
           this.posts = [];
           for (let post of response.posts) {
             this.posts.push(post);
+            this.excluded.push(post._id);
           }
         }
       })
@@ -337,5 +340,25 @@ export class UserProfileComponent implements OnInit {
         break;
       }
     }
+  }
+
+  onScroll() {
+    if (this.isIndexCallPending) {
+      return;
+    }
+    this.isIndexCallPending = true;
+    this.api.post('post/index', { username: this.usernameFromParams, batchSize: 2, excluded: this.excluded }).subscribe({
+      next: (response) => {
+        if (!response.posts.length) {
+          this.isIndexCallPending = false;
+          return;
+        }
+        for (let post of response.posts) {
+          this.posts.push(post);
+          this.excluded.push(post._id);
+        }
+        this.isIndexCallPending = false;
+      }
+    })
   }
 }
