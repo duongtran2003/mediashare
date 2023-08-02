@@ -51,13 +51,14 @@ class PostController {
         const username = res.locals.claims.username;
         const batchSize = req.body.batchSize;
         const excludedID = excluded.map((id: string) => new mongoose.Types.ObjectId(id));
-        const friends = await Friend.find({ $or: [{ source: username }, { target: username }], status: "active" });
+        const friends = await (await Friend.find({ $or: [{ source: username }, { target: username }], status: "active" })).map((friend) => {
+            return friend.source == username ? friend.target : friend.source;
+        })
         friends.push(username);
         const documents = await Post.aggregate([
             {
                 $match: {
                     _id: { $nin: excludedID },
-                    karma: { $gt: 5 },
                     username: { $in: friends },
                 }
             },
@@ -92,8 +93,9 @@ class PostController {
         const username = res.locals.claims.username;
         const excluded = req.body.excluded ? req.body.excluded : [];
         const batchSize = req.body.batchSize;
-        // const excludedID = excluded.map((id: string) => new mongoose.Types.ObjectId(id));
-        const friends = await Friend.find({ $or: [{ source: username }, { target: username }], status: "active" });
+        const friends = await (await Friend.find({ $or: [{ source: username }, { target: username }], status: "active" })).map((friend: any) => {
+            return friend.source == username ? friend.target : friend.source; 
+        })
         friends.push(username);
         const documents = await Post.find({ _id: { $nin: excluded }, username: { $in: friends } }, null, { sort: { createdAt: -1 }, limit: batchSize });
         res.statusCode = 200;

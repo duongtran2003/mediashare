@@ -37,6 +37,8 @@ router.post('/index', postController.index);
 router.post('/topQuery', postController.topBatchQuery);
 router.post('/queryById', postController.queryById);
 router.post('/delete', authGuard, postController.delete);
+router.post('/newQuery', authGuard, postController.friendNewQuery);
+router.post('/homeQuery', authGuard, postController.friendTopBatchQuery);
 
 export {
     router

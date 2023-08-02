@@ -28,6 +28,7 @@ export class HotColComponent implements OnInit {
   }
 
   onScroll() {
+    console.log('dude');
     if (this.isQueryCallPending) {
       return;
     }

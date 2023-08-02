@@ -1,6 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
-import { Router } from '@angular/router';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-home-col',
@@ -9,10 +8,44 @@ import { Router } from '@angular/router';
 })
 export class HomeColComponent implements OnInit {
 
-  private auth = inject(AuthService);
-  private router = inject(Router); 
+  private api = inject(ApiService);
+
+  excluded: string[] = [];
+  posts: any[] = [];
+
+  isQueryCallPending: boolean = false;
 
   ngOnInit(): void {
-    
+    this.api.post('post/homeQuery', { batchSize: 2, excluded: this.excluded }).subscribe({
+      next: (res) => {
+        this.posts = [];
+        for (let post of res) {
+          this.posts.push(post);
+          this.excluded.push(post._id);
+        }
+        console.log(this.posts, this.excluded);
+      }
+    })
   }
+
+  onScroll() {
+    if (this.isQueryCallPending) {
+      return;
+    }
+    this.isQueryCallPending = true;
+    this.api.post('post/homeQuery', { batchSize: 2, excluded: this.excluded }).subscribe({
+      next: (res) => {
+        if (!res.length) {
+          this.isQueryCallPending = false;
+          return;
+        }
+        for (let post of res) {
+          this.posts.push(post);
+          this.excluded.push(post._id);
+        }
+        this.isQueryCallPending = false;
+      }
+    })
+  }
+
 }
