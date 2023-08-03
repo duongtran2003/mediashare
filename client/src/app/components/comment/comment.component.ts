@@ -2,10 +2,10 @@ import { Component, Input, inject, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { IconDefinition, faEdit } from '@fortawesome/free-regular-svg-icons';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faReply, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Socket } from 'ngx-socket-io';
 import { convertToGMT7 } from 'src/app/helpers/timeConverter';
-
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-comment',
@@ -19,8 +19,11 @@ export class CommentComponent implements OnInit {
   editIcon: IconDefinition = faEdit;
   confirmIcon: IconDefinition = faCheck;
   cancelIcon: IconDefinition = faTimes;
+  replyIcon: IconDefinition = faReply;
+  postCommentIcon: IconDefinition = faPaperPlane;
 
   isInEditMode: boolean = false;
+  isReplyInputVisible: boolean = false;
 
   timestamp: string = "";
 
@@ -96,6 +99,10 @@ export class CommentComponent implements OnInit {
 
   toggleEditMode() {
     this.isInEditMode = !this.isInEditMode;
+  }
+
+  toggleReplyInput() {
+    this.isReplyInputVisible = !this.isReplyInputVisible;
   }
 }
 

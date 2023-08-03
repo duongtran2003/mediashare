@@ -57,13 +57,13 @@
                     (input)="updateUserCommentInput(commentInput.value)" (keyup.enter)="postComment()"
                     class="grow bg-gray-100 border rounded-sm px-4 py-2 text-sm outline-none hover:border-blue-500 focus:border-blue-600 duration-200">
                 <button (click)="postComment()"
-                    class="bg-blue-600 text-white rounded-lg px-4 py-1.5 ml-2 hover:bg-blue-800 duration-200 active:scale-105">
+                    class="bg-blue-600 text-white rounded-sm px-4 py-1.5 ml-2 hover:bg-blue-800 duration-200 active:scale-105">
                     <fa-icon [icon]="postCommentIcon"></fa-icon>
                 </button>
             </div>
             <div class="flex flex-col mt-2">
                 <app-comment *ngFor="let comment of commentsContent" [comment]="comment"
-                    [ngClass]="['break-words', 'px-2', 'py-1', 'border', 'border-gray-200', 'shadow-md', 'mt-1', 'rounded-lg']">
+                    [ngClass]="[]">
                 </app-comment>
             </div>
         </div>

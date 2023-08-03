@@ -1,24 +1,41 @@
-<div class="text-xs flex items-center">
-    <img [src]="comment.avatarPath" class="h-8 w-8 rounded-full border-2 border-white">
-    <a target="_blank" [routerLink]="['/user', comment.username]" class="ml-1 font-bold cursor-pointer select-none">{{ comment.username }}</a>
-    <div class="text-gray-400 ml-2">•</div>
-    <div class="grow text-gray-400 ml-2">{{ timestamp }}</div>
-    <button (click)="toggleEditMode()" class="text-gray-300 hover:text-gray-400 duration-100 px-2 py-2">
-        <fa-icon [icon]="editIcon"></fa-icon>
-    </button>
-    <button (click)="onDeleteClick(comment._id)" class="text-gray-300 hover:text-gray-400 duration-100 px-2 py-2">
-        <fa-icon [icon]="deleteIcon"></fa-icon>
-    </button>
-</div>
-<div *ngIf="!isInEditMode" class="ml-2">{{ comment.content }}</div>
-<div class="flex mt-1" *ngIf="isInEditMode">
-    <input #commentInput type="text" [value]="comment.content"
-        (keyup.enter)="onEditClick(comment._id, commentInput.value)"
-        class="grow bg-gray-100 border rounded-sm px-4 py-2 text-sm outline-none hover:border-blue-500 focus:border-blue-600 duration-200">
-    <button (click)="onEditClick(comment._id, commentInput.value)" class="text-white px-2.5 bg-green-600 ml-1 hover:bg-green-700 duration-100 rounded-sm active:scale-105">
-        <fa-icon [icon]="confirmIcon"></fa-icon>
-    </button>
-    <button (click)="toggleEditMode()" class="text-white px-3 bg-red-600 ml-1 hover:bg-red-700 duration-100 rounded-sm active:scale-105">
-        <fa-icon [icon]="cancelIcon"></fa-icon>
-    </button>
+<div class="break-words px-2 py-1 border border-gray-200 shadow-md mt-1 rounded-lg flex flex-col">
+    <div class="text-xs flex items-center">
+        <img [src]="comment.avatarPath" class="h-8 w-8 rounded-full border-2 border-white">
+        <a target="_blank" [routerLink]="['/user', comment.username]"
+            class="ml-1 font-bold cursor-pointer select-none">{{
+            comment.username }}</a>
+        <div class="text-gray-400 ml-2">•</div>
+        <div class="grow text-gray-400 ml-2">{{ timestamp }}</div>
+        <button (click)="toggleEditMode()" class="text-gray-300 hover:text-gray-400 duration-100 px-2 py-2">
+            <fa-icon [icon]="editIcon"></fa-icon>
+        </button>
+        <button (click)="onDeleteClick(comment._id)" class="text-gray-300 hover:text-gray-400 duration-100 px-2 py-2">
+            <fa-icon [icon]="deleteIcon"></fa-icon>
+        </button>
+    </div>
+    <div *ngIf="!isInEditMode" class="ml-2 text-sm">{{ comment.content }}</div>
+    <div class="flex mt-1" *ngIf="isInEditMode">
+        <input #commentInput type="text" [value]="comment.content"
+            (keyup.enter)="onEditClick(comment._id, commentInput.value)"
+            class="grow bg-gray-100 border rounded-sm px-4 py-2 text-sm outline-none hover:border-blue-500 focus:border-blue-600 duration-200">
+        <button (click)="onEditClick(comment._id, commentInput.value)"
+            class="text-white px-2.5 bg-green-600 ml-1 hover:bg-green-700 duration-100 rounded-sm active:scale-105">
+            <fa-icon [icon]="confirmIcon"></fa-icon>
+        </button>
+        <button (click)="toggleEditMode()"
+            class="text-white px-3 bg-red-600 ml-1 hover:bg-red-700 duration-100 rounded-sm active:scale-105">
+            <fa-icon [icon]="cancelIcon"></fa-icon>
+        </button>
+    </div>
+    <div (click)="toggleReplyInput()"
+        class="text-xs cursor-pointer select-none ml-2 mt-1 hover:text-orange-600 duration-200 max-w-fit">
+        <fa-icon [icon]="replyIcon"></fa-icon>
+        <span class="ml-1">Reply</span>
+    </div>
+    <div *ngIf="isReplyInputVisible" class="flex mt-1 ml-2">
+        <input type="text" class="grow bg-gray-100 border rounded-sm px-2 py-1 text-sm outline-none hover:border-blue-500 focus:border-blue-600 duration-200">
+        <button class="bg-blue-600 text-white rounded-sm px-2 py-1 ml-2 hover:bg-blue-800 duration-200 active:scale-105 text-xs">
+            <fa-icon [icon]="postCommentIcon"></fa-icon>
+        </button>
+    </div>
 </div>

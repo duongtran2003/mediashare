@@ -303,7 +303,7 @@ export class PostComponent implements OnInit {
             barClass: ['bg-red-600'],
           })
         }
-        if (err.status == 404) {
+        else if (err.status == 404) {
           this.toast.makeToast({
             state: "close",
             message: "Post not found",
