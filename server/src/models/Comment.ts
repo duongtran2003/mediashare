@@ -1,5 +1,6 @@
 import mongoose, { Schema, model } from "mongoose";
 interface IComment {
+    parent_id: string,
     username: string,
     post_id: string,
     content: string,
@@ -15,6 +16,9 @@ const commentSchema = new Schema<IComment> ({
         type: String,
     },
     content: {
+        type: String,
+    },
+    parent_id: {
         type: String,
     }
 }, { timestamps: true });

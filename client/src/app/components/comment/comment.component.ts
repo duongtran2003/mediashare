@@ -24,14 +24,38 @@ export class CommentComponent implements OnInit {
 
   isInEditMode: boolean = false;
   isReplyInputVisible: boolean = false;
+  isReplyVisible: boolean = false;
+  childComments: any[] = [];
 
   timestamp: string = "";
+  userReplyInput: string = "";
 
   private socket = inject(Socket);
   private toast = inject(ToastService);
   private api = inject(ApiService);
 
   ngOnInit(): void {
+    if (this.comment._id != 0) {
+      this.api.post('comment/childQuery', { parent_id: this.comment._id }).subscribe({
+        next: (res) => {
+          for (let comment of res.comments) {
+            this.api.post('user/getUserInfo', { username: comment.username }).subscribe({
+              next: (res) => {
+                comment.avatarPath = res.avatarPath;
+                this.childComments.push(comment);
+              },
+              error: (err) => {
+                comment.avatarPath = 'http://localhost:8000/static/default.png';
+                this.childComments.push(comment);
+              }
+            })
+          }
+        },
+        error: (err) => {
+
+        }
+      })
+    }
     this.socket.on('comment-edit', (data: any) => {
       if (data.comment_id == this.comment._id) {
         this.comment.content = data.content;
@@ -103,6 +127,54 @@ export class CommentComponent implements OnInit {
 
   toggleReplyInput() {
     this.isReplyInputVisible = !this.isReplyInputVisible;
+  }
+
+  updateReplyInput(val: string) {
+    this.userReplyInput = val;
+  }
+
+  postComment() {
+    if (this.userReplyInput.trim() == "") {
+      this.toast.makeToast({
+        state: "close",
+        message: "Can't create empty comment",
+        barClass: ['bg-red-600'],
+      })
+      return;
+    }
+    this.api.post('comment/create', { content: this.userReplyInput, post_id: this.comment.post_id, parent_id: this.comment._id }).subscribe({
+      next: (res) => {
+        this.isReplyInputVisible = false;
+        this.userReplyInput = "";
+      },
+      error: (err) => {
+        if (err.status == 401) {
+          this.toast.makeToast({
+            state: "close",
+            message: "Login first!",
+            barClass: ['bg-red-600'],
+          })
+        }
+        else if (err.status == 404) {
+          this.toast.makeToast({
+            state: "close",
+            message: "Post not found",
+            barClass: ['bg-red-600'],
+          })
+        }
+        else {
+          this.toast.makeToast({
+            state: "close",
+            message: "Server's error",
+            barClass: ['bg-red-600'],
+          })
+        }
+      }
+    })
+  }
+
+  toggleReply() {
+    this.isReplyVisible = !this.isReplyVisible;
   }
 }
 

@@ -27,15 +27,23 @@
             <fa-icon [icon]="cancelIcon"></fa-icon>
         </button>
     </div>
-    <div (click)="toggleReplyInput()"
-        class="text-xs cursor-pointer select-none ml-2 mt-1 hover:text-orange-600 duration-200 max-w-fit">
-        <fa-icon [icon]="replyIcon"></fa-icon>
-        <span class="ml-1">Reply</span>
+    <div class="flex justify-between">
+        <div (click)="toggleReplyInput()"
+            class="text-xs cursor-pointer select-none ml-2 mt-1 hover:text-orange-600 duration-200 max-w-fit">
+            <fa-icon [icon]="replyIcon"></fa-icon>
+            <span class="ml-1">Reply</span>
+        </div>
+        <div (click)="toggleReply()" class="self-end text-xs select-none cursor-pointer font-bold hover:text-orange-600 duration-100">Show {{ childComments.length }} replies</div>
     </div>
     <div *ngIf="isReplyInputVisible" class="flex mt-1 ml-2">
-        <input type="text" class="grow bg-gray-100 border rounded-sm px-2 py-1 text-sm outline-none hover:border-blue-500 focus:border-blue-600 duration-200">
-        <button class="bg-blue-600 text-white rounded-sm px-2 py-1 ml-2 hover:bg-blue-800 duration-200 active:scale-105 text-xs">
+        <input #replyInput (input)="updateReplyInput(replyInput.value)" [value]="userReplyInput" type="text"
+            class="grow bg-gray-100 border rounded-sm px-2 py-1 text-sm outline-none hover:border-blue-500 focus:border-blue-600 duration-200">
+        <button (click)="postComment()"
+            class="bg-blue-600 text-white rounded-sm px-2 py-1 ml-2 hover:bg-blue-800 duration-200 active:scale-105 text-xs">
             <fa-icon [icon]="postCommentIcon"></fa-icon>
         </button>
     </div>
+</div>
+<div *ngIf="isReplyVisible" class="ml-2 pl-2 border-l-2 border-gray-300">
+    <app-comment *ngFor="let comment of childComments" [comment]="comment"></app-comment>
 </div>

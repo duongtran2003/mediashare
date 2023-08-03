@@ -7,7 +7,7 @@ import { Friend } from '../models/Friend';
 class CommentController {
     queryComment(req: Request, res: Response) {
         const post_id = req.body.post_id;
-        Comment.find({ post_id: post_id }, "username content _id createdAt updatedAt")
+        Comment.find({ post_id: post_id, parent_id: 0})
             .then((comments) => {
                 res.statusCode = 200;
                 return res.json({
@@ -22,6 +22,29 @@ class CommentController {
             })
     }
 
+    async queryChildComment(req: Request, res: Response) {
+        const parent_id = req.body.parent_id;
+        const allComments = [];
+        const queue = [];
+        const comments = await Comment.find({ parent_id: parent_id });
+        for (let comment of comments) {
+            allComments.push(comment);
+            queue.push(comment);
+        }
+        while (queue.length) {
+            const parentComment: any = queue.pop();
+            const comments = await Comment.find({ parent_id: parentComment!._id }); //cannot be undefined because queue.length has to be > 0
+            for (let comment of comments) {
+                allComments.push(comment);
+                queue.push(comment);
+            }
+        }
+        res.statusCode = 200;
+        return res.json({
+            comments: allComments,
+        });
+    }
+
     async create(req: Request, res: Response) {
         const io = req.app.get('io');
         const username = res.locals.claims.username;
@@ -33,10 +56,11 @@ class CommentController {
             });
         }
         const post_id = req.body.post_id;
-
+        const parent_id = req.body.parent_id ? req.body.parent_id : 0;
         const post = await Post.findOneAndUpdate({ _id: post_id }, { $inc: { comments: 1 } }, { new: true });
         if (post) {
             const comment = await Comment.create({
+                parent_id: parent_id,
                 username: username,
                 post_id: post_id,
                 content: content,

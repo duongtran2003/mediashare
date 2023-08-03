@@ -82,10 +82,12 @@ export class PostComponent implements OnInit {
             this.api.post('user/getUserInfo', { username: comment.username }).subscribe({
               next: (res) => {
                 comment.avatarPath = res.avatarPath;
+              },
+              error: (err) => {
+                comment.avatarPath = 'http://localhost:8000/static/default.png';
               }
             })
           }
-          this.comments = response.comments.length;
         },
         error: (err) => {
         }
