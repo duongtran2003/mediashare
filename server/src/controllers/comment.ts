@@ -83,6 +83,7 @@ class CommentController {
                         _id: comment._id,
                         username: comment.username,
                         content: comment.content,
+                        parent_id: comment.parent_id,
                         createdAt: comment.createdAt,
                         updatedAt: comment.updatedAt,
                     },

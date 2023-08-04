@@ -111,12 +111,14 @@ export class PostComponent implements OnInit {
       }
     });
     this.socket.on('user-comment', (data: any) => {
-      if (data.post_id == this._id) {
+      if (data.post_id == this._id && data.comment.parent_id == '0') {
         if (this.isCommentSectionVisible) {
           this.api.post('user/getUserInfo', { username: data.comment.username }).subscribe({
             next: (res) => {
               data.comment.avatarPath = res.avatarPath;
+              data.comment.post_id = data.post_id;
               this.commentsContent.unshift(data.comment);
+              console.log(data.comment);
             }
           })
         }

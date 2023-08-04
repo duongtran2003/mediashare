@@ -71,6 +71,23 @@ export class CommentComponent implements OnInit {
         this.comment.username = data.username;
       }
     });
+    this.socket.on('user-comment', (data: any) => {
+      const newComment = data.comment;
+      if (data.comment.parent_id == this.comment._id) {
+        this.api.post('user/getUserInfo', { username: newComment.username }).subscribe({
+          next: (res) => {
+            newComment.avatarPath = res.avatarPath;
+            newComment.post_id = data.post_id;
+            this.childComments.push(newComment);
+          },
+          error: (err) => {
+            newComment.avatarPath = 'http://localhost:8000/static/default.png';
+            newComment.post_id = data.post_id;
+            this.childComments.push(newComment);
+          }
+        })
+      }
+    });
     if (this.comment.content == '[deleted]') {
       this.timestamp = `${convertToGMT7(this.comment.updatedAt)} (deleted)`;
     }
@@ -142,6 +159,7 @@ export class CommentComponent implements OnInit {
       })
       return;
     }
+    console.log(this.comment);
     this.api.post('comment/create', { content: this.userReplyInput, post_id: this.comment.post_id, parent_id: this.comment._id }).subscribe({
       next: (res) => {
         this.isReplyInputVisible = false;
